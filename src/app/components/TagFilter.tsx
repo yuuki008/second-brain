@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 // 階層構造を持つタグの型定義
 export interface HierarchicalTag {
@@ -37,17 +38,12 @@ const TagNode: React.FC<{
 
   return (
     <div className="w-full">
-      <div
-        className={`flex items-center py-1 px-1 rounded-md hover:bg-gray-100 ${
-          activeTagId === tag.id ? "bg-gray-100" : ""
-        }`}
-        style={{ paddingLeft: `${level * 12}px` }}
-      >
+      <div className={cn("flex items-center py-1 rounded-md")}>
         {hasChildren ? (
           <Button
             variant="ghost"
             size="icon"
-            className="h-5 w-5 p-0 mr-1"
+            className="h-5 w-5 p-0"
             onClick={() => setExpanded(!expanded)}
           >
             {expanded ? (
@@ -57,12 +53,12 @@ const TagNode: React.FC<{
             )}
           </Button>
         ) : (
-          <div className="w-6"></div>
+          <div className="w-5"></div>
         )}
         <Badge
           onClick={() => onTagSelect(tag.id)}
           variant={activeTagId === tag.id ? "default" : "secondary"}
-          className="cursor-pointer"
+          className="cursor-pointer px-1"
           style={{
             backgroundColor: activeTagId === tag.id ? tag.color : undefined,
           }}
@@ -72,7 +68,7 @@ const TagNode: React.FC<{
       </div>
 
       {hasChildren && expanded && (
-        <div className="pl-2">
+        <div className="pl-3">
           {tag.children!.map((child) => (
             <TagNode
               key={child.id}
@@ -113,7 +109,7 @@ const TagFilter: React.FC<TagFilterComponentProps> = ({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-72 p-2" align="start">
+        <PopoverContent className="w-auto p-2" align="start">
           <ScrollArea className="max-h-80">
             <div className="space-y-1">
               {rootTags.map((tag) => (
