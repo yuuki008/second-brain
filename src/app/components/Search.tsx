@@ -79,7 +79,7 @@ const Search: React.FC<SearchComponentProps> = ({
 
   return (
     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 z-10 w-full max-w-lg">
-      <Command className="rounded-lg border shadow-xl" shouldFilter={false}>
+      <Command className="rounded-lg border" shouldFilter={false}>
         <CommandInput
           value={searchQuery}
           onValueChange={setSearchQuery}

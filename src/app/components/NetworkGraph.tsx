@@ -76,16 +76,6 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
     const centerX = width / 2;
     const centerY = height / 2;
 
-    // テーマに応じた色を取得（CSS変数から）
-    const isLightMode = !document.documentElement.classList.contains("dark");
-    const linkColor = isLightMode ? "hsl(var(--border))" : "hsl(var(--muted))";
-    const nodeColor = isLightMode
-      ? "hsl(var(--muted-foreground))"
-      : "hsl(var(--muted))";
-    const textColor = isLightMode
-      ? "hsl(var(--foreground))"
-      : "hsl(var(--foreground))";
-
     // タグでフィルタリングされたノード
     const filteredNodes = activeTagId
       ? graphData.nodes.filter(
@@ -163,7 +153,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .selectAll("line")
       .data(links)
       .join("line")
-      .attr("stroke", linkColor)
+      .attr("stroke", "hsl(var(--border))")
       .attr("stroke-width", 1.5);
 
     // ノードグループの作成
@@ -185,7 +175,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       });
 
     // ノードの円の描画
-    node.append("circle").attr("r", 7).attr("fill", nodeColor);
+    node.append("circle").attr("r", 7).attr("fill", "hsl(var(--foreground))");
 
     // ノードのラベルの描画
     node
@@ -193,7 +183,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .attr("dx", 10)
       .attr("dy", ".35em")
       .attr("font-size", "12px")
-      .attr("fill", textColor)
+      .attr("fill", "hsl(var(--foreground))")
       .attr("font-weight", "500")
       .text((d) => d.name);
 
@@ -267,39 +257,11 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
     };
 
     // テーマ変更を監視
-    const handleThemeChange = () => {
-      const isLightModeNow =
-        !document.documentElement.classList.contains("dark");
-      const newLinkColor = isLightModeNow
-        ? "hsl(var(--border))"
-        : "hsl(var(--muted))";
-      const newNodeColor = isLightModeNow
-        ? "hsl(var(--muted-foreground))"
-        : "hsl(var(--muted))";
-      const newTextColor = isLightModeNow
-        ? "hsl(var(--foreground))"
-        : "hsl(var(--foreground))";
-
-      // 色を更新
-      link.attr("stroke", newLinkColor);
-      node.selectAll("circle").attr("fill", newNodeColor);
-      node.selectAll("text").attr("fill", newTextColor);
-    };
-
     window.addEventListener("resize", handleResize);
-
-    // カスタムイベントとシステムの暗いモード設定の両方を監視
-    window.addEventListener("themeChange", handleThemeChange);
-    const darkModeMediaQuery = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    );
-    darkModeMediaQuery.addEventListener("change", handleThemeChange);
 
     // クリーンアップ
     return () => {
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("themeChange", handleThemeChange);
-      darkModeMediaQuery.removeEventListener("change", handleThemeChange);
       simulation.stop();
     };
   }, [graphData, activeTagId, onNodeSelect, allTagIds]);
