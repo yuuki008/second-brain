@@ -17,7 +17,6 @@ import TagFilter, { HierarchicalTag } from "@/app/components/TagFilter";
 import Search from "@/app/components/Search";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import { tagData, generateGraphData } from "@/data/graphData";
-import { Pencil } from "lucide-react";
 
 // D3.js用の型定義
 interface NodeData {
