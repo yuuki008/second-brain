@@ -1,0 +1,30 @@
+// schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Term {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  definition String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  tags       Tag[]    @relation("TermToTag")
+
+  @@map("terms")
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  color     String   @default("#3B82F6") 
+  createdAt DateTime @default(now()) @map("created_at")
+  terms     Term[]   @relation("TermToTag")
+
+  @@map("tags")
+}
