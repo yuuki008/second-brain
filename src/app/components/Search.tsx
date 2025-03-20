@@ -84,7 +84,7 @@ const Search: React.FC<SearchComponentProps> = ({
           value={searchQuery}
           onValueChange={setSearchQuery}
           onFocus={handleFocus}
-          placeholder="用語を検索..."
+          placeholder="Type to search..."
           className="flex h-12 w-full bg-transparent py-3 text-sm placeholder:text-muted-foreground"
         />
         {open && searchQuery && (
@@ -94,7 +94,10 @@ const Search: React.FC<SearchComponentProps> = ({
                 onSelect={handleCreateNew}
                 className="cursor-pointer"
               >
-                <div className="font-medium">「{searchQuery}」の新規作成</div>
+                <div className="font-medium">
+                  Create new term
+                  <span className="text-red-500">「{searchQuery}」</span>
+                </div>
               </CommandItem>
               {filteredTerms.map((term) => (
                 <CommandItem
