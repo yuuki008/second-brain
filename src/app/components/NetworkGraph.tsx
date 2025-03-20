@@ -287,7 +287,9 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
     };
 
     window.addEventListener("resize", handleResize);
-    // テーマ変更イベントがある場合は監視（カスタムイベントとして実装されているかもしれません）
+
+    // カスタムイベントとシステムの暗いモード設定の両方を監視
+    window.addEventListener("themeChange", handleThemeChange);
     const darkModeMediaQuery = window.matchMedia(
       "(prefers-color-scheme: dark)"
     );
@@ -296,6 +298,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
     // クリーンアップ
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("themeChange", handleThemeChange);
       darkModeMediaQuery.removeEventListener("change", handleThemeChange);
       simulation.stop();
     };

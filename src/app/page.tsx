@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +17,7 @@ import TagFilter, { HierarchicalTag } from "@/app/components/TagFilter";
 import Search from "@/app/components/Search";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import { tagData, generateGraphData } from "@/data/graphData";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 // D3.js用の型定義
 interface NodeData {
@@ -108,6 +109,11 @@ const TopPage = () => {
 
   return (
     <div className="h-screen w-screen relative overflow-hidden">
+      {/* テーマ切り替えボタン */}
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
+
       {/* ネットワークグラフコンポーネント */}
       <NetworkGraph
         graphData={graphData}
