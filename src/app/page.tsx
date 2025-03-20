@@ -521,10 +521,11 @@ const TopPage = () => {
       })
     : [];
 
-  // 検索キーを押した時の処理を追加
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Enterキーが押されて、検索クエリがあり、検索結果がない場合
-    if (e.key === "Enter" && searchQuery && filteredTerms.length === 0) {
+  // 検索キーを押した時の処理を削除し、フォーム送信処理に変更
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // 検索クエリがあり、検索結果がない場合
+    if (searchQuery && filteredTerms.length === 0) {
       handleCreateTerm();
     }
   };
@@ -637,19 +638,27 @@ const TopPage = () => {
       {/* 中央検索フォーム */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-lg px-4">
         <div className="relative">
-          <div className="flex relative items-center">
-            <Search
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={18}
-            />
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearchKeyDown}
-              placeholder="用語を検索..."
-              className="pl-10 pr-5 py-6 rounded-full shadow-md bg-white border-none"
-            />
-          </div>
+          <form onSubmit={handleSearchSubmit}>
+            <div className="flex relative items-center">
+              <Search
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={18}
+              />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="用語を検索..."
+                className="pl-10 pr-5 py-6 rounded-full shadow-md bg-white border-none"
+              />
+              <Button
+                type="submit"
+                className="absolute right-0 rounded-r-full h-full px-4"
+                variant="ghost"
+              >
+                検索
+              </Button>
+            </div>
+          </form>
 
           {/* 検索結果ドロップダウン */}
           {renderSearchResults()}
