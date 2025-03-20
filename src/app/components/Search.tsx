@@ -14,7 +14,7 @@ import {
 interface NodeData {
   id: string;
   name: string;
-  tags: string[];
+  tags: { id: string; name: string; color: string }[];
 }
 
 interface GraphData {
@@ -50,7 +50,7 @@ const Search: React.FC<SearchComponentProps> = ({
         const tagMatch =
           node.tags &&
           node.tags.some((tag) =>
-            tag.toLowerCase().includes(searchQuery.toLowerCase())
+            tag.name.toLowerCase().includes(searchQuery.toLowerCase())
           );
         return nameMatch || tagMatch;
       })
@@ -107,11 +107,12 @@ const Search: React.FC<SearchComponentProps> = ({
                     <div className="mt-1 flex flex-wrap gap-1">
                       {term.tags.map((tag) => (
                         <Badge
-                          key={tag}
+                          key={tag.id}
                           variant="secondary"
                           className="text-xs"
+                          style={{ backgroundColor: tag.color }}
                         >
-                          {tag}
+                          {tag.name}
                         </Badge>
                       ))}
                     </div>

@@ -24,6 +24,13 @@ model Tag {
   name      String   @unique
   color     String   @default("#3B82F6") 
   createdAt DateTime @default(now()) @map("created_at")
+  
+  // 階層構造のための関係
+  parentId  String?  @map("parent_id")
+  parent    Tag?     @relation("TagHierarchy", fields: [parentId], references: [id])
+  children  Tag[]    @relation("TagHierarchy")
+  
+  // 既存の関係
   terms     Term[]   @relation("TermToTag")
 
   @@map("tags")

@@ -7,7 +7,7 @@ import * as d3 from "d3";
 interface NodeData {
   id: string;
   name: string;
-  tags: string[];
+  tags: { id: string; name: string; color: string }[];
   x?: number;
   y?: number;
   fx?: number | null;
@@ -38,14 +38,16 @@ interface NetworkGraphProps {
       target: string;
     }[];
   };
-  activeTag: string | null;
+  activeTagId: string | null;
   onNodeSelect: (node: NodeData) => void;
+  allTagIds?: string[]; // 選択されたタグとその子タグのIDリスト
 }
 
 const NetworkGraph: React.FC<NetworkGraphProps> = ({
   graphData,
-  activeTag,
+  activeTagId,
   onNodeSelect,
+  allTagIds,
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -75,9 +77,14 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
     const centerY = height / 2;
 
     // タグでフィルタリングされたノード
-    const filteredNodes = activeTag
+    const filteredNodes = activeTagId
       ? graphData.nodes.filter(
-          (node) => node.tags && node.tags.includes(activeTag)
+          (node) =>
+            node.tags &&
+            node.tags.some((tag) =>
+              // 選択されたタグIDとその子タグIDのリストを使用してフィルタリング
+              allTagIds ? allTagIds.includes(tag.id) : tag.id === activeTagId
+            )
         )
       : graphData.nodes;
 
@@ -85,7 +92,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
     const filteredNodeIds = new Set(filteredNodes.map((node) => node.id));
 
     // リンクもフィルタリング
-    const filteredLinks = activeTag
+    const filteredLinks = activeTagId
       ? graphData.links.filter(
           (link) =>
             filteredNodeIds.has(
@@ -251,15 +258,19 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
 
     window.addEventListener("resize", handleResize);
 
+    // クリーンアップ
     return () => {
-      simulation.stop();
       window.removeEventListener("resize", handleResize);
+      simulation.stop();
     };
-  }, [activeTag, graphData, onNodeSelect]);
+  }, [graphData, activeTagId, onNodeSelect, allTagIds]);
 
   return (
-    <div ref={containerRef} className="w-full h-full">
-      <svg ref={svgRef} width="100%" height="100%" />
+    <div
+      ref={containerRef}
+      className="w-full h-full absolute top-0 left-0 bg-gray-50"
+    >
+      <svg ref={svgRef} className="w-full h-full"></svg>
     </div>
   );
 };
