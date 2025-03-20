@@ -611,16 +611,13 @@ const TopPage = () => {
             >
               <Tag className="h-5 w-5" />
               {activeTag && (
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+                <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-64 p-0" align="start">
-            <div className="p-3 border-b">
-              <h3 className="text-sm font-medium">タグでフィルター</h3>
-            </div>
-            <ScrollArea className="h-64">
-              <div className="p-3 flex flex-wrap gap-2">
+          <PopoverContent className="w-80 p-0" align="start">
+            <ScrollArea className="h-80">
+              <div className="p-4 flex flex-wrap gap-2">
                 {allTags.map((tag: string) => (
                   <Badge
                     key={tag}
@@ -638,7 +635,7 @@ const TopPage = () => {
       </div>
 
       {/* 中央検索フォーム */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-md px-4">
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-lg px-4">
         <div className="relative">
           <div className="flex relative items-center">
             <Search
