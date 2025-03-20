@@ -107,7 +107,7 @@ const TopPage = () => {
   };
 
   return (
-    <div className="h-screen w-screen relative overflow-hidden bg-gray-50">
+    <div className="h-screen w-screen relative overflow-hidden">
       {/* ネットワークグラフコンポーネント */}
       <NetworkGraph
         graphData={graphData}

@@ -76,6 +76,16 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
     const centerX = width / 2;
     const centerY = height / 2;
 
+    // テーマに応じた色を取得（CSS変数から）
+    const isLightMode = !document.documentElement.classList.contains("dark");
+    const linkColor = isLightMode ? "hsl(var(--border))" : "hsl(var(--muted))";
+    const nodeColor = isLightMode
+      ? "hsl(var(--muted-foreground))"
+      : "hsl(var(--muted))";
+    const textColor = isLightMode
+      ? "hsl(var(--foreground))"
+      : "hsl(var(--foreground))";
+
     // タグでフィルタリングされたノード
     const filteredNodes = activeTagId
       ? graphData.nodes.filter(
@@ -153,7 +163,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .selectAll("line")
       .data(links)
       .join("line")
-      .attr("stroke", "#E5E7EB")
+      .attr("stroke", linkColor)
       .attr("stroke-width", 1.5);
 
     // ノードグループの作成
@@ -175,7 +185,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       });
 
     // ノードの円の描画
-    node.append("circle").attr("r", 7).attr("fill", "#9CA3AF"); // グレーの色に統一
+    node.append("circle").attr("r", 7).attr("fill", nodeColor);
 
     // ノードのラベルの描画
     node
@@ -183,7 +193,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .attr("dx", 10)
       .attr("dy", ".35em")
       .attr("font-size", "12px")
-      .attr("fill", "#4b5563")
+      .attr("fill", textColor)
       .attr("font-weight", "500")
       .text((d) => d.name);
 
@@ -256,20 +266,43 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       }
     };
 
+    // テーマ変更を監視
+    const handleThemeChange = () => {
+      const isLightModeNow =
+        !document.documentElement.classList.contains("dark");
+      const newLinkColor = isLightModeNow
+        ? "hsl(var(--border))"
+        : "hsl(var(--muted))";
+      const newNodeColor = isLightModeNow
+        ? "hsl(var(--muted-foreground))"
+        : "hsl(var(--muted))";
+      const newTextColor = isLightModeNow
+        ? "hsl(var(--foreground))"
+        : "hsl(var(--foreground))";
+
+      // 色を更新
+      link.attr("stroke", newLinkColor);
+      node.selectAll("circle").attr("fill", newNodeColor);
+      node.selectAll("text").attr("fill", newTextColor);
+    };
+
     window.addEventListener("resize", handleResize);
+    // テーマ変更イベントがある場合は監視（カスタムイベントとして実装されているかもしれません）
+    const darkModeMediaQuery = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    );
+    darkModeMediaQuery.addEventListener("change", handleThemeChange);
 
     // クリーンアップ
     return () => {
       window.removeEventListener("resize", handleResize);
+      darkModeMediaQuery.removeEventListener("change", handleThemeChange);
       simulation.stop();
     };
   }, [graphData, activeTagId, onNodeSelect, allTagIds]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-full absolute top-0 left-0 bg-gray-50"
-    >
+    <div ref={containerRef} className="w-full h-full absolute top-0 left-0">
       <svg ref={svgRef} className="w-full h-full"></svg>
     </div>
   );
