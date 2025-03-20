@@ -27,7 +27,6 @@ import { Term } from "@prisma/client";
 interface NodeData {
   id: string;
   name: string;
-  group: number;
   tags: string[];
   x?: number;
   y?: number;
@@ -71,49 +70,41 @@ const TopPage = () => {
         {
           id: "1",
           name: "React",
-          group: 1,
           tags: ["フロントエンド", "ライブラリ", "UI"],
         },
         {
           id: "2",
           name: "Next.js",
-          group: 1,
           tags: ["フロントエンド", "フレームワーク", "React"],
         },
         {
           id: "3",
           name: "Tailwind CSS",
-          group: 1,
           tags: ["フロントエンド", "CSS", "スタイリング"],
         },
         {
           id: "4",
           name: "TypeScript",
-          group: 1,
           tags: ["言語", "型システム", "JavaScript"],
         },
         {
           id: "5",
           name: "GraphQL",
-          group: 1,
           tags: ["API", "クエリ言語", "データ取得"],
         },
         {
           id: "6",
           name: "RESTful API",
-          group: 1,
           tags: ["API", "バックエンド", "アーキテクチャ"],
         },
         {
           id: "7",
           name: "Redux",
-          group: 1,
           tags: ["フロントエンド", "状態管理", "React"],
         },
         {
           id: "8",
           name: "React Hooks",
-          group: 1,
           tags: ["フロントエンド", "React", "関数コンポーネント"],
         },
 
@@ -121,43 +112,36 @@ const TopPage = () => {
         {
           id: "10",
           name: "PostgreSQL",
-          group: 2,
           tags: ["データベース", "SQL", "RDBMS"],
         },
         {
           id: "11",
           name: "MongoDB",
-          group: 2,
           tags: ["データベース", "NoSQL", "ドキュメント指向"],
         },
         {
           id: "12",
           name: "Prisma",
-          group: 2,
           tags: ["ORM", "データベース", "TypeScript"],
         },
         {
           id: "13",
           name: "Supabase",
-          group: 2,
           tags: ["データベース", "BaaS", "Firebase代替"],
         },
         {
           id: "14",
           name: "SQL",
-          group: 2,
           tags: ["クエリ言語", "データベース", "RDBMS"],
         },
         {
           id: "15",
           name: "NoSQL",
-          group: 2,
           tags: ["データベース", "非リレーショナル", "スケーラビリティ"],
         },
         {
           id: "16",
           name: "Firebase",
-          group: 2,
           tags: ["データベース", "BaaS", "Google"],
         },
 
@@ -165,37 +149,31 @@ const TopPage = () => {
         {
           id: "20",
           name: "Docker",
-          group: 3,
           tags: ["コンテナ", "インフラ", "開発環境"],
         },
         {
           id: "21",
           name: "Kubernetes",
-          group: 3,
           tags: ["コンテナオーケストレーション", "インフラ", "クラウド"],
         },
         {
           id: "22",
           name: "AWS",
-          group: 3,
           tags: ["クラウド", "インフラ", "サービス"],
         },
         {
           id: "23",
           name: "Vercel",
-          group: 3,
           tags: ["デプロイ", "ホスティング", "Next.js"],
         },
         {
           id: "24",
           name: "CI/CD",
-          group: 3,
           tags: ["自動化", "デプロイ", "インフラ"],
         },
         {
           id: "25",
           name: "Microservices",
-          group: 3,
           tags: ["アーキテクチャ", "スケーラビリティ", "分散システム"],
         },
 
@@ -203,37 +181,31 @@ const TopPage = () => {
         {
           id: "30",
           name: "SPA",
-          group: 4,
           tags: ["アーキテクチャ", "フロントエンド", "React"],
         },
         {
           id: "31",
           name: "SSR",
-          group: 4,
           tags: ["レンダリング", "Next.js", "パフォーマンス"],
         },
         {
           id: "32",
           name: "SSG",
-          group: 4,
           tags: ["レンダリング", "Next.js", "パフォーマンス"],
         },
         {
           id: "33",
           name: "ISR",
-          group: 4,
           tags: ["レンダリング", "Next.js", "パフォーマンス"],
         },
         {
           id: "34",
           name: "JWT",
-          group: 4,
           tags: ["認証", "セキュリティ", "トークン"],
         },
         {
           id: "35",
           name: "OAuth",
-          group: 4,
           tags: ["認証", "セキュリティ", "認可"],
         },
 
@@ -241,31 +213,26 @@ const TopPage = () => {
         {
           id: "40",
           name: "Agile",
-          group: 5,
           tags: ["プロジェクト管理", "開発手法", "チーム"],
         },
         {
           id: "41",
           name: "Scrum",
-          group: 5,
           tags: ["プロジェクト管理", "Agile", "スプリント"],
         },
         {
           id: "42",
           name: "TDD",
-          group: 5,
           tags: ["テスト", "開発手法", "品質"],
         },
         {
           id: "43",
           name: "DDD",
-          group: 5,
           tags: ["設計", "アーキテクチャ", "モデリング"],
         },
         {
           id: "44",
           name: "DevOps",
-          group: 5,
           tags: ["組織文化", "自動化", "CI/CD"],
         },
       ],
@@ -352,11 +319,7 @@ const TopPage = () => {
     const centerX = width / 2;
     const centerY = height / 2;
 
-    // ノードの色を決定する関数
-    const getNodeColor = (group: number) => {
-      const colors = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EC4899"];
-      return colors[(group - 1) % colors.length] || "#6366F1";
-    };
+    // ノードの色を決定する関数を削除し、固定の色を使用
 
     // タグでフィルタリングされたノード
     const filteredNodes = activeTag
@@ -452,10 +415,7 @@ const TopPage = () => {
       });
 
     // ノードの円の描画
-    node
-      .append("circle")
-      .attr("r", 7)
-      .attr("fill", (d) => getNodeColor(d.group));
+    node.append("circle").attr("r", 7).attr("fill", "#9CA3AF"); // グレーの色に統一
 
     // ノードのラベルの描画
     node
