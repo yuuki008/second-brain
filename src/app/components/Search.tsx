@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -79,7 +78,7 @@ const Search: React.FC<SearchComponentProps> = ({
   };
 
   return (
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-lg px-4">
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 z-10 w-full max-w-lg px-4">
       <Command className="rounded-lg border" shouldFilter={false}>
         <CommandInput
           value={searchQuery}
@@ -90,15 +89,15 @@ const Search: React.FC<SearchComponentProps> = ({
         />
         {open && searchQuery && (
           <CommandList>
-            <CommandEmpty className="py-0">
-              <button
-                onClick={handleCreateNew}
-                className="px-2 py-1.5 text-sm w-full text-left hover:bg-accent hover:text-accent-foreground rounded-sm"
-              >
-                「{searchQuery}」の新規作成
-              </button>
-            </CommandEmpty>
             <CommandGroup>
+              <CommandItem
+                onSelect={handleCreateNew}
+                className="cursor-pointer"
+              >
+                <div className="font-medium mr-2">
+                  「{searchQuery}」の新規作成
+                </div>
+              </CommandItem>
               {filteredTerms.map((term) => (
                 <CommandItem
                   key={term.id}
