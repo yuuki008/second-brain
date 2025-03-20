@@ -88,7 +88,7 @@ const Search: React.FC<SearchComponentProps> = ({
           className="flex h-12 w-full bg-transparent text-sm placeholder:text-muted-foreground"
         />
         {open && searchQuery && (
-          <CommandList>
+          <CommandList className="max-h-96 overflow-y-auto">
             <CommandGroup>
               <CommandItem
                 onSelect={handleCreateNew}
