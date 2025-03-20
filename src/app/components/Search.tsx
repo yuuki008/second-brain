@@ -94,9 +94,7 @@ const Search: React.FC<SearchComponentProps> = ({
                 onSelect={handleCreateNew}
                 className="cursor-pointer"
               >
-                <div className="font-medium mr-2">
-                  「{searchQuery}」の新規作成
-                </div>
+                <div className="font-medium">「{searchQuery}」の新規作成</div>
               </CommandItem>
               {filteredTerms.map((term) => (
                 <CommandItem
