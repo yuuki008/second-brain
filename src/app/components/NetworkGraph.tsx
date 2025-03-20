@@ -155,7 +155,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .selectAll<SVGGElement, NodeData>(".node")
       .data(nodes)
       .join("g")
-      .attr("class", "node")
+      .attr("class", "node cursor-pointer")
       .call(
         d3
           .drag<SVGGElement, NodeData>()
