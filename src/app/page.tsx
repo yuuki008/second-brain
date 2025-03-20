@@ -698,13 +698,13 @@ const TopPage = () => {
         <div className="relative">
           <div className="flex relative items-center">
             <Search
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700"
-              size={20}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={18}
             />
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="用語またはタグを検索..."
+              placeholder="用語を検索..."
               className="pl-10 pr-5 py-6 rounded-full shadow-md bg-white border-none"
             />
           </div>
