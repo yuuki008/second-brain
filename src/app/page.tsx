@@ -17,7 +17,7 @@ import TagFilter, { HierarchicalTag } from "@/app/components/TagFilter";
 import Search from "@/app/components/Search";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import { tagData, generateGraphData } from "@/data/graphData";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { ThemeToggle } from "@/app/components/ThemeToggle";
 
 // D3.js用の型定義
 interface NodeData {
