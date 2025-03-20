@@ -17,6 +17,7 @@ import TagFilter, { HierarchicalTag } from "@/app/components/TagFilter";
 import Search from "@/app/components/Search";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import { tagData, generateGraphData } from "@/data/graphData";
+import { Pencil } from "lucide-react";
 
 // D3.js用の型定義
 interface NodeData {
@@ -134,9 +135,11 @@ const TopPage = () => {
       <Dialog open={showTermModal} onOpenChange={setShowTermModal}>
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{selectedTerm?.name}</DialogTitle>
+            <DialogTitle className="text-2xl font-bold">
+              {selectedTerm?.name}
+            </DialogTitle>
             {selectedTerm?.tags && selectedTerm.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-2">
+              <div className="flex flex-wrap gap-1">
                 {selectedTerm.tags.map((tag) => (
                   <Badge
                     key={tag.id}
@@ -156,10 +159,6 @@ const TopPage = () => {
               __html: selectedTerm?.definition || "",
             }}
           />
-
-          <DialogFooter>
-            <Button variant="outline">編集</Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
