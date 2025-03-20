@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import * as d3 from "d3";
-import { Search, Plus, Tag } from "lucide-react";
+import { Search, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -521,8 +521,13 @@ const TopPage = () => {
       })
     : [];
 
-  // 検索クエリが存在して、検索結果がない場合
-  const shouldShowCreateOption = searchQuery && filteredTerms.length === 0;
+  // 検索キーを押した時の処理を追加
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Enterキーが押されて、検索クエリがあり、検索結果がない場合
+    if (e.key === "Enter" && searchQuery && filteredTerms.length === 0) {
+      handleCreateTerm();
+    }
+  };
 
   // 用語選択時の処理
   const handleTermSelect = (term: NodeData) => {
@@ -558,52 +563,31 @@ const TopPage = () => {
 
   // 検索結果表示部分
   const renderSearchResults = () => {
-    if (!searchQuery) return null;
+    if (!searchQuery || filteredTerms.length === 0) return <></>;
 
     return (
       <Card className="absolute top-full left-0 right-0 mt-1 z-20 overflow-hidden">
         <ScrollArea className="max-h-60">
-          {filteredTerms.length > 0 ? (
-            <div className="divide-y">
-              {filteredTerms.map((term) => (
-                <div
-                  key={term.id}
-                  className="p-3 cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleSearchResultClick(term)}
-                >
-                  <div className="font-medium">{term.name}</div>
-                  {term.tags && term.tags.length > 0 && (
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {term.tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            shouldShowCreateOption && (
-              <div className="p-4">
-                <p className="text-gray-500">
-                  「{searchQuery}」に一致する用語は見つかりませんでした
-                </p>
-                <Button
-                  variant="ghost"
-                  className="mt-2 p-0 h-auto text-blue-600 font-medium hover:bg-transparent"
-                  onClick={handleCreateTerm}
-                >
-                  <Plus className="h-4 w-4 mr-2" />「{searchQuery}」を新規作成
-                </Button>
+          <div className="divide-y">
+            {filteredTerms.map((term) => (
+              <div
+                key={term.id}
+                className="p-3 cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSearchResultClick(term)}
+              >
+                <div className="font-medium">{term.name}</div>
+                {term.tags && term.tags.length > 0 && (
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {term.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
-            )
-          )}
+            ))}
+          </div>
         </ScrollArea>
       </Card>
     );
@@ -664,6 +648,7 @@ const TopPage = () => {
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
               placeholder="用語を検索..."
               className="pl-10 pr-5 py-6 rounded-full shadow-md bg-white border-none"
             />
