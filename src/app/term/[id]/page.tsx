@@ -117,7 +117,7 @@ function getTermData(id: string): { term: Term; graphData: GraphData } | null {
     (_, termId) => {
       const linkedTerm = graphData.nodes.find((node) => node.id === termId);
       return linkedTerm
-        ? `<span class="text-blue-500 cursor-pointer underline" data-term-id="${termId}">${linkedTerm.name}</span>`
+        ? `<span class="bg-yellow-100 cursor-pointer hover:bg-yellow-300 transition-colors rounded-xs px-1 py-0.5" data-term-id="${termId}">${linkedTerm.name}</span>`
         : "";
     }
   );

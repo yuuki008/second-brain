@@ -2,7 +2,6 @@
 
 import React, { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -81,27 +80,14 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
           <h1 className="text-2xl font-bold">{term.name}</h1>
         </header>
 
-        <ScrollArea className="flex-1 p-6">
-          <div className="space-y-6">
-            {term.tags && term.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-4">
-                {term.tags.map((tag) => (
-                  <Badge key={tag.id} style={{ backgroundColor: tag.color }}>
-                    {tag.name}
-                  </Badge>
-                ))}
-              </div>
-            )}
-
-            {/* 用語の定義 */}
-            <div
-              ref={definitionRef}
-              className="prose max-w-none dark:prose-invert"
-              dangerouslySetInnerHTML={{
-                __html: term.definition,
-              }}
-            />
-          </div>
+        <ScrollArea className="flex-1">
+          <div
+            ref={definitionRef}
+            className="prose p-6 max-w-none dark:prose-invert"
+            dangerouslySetInnerHTML={{
+              __html: term.definition,
+            }}
+          />
         </ScrollArea>
       </div>
 

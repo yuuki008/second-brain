@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import * as d3 from "d3";
 
 // D3.js用の型定義
@@ -53,10 +53,40 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
+
+  // フィルタリングされたノードとリンクのメモ化
+  const { filteredNodes, filteredLinks } = useMemo(() => {
+    // タグでフィルタリングされたノード
+    const nodes = activeTagId
+      ? graphData.nodes.filter(
+          (node) =>
+            node.tags &&
+            node.tags.some((tag) =>
+              allTagIds ? allTagIds.includes(tag.id) : tag.id === activeTagId
+            )
+        )
+      : graphData.nodes;
+
+    // フィルタリングされたノードIDのセット
+    const nodeIds = new Set(nodes.map((node) => node.id));
+
+    // リンクもフィルタリング
+    const links = activeTagId
+      ? graphData.links.filter(
+          (link) => nodeIds.has(link.source) && nodeIds.has(link.target)
+        )
+      : graphData.links;
+
+    return { filteredNodes: nodes, filteredLinks: links };
+  }, [graphData, activeTagId, allTagIds]);
 
   // D3.jsを使ったネットワークグラフの初期化
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
+
+    // クリーンアップ関数
+    const cleanupFunctions: (() => void)[] = [];
 
     // コンテナのサイズを取得
     const containerRect = containerRef.current.getBoundingClientRect();
@@ -73,46 +103,36 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .attr("width", "100%")
       .attr("height", "100%");
 
+    // ズーム用のコンテナを追加
+    const zoomContainer = svg.append("g").attr("class", "zoom-container");
+
+    // ズーム動作の設定
+    const zoom = d3
+      .zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.1, 4])
+      .on("zoom", (event) => {
+        zoomContainer.attr("transform", event.transform);
+      });
+
+    // zoomRefを保存（後でプログラムからズームコントロールするため）
+    zoomRef.current = zoom;
+
+    // SVGにズーム動作を適用
+    svg.call(zoom);
+
+    // ダブルクリックでズームリセット（使いやすさ向上）
+    svg.on("dblclick.zoom", () => {
+      svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);
+    });
+
     // 中央に空白領域を作成（検索フォーム用）
     const centerRadius = centerNodeId ? 0 : 150; // 詳細ページでは中心の空白エリアが不要
     const centerX = width / 2;
     const centerY = height / 2;
 
-    // タグでフィルタリングされたノード
-    const filteredNodes = activeTagId
-      ? graphData.nodes.filter(
-          (node) =>
-            node.tags &&
-            node.tags.some((tag) =>
-              // 選択されたタグIDとその子タグIDのリストを使用してフィルタリング
-              allTagIds ? allTagIds.includes(tag.id) : tag.id === activeTagId
-            )
-        )
-      : graphData.nodes;
-
-    // フィルタリングされたノードIDを取得
-    const filteredNodeIds = new Set(filteredNodes.map((node) => node.id));
-
-    // リンクもフィルタリング
-    const filteredLinks = activeTagId
-      ? graphData.links.filter(
-          (link) =>
-            filteredNodeIds.has(
-              typeof link.source === "string"
-                ? link.source
-                : (link.source as NodeData).id
-            ) &&
-            filteredNodeIds.has(
-              typeof link.target === "string"
-                ? link.target
-                : (link.target as NodeData).id
-            )
-        )
-      : graphData.links;
-
-    // グラフデータを整形（文字列IDをオブジェクト参照に）
-    const links: LinkData[] = filteredLinks.map((d) => ({ ...d }));
+    // グラフデータの準備
     const nodes: NodeData[] = filteredNodes.map((d) => ({ ...d }));
+    const links: LinkData[] = filteredLinks.map((d) => ({ ...d }));
 
     // 中心に配置するノードを検索
     const centerNode = centerNodeId
@@ -120,45 +140,33 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       : null;
 
     // リンクのIDをオブジェクト参照に変換
+    const nodeMap = new Map(nodes.map((node) => [node.id, node]));
+
     links.forEach((link) => {
       if (typeof link.source === "string") {
-        const sourceNode = nodes.find((node) => node.id === link.source);
-        if (sourceNode) {
-          link.source = sourceNode;
-        }
+        const sourceNode = nodeMap.get(link.source);
+        if (sourceNode) link.source = sourceNode;
       }
       if (typeof link.target === "string") {
-        const targetNode = nodes.find((node) => node.id === link.target);
-        if (targetNode) {
-          link.target = targetNode;
-        }
+        const targetNode = nodeMap.get(link.target);
+        if (targetNode) link.target = targetNode;
       }
     });
 
     // フォースシミュレーションの設定
-    const simulation = d3
-      .forceSimulation(nodes as d3.SimulationNodeDatum[])
-      .force(
-        "link",
-        d3
-          .forceLink(links as d3.SimulationLinkDatum<d3.SimulationNodeDatum>[])
-          .id((d: d3.SimulationNodeDatum) => d.id as string)
-          .distance(100)
-      )
-      .force("charge", d3.forceManyBody().strength(-400))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collide", d3.forceCollide().radius(40));
-
-    // 詳細ページでは中心から離す力を適用しない
-    if (!centerNodeId) {
-      simulation.force(
-        "centerAvoid",
-        d3.forceRadial(centerRadius, centerX, centerY).strength(0.8)
-      );
-    }
+    const simulation = setupSimulation(
+      nodes,
+      links,
+      width,
+      height,
+      centerRadius,
+      centerX,
+      centerY,
+      centerNodeId
+    );
 
     // リンクの描画
-    const link = svg
+    const link = zoomContainer
       .append("g")
       .selectAll("line")
       .data(links)
@@ -167,7 +175,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .attr("stroke-width", 1.5);
 
     // ノードグループの作成
-    const node = svg
+    const node = zoomContainer
       .append("g")
       .selectAll<SVGGElement, NodeData>(".node")
       .data(nodes)
@@ -177,13 +185,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
           ? "node cursor-pointer font-bold"
           : "node cursor-pointer"
       )
-      .call(
-        d3
-          .drag<SVGGElement, NodeData>()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended)
-      )
+      .call(setupDragBehavior(simulation, centerNodeId))
       .on("click", (event, d) => {
         onNodeSelect(d);
       });
@@ -225,99 +227,281 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
     simulation.on("tick", () => {
       // 中心付近を避けるように調整（詳細ページでは適用しない）
       if (!centerNodeId) {
-        nodes.forEach((d) => {
-          if (d !== centerNode) {
-            // 中心ノードでない場合のみ適用
-            const dx = (d.x || 0) - centerX;
-            const dy = (d.y || 0) - centerY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < centerRadius) {
-              const scale = centerRadius / distance;
-              d.x = centerX + dx * scale;
-              d.y = centerY + dy * scale;
-            }
-          }
-        });
+        avoidCenter(nodes, centerNode || null, centerX, centerY, centerRadius);
       }
 
-      link
-        .attr("x1", (d) => (d.source as NodeData).x || 0)
-        .attr("y1", (d) => (d.source as NodeData).y || 0)
-        .attr("x2", (d) => (d.target as NodeData).x || 0)
-        .attr("y2", (d) => (d.target as NodeData).y || 0);
-
-      node.attr("transform", (d) => `translate(${d.x || 0},${d.y || 0})`);
+      // 要素の位置更新
+      updatePositions(link, node);
     });
-
-    // ドラッグ関連の関数
-    function dragstarted(
-      event: d3.D3DragEvent<SVGGElement, NodeData, unknown>,
-      d: NodeData
-    ) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
-      // 中心ノードの場合は位置を固定したまま
-      if (!(centerNodeId && d.id === centerNodeId)) {
-        d.fx = d.x;
-        d.fy = d.y;
-      }
-    }
-
-    function dragged(
-      event: d3.D3DragEvent<SVGGElement, NodeData, unknown>,
-      d: NodeData
-    ) {
-      // 中心ノードの場合は位置を固定したまま
-      if (!(centerNodeId && d.id === centerNodeId)) {
-        d.fx = event.x;
-        d.fy = event.y;
-      }
-    }
-
-    function dragended(
-      event: d3.D3DragEvent<SVGGElement, NodeData, unknown>,
-      d: NodeData
-    ) {
-      if (!event.active) simulation.alphaTarget(0);
-      // 中心ノードの場合は位置を固定したまま
-      if (!(centerNodeId && d.id === centerNodeId)) {
-        d.fx = null;
-        d.fy = null;
-      }
-    }
 
     // ウィンドウリサイズに対応
     const handleResize = () => {
       if (containerRef.current) {
         const newRect = containerRef.current.getBoundingClientRect();
-        simulation.force(
-          "center",
-          d3.forceCenter(newRect.width / 2, newRect.height / 2)
+        updateSimulationForResize(
+          simulation,
+          newRect,
+          centerRadius,
+          centerNodeId
         );
-        // 中心を避ける力も更新
-        if (!centerNodeId) {
-          simulation.force(
-            "centerAvoid",
-            d3
-              .forceRadial(centerRadius, newRect.width / 2, newRect.height / 2)
-              .strength(0.8)
-          );
-        }
-        simulation.alpha(0.3).restart();
       }
     };
 
     window.addEventListener("resize", handleResize);
+    cleanupFunctions.push(() =>
+      window.removeEventListener("resize", handleResize)
+    );
 
+    // クリーンアップ関数を返す
     return () => {
-      window.removeEventListener("resize", handleResize);
+      cleanupFunctions.forEach((fn) => fn());
     };
-  }, [graphData, activeTagId, allTagIds, onNodeSelect, centerNodeId]);
+  }, [
+    filteredNodes,
+    filteredLinks,
+    activeTagId,
+    allTagIds,
+    onNodeSelect,
+    centerNodeId,
+  ]);
+
+  // ズームコントロール用の関数を公開
+  const handleZoomIn = () => {
+    if (svgRef.current && zoomRef.current) {
+      d3.select(svgRef.current)
+        .transition()
+        .duration(300)
+        .call(zoomRef.current.scaleBy, 1.3);
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (svgRef.current && zoomRef.current) {
+      d3.select(svgRef.current)
+        .transition()
+        .duration(300)
+        .call(zoomRef.current.scaleBy, 0.7);
+    }
+  };
+
+  const handleResetZoom = () => {
+    if (svgRef.current && zoomRef.current) {
+      d3.select(svgRef.current)
+        .transition()
+        .duration(300)
+        .call(zoomRef.current.transform, d3.zoomIdentity);
+    }
+  };
 
   return (
-    <div ref={containerRef} className="w-full h-full bg-background">
+    <div ref={containerRef} className="w-full h-full bg-background relative">
       <svg ref={svgRef} className="w-full h-full" />
+
+      {/* ズームコントロール UI */}
+      <div className="absolute bottom-4 right-4 flex flex-col gap-2">
+        <button
+          onClick={handleZoomIn}
+          className="p-2 bg-background border border-border rounded-md hover:bg-muted"
+          aria-label="ズームイン"
+        >
+          <PlusIcon />
+        </button>
+        <button
+          onClick={handleZoomOut}
+          className="p-2 bg-background border border-border rounded-md hover:bg-muted"
+          aria-label="ズームアウト"
+        >
+          <MinusIcon />
+        </button>
+        <button
+          onClick={handleResetZoom}
+          className="p-2 bg-background border border-border rounded-md hover:bg-muted"
+          aria-label="ズームリセット"
+        >
+          <ResetIcon />
+        </button>
+      </div>
     </div>
   );
 };
+
+// ヘルパー関数群
+function setupSimulation(
+  nodes: NodeData[],
+  links: LinkData[],
+  width: number,
+  height: number,
+  centerRadius: number,
+  centerX: number,
+  centerY: number,
+  centerNodeId?: string
+) {
+  const simulation = d3
+    .forceSimulation(nodes as d3.SimulationNodeDatum[])
+    .force(
+      "link",
+      d3
+        .forceLink(links as d3.SimulationLinkDatum<d3.SimulationNodeDatum>[])
+        .id((d: d3.SimulationNodeDatum) => d.id as string)
+        .distance(100)
+    )
+    .force("charge", d3.forceManyBody().strength(-400))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("collide", d3.forceCollide().radius(40));
+
+  // 詳細ページでない場合は中心から離す力を適用
+  if (!centerNodeId) {
+    simulation.force(
+      "centerAvoid",
+      d3.forceRadial(centerRadius, centerX, centerY).strength(0.8)
+    );
+  }
+
+  return simulation;
+}
+
+function setupDragBehavior(
+  simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>,
+  centerNodeId?: string
+) {
+  return d3
+    .drag<SVGGElement, NodeData>()
+    .on("start", (event, d) => {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      if (!(centerNodeId && d.id === centerNodeId)) {
+        d.fx = d.x;
+        d.fy = d.y;
+      }
+    })
+    .on("drag", (event, d) => {
+      if (!(centerNodeId && d.id === centerNodeId)) {
+        d.fx = event.x;
+        d.fy = event.y;
+      }
+    })
+    .on("end", (event, d) => {
+      if (!event.active) simulation.alphaTarget(0);
+      if (!(centerNodeId && d.id === centerNodeId)) {
+        d.fx = null;
+        d.fy = null;
+      }
+    });
+}
+
+function avoidCenter(
+  nodes: NodeData[],
+  centerNode: NodeData | null,
+  centerX: number,
+  centerY: number,
+  centerRadius: number
+) {
+  nodes.forEach((d) => {
+    if (d !== centerNode) {
+      const dx = (d.x || 0) - centerX;
+      const dy = (d.y || 0) - centerY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < centerRadius) {
+        const scale = centerRadius / distance;
+        d.x = centerX + dx * scale;
+        d.y = centerY + dy * scale;
+      }
+    }
+  });
+}
+
+function updatePositions(
+  link: d3.Selection<d3.BaseType, LinkData, SVGGElement, unknown>,
+  node: d3.Selection<SVGGElement, NodeData, SVGGElement, unknown>
+) {
+  link
+    .attr("x1", (d) => (d.source as NodeData).x || 0)
+    .attr("y1", (d) => (d.source as NodeData).y || 0)
+    .attr("x2", (d) => (d.target as NodeData).x || 0)
+    .attr("y2", (d) => (d.target as NodeData).y || 0);
+
+  node.attr("transform", (d) => `translate(${d.x || 0},${d.y || 0})`);
+}
+
+function updateSimulationForResize(
+  simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>,
+  newRect: DOMRect,
+  centerRadius: number,
+  centerNodeId?: string
+) {
+  simulation.force(
+    "center",
+    d3.forceCenter(newRect.width / 2, newRect.height / 2)
+  );
+
+  if (!centerNodeId) {
+    simulation.force(
+      "centerAvoid",
+      d3
+        .forceRadial(centerRadius, newRect.width / 2, newRect.height / 2)
+        .strength(0.8)
+    );
+  }
+
+  simulation.alpha(0.3).restart();
+}
+
+// シンプルなアイコンコンポーネント
+const PlusIcon = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M8 4V12M4 8H12"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const MinusIcon = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M4 8H12"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const ResetIcon = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M3 8C3 5.23858 5.23858 3 8 3C10.7614 3 13 5.23858 13 8C13 10.7614 10.7614 13 8 13C6.17746 13 4.58013 12.0599 3.7094 10.6187"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M2.5 7V9H4.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 export default NetworkGraph;
