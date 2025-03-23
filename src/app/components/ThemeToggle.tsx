@@ -1,18 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 
 export function ThemeToggle() {
   // 現在のテーマの状態
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
-  // 初期化時にドキュメントのクラスからダークモードかを判定
-  useEffect(() => {
-    document.documentElement.classList.add("dark");
-    setIsDarkMode(true);
-  }, []);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // テーマの切り替え関数
   const toggleTheme = () => {

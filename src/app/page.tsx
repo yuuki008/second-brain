@@ -98,17 +98,6 @@ const TopPage = () => {
     setActiveTagId(activeTagId === tagId ? null : tagId);
   };
 
-  // 初期テーマの設定
-  useEffect(() => {
-    // デフォルトでシステム設定に従う
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    if (prefersDark) {
-      document.documentElement.classList.add("dark");
-    }
-  }, []);
-
   return (
     <div className="h-screen w-screen relative overflow-hidden">
       {/* テーマ切り替えボタン */}
