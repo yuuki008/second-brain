@@ -194,9 +194,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .attr("r", (d) => (centerNodeId && d.id === centerNodeId ? 10 : 7))
       .attr("fill", (d) =>
         centerNodeId && d.id === centerNodeId
-          ? d.tags && d.tags.length > 0
-            ? d.tags[0].color
-            : "hsl(var(--primary))"
+          ? "hsl(var(--primary))"
           : "hsl(var(--foreground))"
       );
 

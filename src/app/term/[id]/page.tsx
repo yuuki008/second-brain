@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Term } from "@/types";
-import { allTerms } from "@/lib/terms";
 import TermDetail from "./TermDetail";
+import { generateGraphData } from "@/data/graphData";
 
 // 用語の型定義
 interface TermNode {
@@ -20,111 +20,135 @@ interface GraphData {
 
 // すべての関連ノードとリンクを取得する関数
 function getRelatedNodesAndLinks(termId: string): GraphData {
+  // グラフデータを生成
+  const graphData = generateGraphData([]);
+
   // 中心となる用語を取得
-  const centerTerm = allTerms.find((term: Term) => term.id === termId);
+  const centerTerm = graphData.nodes.find((node) => node.id === termId);
   if (!centerTerm) {
     return { nodes: [], links: [] };
   }
 
-  // 関連用語のIDを抽出（定義内の[term:id]形式のリンクから）
-  const relatedTermIds = new Set<string>();
-  const regex = /\[term:([^\]]+)\]/g;
-  let match;
+  // 関連リンクを抽出
+  const relatedLinks = graphData.links.filter(
+    (link) => link.source === termId || link.target === termId
+  );
 
-  while ((match = regex.exec(centerTerm.definition)) !== null) {
-    relatedTermIds.add(match[1]);
-  }
-
-  // 中心用語を参照している他の用語も関連ノードとして追加
-  allTerms.forEach((term: Term) => {
-    if (term.id !== termId) {
-      const termRegex = new RegExp(`\\[term:${termId}\\]`, "g");
-      if (termRegex.test(term.definition)) {
-        relatedTermIds.add(term.id);
-      }
+  // 関連ノードのIDを抽出
+  const relatedNodeIds = new Set<string>();
+  relatedLinks.forEach((link) => {
+    if (link.source === termId) {
+      relatedNodeIds.add(link.target);
+    } else if (link.target === termId) {
+      relatedNodeIds.add(link.source);
     }
   });
 
-  // 関連用語をノードとして追加
-  const nodes: TermNode[] = [
-    {
-      id: centerTerm.id,
-      name: centerTerm.name,
-      tags: centerTerm.tags,
-    },
-  ];
+  // 中心ノードも追加
+  relatedNodeIds.add(termId);
 
-  const links: { source: string; target: string }[] = [];
+  // 関連ノードを抽出
+  const nodes = graphData.nodes.filter((node) => relatedNodeIds.has(node.id));
 
-  // 関連用語をノードとリンクとして追加
-  relatedTermIds.forEach((relatedId) => {
-    const relatedTerm = allTerms.find((term: Term) => term.id === relatedId);
-    if (relatedTerm) {
-      // ノードを追加
-      nodes.push({
-        id: relatedTerm.id,
-        name: relatedTerm.name,
-        tags: relatedTerm.tags,
-      });
-
-      // リンクを追加（中心用語から関連用語へ）
-      links.push({
-        source: centerTerm.id,
-        target: relatedTerm.id,
-      });
-    }
-  });
+  // 最終的な関連リンクを取得（関連ノード間のもののみ）
+  const links = graphData.links.filter(
+    (link) => relatedNodeIds.has(link.source) && relatedNodeIds.has(link.target)
+  );
 
   return { nodes, links };
 }
 
+// ダミーの用語データを生成
+function createDummyDefinition(term: TermNode, allNodes: TermNode[]): string {
+  // ランダムに2-3つの関連用語を選択
+  const otherNodes = allNodes.filter((node) => node.id !== term.id);
+  const shuffledNodes = [...otherNodes].sort(() => 0.5 - Math.random());
+  const relatedTerms = shuffledNodes.slice(
+    0,
+    Math.min(3, shuffledNodes.length)
+  );
+
+  // 基本的な説明テキスト
+  let definition = `${term.name}は、テクノロジーの世界で重要な概念です。`;
+
+  // 関連用語へのリンクを含む説明文
+  if (relatedTerms.length > 0) {
+    definition += ` 主な関連技術には`;
+    relatedTerms.forEach((relatedTerm, index) => {
+      if (index > 0) {
+        definition += index === relatedTerms.length - 1 ? `、そして` : `、`;
+      }
+      definition += `[term:${relatedTerm.id}]`;
+    });
+    definition += `があります。`;
+  }
+
+  // 追加の説明文
+  definition += ` ${term.name}を理解することは、現代のソフトウェア開発において非常に重要です。`;
+
+  return definition;
+}
+
 // 用語データを取得する関数
 function getTermData(id: string): { term: Term; graphData: GraphData } | null {
-  const term = allTerms.find((t: Term) => t.id === id);
-  if (!term) return null;
+  // グラフデータを生成
+  const graphData = generateGraphData([]);
+  const termNode = graphData.nodes.find((node) => node.id === id);
 
-  // 定義内のリンクをHTMLに変換
-  const enhancedDefinition = term.definition.replace(
+  if (!termNode) return null;
+
+  // ダミーの定義を生成
+  const definition = createDummyDefinition(termNode, graphData.nodes);
+
+  // HTMLリンク付きの定義を生成
+  const enhancedDefinition = definition.replace(
     /\[term:([^\]]+)\]/g,
-    (_match: string, termId: string) => {
-      const linkedTerm = allTerms.find((t: Term) => t.id === termId);
+    (_, termId) => {
+      const linkedTerm = graphData.nodes.find((node) => node.id === termId);
       return linkedTerm
         ? `<span class="text-blue-500 cursor-pointer underline" data-term-id="${termId}">${linkedTerm.name}</span>`
         : "";
     }
   );
 
-  // 強調された用語のデータを作成
-  const enhancedTerm = {
-    ...term,
+  // 用語データを作成
+  const term: Term = {
+    id: termNode.id,
+    name: termNode.name,
     definition: enhancedDefinition,
+    createdAt: new Date(Date.now() - Math.random() * 10000000000),
+    updatedAt: new Date(Date.now() - Math.random() * 1000000000),
+    tags: termNode.tags,
   };
 
   // 関連ノードとリンクを取得
-  const graphData = getRelatedNodesAndLinks(id);
+  const relatedGraphData = getRelatedNodesAndLinks(id);
 
   return {
-    term: enhancedTerm,
-    graphData,
+    term,
+    graphData: relatedGraphData,
   };
 }
 
 // サーバーコンポーネント
 interface PageProps {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 }
 
-export default async function Page({ params }: PageProps) {
-  const id = (await params).id;
-  const termData = getTermData(id);
+export default function Page({ params }: PageProps) {
+  const termData = getTermData(params.id);
 
   if (!termData) {
     notFound();
   }
 
   return (
-    <TermDetail id={id} term={termData.term} graphData={termData.graphData} />
+    <TermDetail
+      id={params.id}
+      term={termData.term}
+      graphData={termData.graphData}
+    />
   );
 }
