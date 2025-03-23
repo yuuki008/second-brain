@@ -29,28 +29,39 @@ function getRelatedNodesAndLinks(termId: string): GraphData {
     return { nodes: [], links: [] };
   }
 
-  // 関連リンクを抽出
-  const relatedLinks = graphData.links.filter(
-    (link) => link.source === termId || link.target === termId
-  );
+  // 関連ノードのIDを再帰的に収集する関数
+  const collectRelatedNodeIds = (
+    currentId: string,
+    depth: number,
+    collected: Set<string>
+  ) => {
+    if (depth <= 0) return;
 
-  // 関連ノードのIDを抽出
+    // 現在のノードを追加
+    collected.add(currentId);
+
+    // 関連リンクを取得
+    const links = graphData.links.filter(
+      (link) => link.source === currentId || link.target === currentId
+    );
+
+    // 関連ノードを再帰的に処理
+    links.forEach((link) => {
+      const nextId = link.source === currentId ? link.target : link.source;
+      if (!collected.has(nextId)) {
+        collectRelatedNodeIds(nextId, depth - 1, collected);
+      }
+    });
+  };
+
+  // 関連ノードのIDを収集（深さ3まで）
   const relatedNodeIds = new Set<string>();
-  relatedLinks.forEach((link) => {
-    if (link.source === termId) {
-      relatedNodeIds.add(link.target);
-    } else if (link.target === termId) {
-      relatedNodeIds.add(link.source);
-    }
-  });
-
-  // 中心ノードも追加
-  relatedNodeIds.add(termId);
+  collectRelatedNodeIds(termId, 3, relatedNodeIds);
 
   // 関連ノードを抽出
   const nodes = graphData.nodes.filter((node) => relatedNodeIds.has(node.id));
 
-  // 最終的な関連リンクを取得（関連ノード間のもののみ）
+  // 関連ノード間のリンクを抽出
   const links = graphData.links.filter(
     (link) => relatedNodeIds.has(link.source) && relatedNodeIds.has(link.target)
   );
