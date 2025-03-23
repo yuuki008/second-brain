@@ -8,6 +8,7 @@ import {
   avoidCenter,
   updatePositions,
   updateSimulationForResize,
+  fitGraphToView,
 } from "./helper";
 
 // D3.js用の型定義
@@ -106,9 +107,10 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
     // SVGの設定
     const svg = d3
       .select(svgRef.current)
-      .attr("viewBox", [0, 0, width, height])
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .attr("preserveAspectRatio", "xMidYMid meet")
+      .attr("viewBox", `0 0 ${width} ${height}`);
 
     // ズーム用のコンテナを追加
     const zoomContainer = svg.append("g");
@@ -129,7 +131,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
 
     // ダブルクリックでズームリセット（使いやすさ向上）
     svg.on("dblclick.zoom", () => {
-      svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);
+      fitGraphToView(filteredNodes, width, height, zoom, svg);
     });
 
     // 中央に空白領域を作成（検索フォーム用）
@@ -251,6 +253,19 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
           centerRadius,
           centerNodeId
         );
+
+        // リサイズ後にグラフを再フィット
+        setTimeout(() => {
+          if (zoomRef.current) {
+            fitGraphToView(
+              nodes,
+              newRect.width,
+              newRect.height,
+              zoomRef.current,
+              svg
+            );
+          }
+        }, 100);
       }
     };
 
@@ -258,6 +273,9 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
     cleanupFunctions.push(() =>
       window.removeEventListener("resize", handleResize)
     );
+
+    // グラフ全体が見えるようにズーム調整（遅延実行で位置が安定した後に実行）
+    fitGraphToView(nodes, width, height, zoom, svg);
 
     // クリーンアップ関数を返す
     return () => {

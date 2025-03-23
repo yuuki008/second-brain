@@ -119,3 +119,58 @@ export function updateSimulationForResize(
 
   simulation.alpha(0.3).restart();
 }
+
+export function fitGraphToView(
+  nodes: NodeData[],
+  width: number,
+  height: number,
+  zoom: d3.ZoomBehavior<SVGSVGElement, unknown>,
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
+  padding: number = 50
+) {
+  if (nodes.length === 0) return;
+
+  // グラフの範囲を計算
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
+
+  nodes.forEach((node) => {
+    if (node.x !== undefined && node.y !== undefined) {
+      minX = Math.min(minX, node.x);
+      minY = Math.min(minY, node.y);
+      maxX = Math.max(maxX, node.x);
+      maxY = Math.max(maxY, node.y);
+    }
+  });
+
+  // バウンディングボックスに余白を追加
+  minX -= padding;
+  minY -= padding;
+  maxX += padding;
+  maxY += padding;
+
+  // グラフの幅と高さを計算
+  const graphWidth = maxX - minX;
+  const graphHeight = maxY - minY;
+
+  // スケールとトランスレーションを計算
+  if (graphWidth > 0 && graphHeight > 0) {
+    const scale = Math.min(
+      width / graphWidth,
+      height / graphHeight,
+      1 // 最大スケールを1に制限
+    );
+
+    // 中心に配置するための移動量を計算
+    const translateX = (width - graphWidth * scale) / 2 - minX * scale;
+    const translateY = (height - graphHeight * scale) / 2 - minY * scale;
+
+    // ズームトランスフォームを適用
+    svg.call(
+      zoom.transform,
+      d3.zoomIdentity.translate(translateX, translateY).scale(scale)
+    );
+  }
+}
