@@ -9,6 +9,8 @@ import {
   updatePositions,
   updateSimulationForResize,
   fitGraphToView,
+  convertLinksToNodeReferences,
+  runInitialSimulation,
 } from "./helper";
 
 // D3.js用の型定義
@@ -100,13 +102,14 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
     // 既存のSVGをクリア
     d3.select(svgRef.current).selectAll("*").remove();
 
-    // SVGの設定
+    // SVGの設定（最初は非表示）
     const svg = d3
       .select(svgRef.current)
       .attr("width", "100%")
       .attr("height", "100%")
       .attr("preserveAspectRatio", "xMidYMid meet")
-      .attr("viewBox", `0 0 ${width} ${height}`);
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .style("opacity", 0); // 初期状態では見えないように設定
 
     // ズーム用のコンテナを追加
     const zoomContainer = svg.append("g");
@@ -122,12 +125,12 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
     // SVGにズーム動作を適用
     svg.call(zoom);
 
-    // ダブルクリックでズームリセット（使いやすさ向上）
+    // ダブルクリックでズームリセット
     svg.on("dblclick.zoom", () => {
       fitGraphToView(filteredNodes, width, height, zoom, svg);
     });
 
-    // 中央に空白領域を作成（検索フォーム用）
+    // グラフの設定
     const centerRadius = centerNodeId ? 0 : 150; // 詳細ページでは中心の空白エリアが不要
     const centerX = width / 2;
     const centerY = height / 2;
@@ -136,24 +139,16 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
     const nodes: NodeData[] = filteredNodes.map((d) => ({ ...d }));
     const links: LinkData[] = filteredLinks.map((d) => ({ ...d }));
 
-    // 中心に配置するノードを検索
-    const centerNode = centerNodeId
-      ? nodes.find((node) => node.id === centerNodeId)
-      : null;
-
-    // リンクのIDをオブジェクト参照に変換
+    // ノードマップの作成とリンクの参照変換
     const nodeMap = new Map(nodes.map((node) => [node.id, node]));
+    convertLinksToNodeReferences(links, nodeMap);
 
-    links.forEach((link) => {
-      if (typeof link.source === "string") {
-        const sourceNode = nodeMap.get(link.source);
-        if (sourceNode) link.source = sourceNode;
-      }
-      if (typeof link.target === "string") {
-        const targetNode = nodeMap.get(link.target);
-        if (targetNode) link.target = targetNode;
-      }
-    });
+    // 中心ノードの検索と設定
+    const centerNode = centerNodeId ? nodeMap.get(centerNodeId) || null : null;
+    if (centerNode) {
+      centerNode.fx = width / 2;
+      centerNode.fy = height / 2;
+    }
 
     // フォースシミュレーションの設定
     const simulation = setupSimulation(
@@ -213,28 +208,30 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .attr("fill", "hsl(var(--foreground))")
       .text((d) => d.name);
 
-    // 中心ノードがある場合、その位置を固定
+    // 中心ノードがある場合、シミュレーションを実行して位置を安定させる
     if (centerNode) {
-      centerNode.fx = width / 2;
-      centerNode.fy = height / 2;
-
-      // シミュレーションを一定回数実行して関連ノードを中心の周りに配置
-      simulation.alpha(1).restart();
-      for (let i = 0; i < 300; i++) {
-        simulation.tick();
-      }
+      runInitialSimulation(simulation, 300);
     }
 
     // シミュレーションの更新関数
     simulation.on("tick", () => {
       // 中心付近を避けるように調整（詳細ページでは適用しない）
       if (!centerNodeId) {
-        avoidCenter(nodes, centerNode || null, centerX, centerY, centerRadius);
+        avoidCenter(nodes, centerNode, centerX, centerY, centerRadius);
       }
 
       // 要素の位置更新
       updatePositions(link, node);
     });
+
+    // グラフを表示する前に位置を安定させてからフィットさせる
+    runInitialSimulation(simulation, centerNode ? 100 : 150);
+
+    // グラフ全体が見えるようにズーム調整し、その後表示
+    fitGraphToView(nodes, width, height, zoom, svg);
+
+    // フィットした後にSVGを表示
+    svg.transition().duration(300).style("opacity", 1);
 
     // ウィンドウリサイズに対応
     const handleResize = () => {
@@ -247,23 +244,16 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
           centerNodeId
         );
 
-        // リサイズ後にグラフを再フィット
-        setTimeout(() => {
-          fitGraphToView(nodes, newRect.width, newRect.height, zoom, svg);
-        }, 100);
+        fitGraphToView(nodes, newRect.width, newRect.height, zoom, svg);
       }
     };
 
     window.addEventListener("resize", handleResize);
 
-    // グラフ全体が見えるようにズーム調整（遅延実行で位置が安定した後に実行）
-    setTimeout(() => {
-      fitGraphToView(nodes, width, height, zoom, svg);
-    }, 50);
-
     // クリーンアップ関数を返す
     return () => {
       window.removeEventListener("resize", handleResize);
+      simulation.stop();
     };
   }, [
     filteredNodes,

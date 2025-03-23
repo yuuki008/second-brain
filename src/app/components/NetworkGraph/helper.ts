@@ -174,3 +174,30 @@ export function fitGraphToView(
     );
   }
 }
+
+export function convertLinksToNodeReferences(
+  links: LinkData[],
+  nodeMap: Map<string, NodeData>
+) {
+  links.forEach((link) => {
+    if (typeof link.source === "string") {
+      const sourceNode = nodeMap.get(link.source);
+      if (sourceNode) link.source = sourceNode;
+    }
+    if (typeof link.target === "string") {
+      const targetNode = nodeMap.get(link.target);
+      if (targetNode) link.target = targetNode;
+    }
+  });
+}
+
+// 初期シミュレーションを実行して位置を安定させる
+export function runInitialSimulation(
+  simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>,
+  iterations: number
+) {
+  simulation.alpha(1).restart();
+  for (let i = 0; i < iterations; i++) {
+    simulation.tick();
+  }
+}
