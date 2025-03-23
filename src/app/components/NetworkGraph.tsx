@@ -203,13 +203,10 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .append("text")
       .attr("dx", 10)
       .attr("dy", ".35em")
-      .attr("font-size", (d) =>
-        centerNodeId && d.id === centerNodeId ? "14px" : "12px"
+      .attr("class", (d) =>
+        centerNodeId && d.id === centerNodeId ? "font-bold text-sm" : "text-xs"
       )
       .attr("fill", "hsl(var(--foreground))")
-      .attr("font-weight", (d) =>
-        centerNodeId && d.id === centerNodeId ? "700" : "500"
-      )
       .text((d) => d.name);
 
     // 中心ノードがある場合、その位置を固定
