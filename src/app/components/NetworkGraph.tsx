@@ -41,6 +41,7 @@ interface NetworkGraphProps {
   activeTagId: string | null;
   onNodeSelect: (node: NodeData) => void;
   allTagIds?: string[]; // 選択されたタグとその子タグのIDリスト
+  centerNodeId?: string; // 中心に配置するノードのID
 }
 
 const NetworkGraph: React.FC<NetworkGraphProps> = ({
@@ -48,6 +49,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
   activeTagId,
   onNodeSelect,
   allTagIds,
+  centerNodeId,
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -72,7 +74,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .attr("height", "100%");
 
     // 中央に空白領域を作成（検索フォーム用）
-    const centerRadius = 150; // 中心の空白エリアの半径
+    const centerRadius = centerNodeId ? 0 : 150; // 詳細ページでは中心の空白エリアが不要
     const centerX = width / 2;
     const centerY = height / 2;
 
@@ -112,6 +114,11 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
     const links: LinkData[] = filteredLinks.map((d) => ({ ...d }));
     const nodes: NodeData[] = filteredNodes.map((d) => ({ ...d }));
 
+    // 中心に配置するノードを検索
+    const centerNode = centerNodeId
+      ? nodes.find((node) => node.id === centerNodeId)
+      : null;
+
     // リンクのIDをオブジェクト参照に変換
     links.forEach((link) => {
       if (typeof link.source === "string") {
@@ -140,12 +147,15 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       )
       .force("charge", d3.forceManyBody().strength(-400))
       .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collide", d3.forceCollide().radius(40))
-      // 中心から離す力を追加
-      .force(
+      .force("collide", d3.forceCollide().radius(40));
+
+    // 詳細ページでは中心から離す力を適用しない
+    if (!centerNodeId) {
+      simulation.force(
         "centerAvoid",
         d3.forceRadial(centerRadius, centerX, centerY).strength(0.8)
       );
+    }
 
     // リンクの描画
     const link = svg
@@ -162,7 +172,11 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .selectAll<SVGGElement, NodeData>(".node")
       .data(nodes)
       .join("g")
-      .attr("class", "node cursor-pointer")
+      .attr("class", (d) =>
+        centerNodeId && d.id === centerNodeId
+          ? "node cursor-pointer font-bold"
+          : "node cursor-pointer"
+      )
       .call(
         d3
           .drag<SVGGElement, NodeData>()
@@ -175,31 +189,61 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       });
 
     // ノードの円の描画
-    node.append("circle").attr("r", 7).attr("fill", "hsl(var(--foreground))");
+    node
+      .append("circle")
+      .attr("r", (d) => (centerNodeId && d.id === centerNodeId ? 10 : 7))
+      .attr("fill", (d) =>
+        centerNodeId && d.id === centerNodeId
+          ? d.tags && d.tags.length > 0
+            ? d.tags[0].color
+            : "hsl(var(--primary))"
+          : "hsl(var(--foreground))"
+      );
 
     // ノードのラベルの描画
     node
       .append("text")
       .attr("dx", 10)
       .attr("dy", ".35em")
-      .attr("font-size", "12px")
+      .attr("font-size", (d) =>
+        centerNodeId && d.id === centerNodeId ? "14px" : "12px"
+      )
       .attr("fill", "hsl(var(--foreground))")
-      .attr("font-weight", "500")
+      .attr("font-weight", (d) =>
+        centerNodeId && d.id === centerNodeId ? "700" : "500"
+      )
       .text((d) => d.name);
+
+    // 中心ノードがある場合、その位置を固定
+    if (centerNode) {
+      centerNode.fx = width / 2;
+      centerNode.fy = height / 2;
+
+      // シミュレーションを一定回数実行して関連ノードを中心の周りに配置
+      simulation.alpha(1).restart();
+      for (let i = 0; i < 300; i++) {
+        simulation.tick();
+      }
+    }
 
     // シミュレーションの更新関数
     simulation.on("tick", () => {
-      // 中心付近を避けるように調整
-      nodes.forEach((d) => {
-        const dx = (d.x || 0) - centerX;
-        const dy = (d.y || 0) - centerY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < centerRadius) {
-          const scale = centerRadius / distance;
-          d.x = centerX + dx * scale;
-          d.y = centerY + dy * scale;
-        }
-      });
+      // 中心付近を避けるように調整（詳細ページでは適用しない）
+      if (!centerNodeId) {
+        nodes.forEach((d) => {
+          if (d !== centerNode) {
+            // 中心ノードでない場合のみ適用
+            const dx = (d.x || 0) - centerX;
+            const dy = (d.y || 0) - centerY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < centerRadius) {
+              const scale = centerRadius / distance;
+              d.x = centerX + dx * scale;
+              d.y = centerY + dy * scale;
+            }
+          }
+        });
+      }
 
       link
         .attr("x1", (d) => (d.source as NodeData).x || 0)
@@ -216,16 +260,22 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       d: NodeData
     ) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
+      // 中心ノードの場合は位置を固定したまま
+      if (!(centerNodeId && d.id === centerNodeId)) {
+        d.fx = d.x;
+        d.fy = d.y;
+      }
     }
 
     function dragged(
       event: d3.D3DragEvent<SVGGElement, NodeData, unknown>,
       d: NodeData
     ) {
-      d.fx = event.x;
-      d.fy = event.y;
+      // 中心ノードの場合は位置を固定したまま
+      if (!(centerNodeId && d.id === centerNodeId)) {
+        d.fx = event.x;
+        d.fy = event.y;
+      }
     }
 
     function dragended(
@@ -233,8 +283,11 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
       d: NodeData
     ) {
       if (!event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
+      // 中心ノードの場合は位置を固定したまま
+      if (!(centerNodeId && d.id === centerNodeId)) {
+        d.fx = null;
+        d.fy = null;
+      }
     }
 
     // ウィンドウリサイズに対応
@@ -246,29 +299,28 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
           d3.forceCenter(newRect.width / 2, newRect.height / 2)
         );
         // 中心を避ける力も更新
-        simulation.force(
-          "centerAvoid",
-          d3
-            .forceRadial(centerRadius, newRect.width / 2, newRect.height / 2)
-            .strength(0.8)
-        );
+        if (!centerNodeId) {
+          simulation.force(
+            "centerAvoid",
+            d3
+              .forceRadial(centerRadius, newRect.width / 2, newRect.height / 2)
+              .strength(0.8)
+          );
+        }
         simulation.alpha(0.3).restart();
       }
     };
 
-    // テーマ変更を監視
     window.addEventListener("resize", handleResize);
 
-    // クリーンアップ
     return () => {
       window.removeEventListener("resize", handleResize);
-      simulation.stop();
     };
-  }, [graphData, activeTagId, onNodeSelect, allTagIds]);
+  }, [graphData, activeTagId, allTagIds, onNodeSelect, centerNodeId]);
 
   return (
-    <div ref={containerRef} className="w-full h-full absolute top-0 left-0">
-      <svg ref={svgRef} className="w-full h-full"></svg>
+    <div ref={containerRef} className="w-full h-full bg-background">
+      <svg ref={svgRef} className="w-full h-full" />
     </div>
   );
 };

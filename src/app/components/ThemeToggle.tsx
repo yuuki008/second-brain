@@ -29,9 +29,10 @@ export function ThemeToggle() {
 
   return (
     <Button
-      variant="ghost"
       size="icon"
+      variant="outline"
       onClick={toggleTheme}
+      className="rounded-full h-10 w-10 relative"
       aria-label={
         isDarkMode ? "ライトモードに切り替え" : "ダークモードに切り替え"
       }

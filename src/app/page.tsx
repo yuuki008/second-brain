@@ -1,14 +1,22 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { Term } from "@prisma/client";
+import React, { useState, useMemo, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import TagFilter, { HierarchicalTag } from "@/app/components/TagFilter";
 import Search from "@/app/components/Search";
 import NetworkGraph from "@/app/components/NetworkGraph";
-import TagDetail from "@/app/components/TagDetail";
 import TagCreate from "@/app/components/TagCreate";
 import { tagData, generateGraphData } from "@/data/graphData";
 import { ThemeToggle } from "@/app/components/ThemeToggle";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 // D3.js用の型定義
 interface NodeData {
@@ -18,10 +26,7 @@ interface NodeData {
 }
 
 const TopPage = () => {
-  const [showTermModal, setShowTermModal] = useState(false);
-  const [selectedTerm, setSelectedTerm] = useState<
-    (Term & { tags: { id: string; name: string; color: string }[] }) | null
-  >(null);
+  const router = useRouter();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [activeTagId, setActiveTagId] = useState<string | null>(null);
 
@@ -76,21 +81,12 @@ const TopPage = () => {
 
   // 用語選択時の処理
   const handleTermSelect = (term: NodeData) => {
-    setSelectedTerm({
-      id: term.id,
-      name: term.name,
-      definition: `これは${term.name}の定義です。これは例として、<span class="text-blue-600 cursor-pointer underline">Next.js</span>や<span class="text-blue-600 cursor-pointer underline">Tailwind CSS</span>などの関連用語へのリンクを含んでいます。`,
-      createdAt: new Date("2025-03-01"),
-      updatedAt: new Date("2025-03-20"),
-      tags: term.tags || [],
-    });
-    setShowTermModal(true);
+    router.push(`/term/${term.id}`);
   };
 
   // 新規用語作成モーダルを表示
   const handleCreateTerm = () => {
     setShowCreateModal(true);
-    setShowTermModal(false);
   };
 
   // タグ選択時の処理
@@ -99,40 +95,54 @@ const TopPage = () => {
   };
 
   return (
-    <div className="h-screen w-screen relative overflow-hidden">
-      {/* テーマ切り替えボタン */}
-      <div className="absolute top-4 right-4 z-10">
+    <div className="h-screen w-screen relative overflow-hidden flex flex-col">
+      {/* ヘッダー */}
+      <div className="fixed top-0 left-0 right-0 flex justify-end p-4 z-20">
+        <TagFilter
+          tags={tags}
+          activeTagId={activeTagId}
+          onTagSelect={handleTagSelect}
+        />
         <ThemeToggle />
       </div>
 
-      {/* ネットワークグラフコンポーネント */}
-      <NetworkGraph
-        graphData={graphData}
-        activeTagId={activeTagId}
-        allTagIds={activeTagAndChildrenIds || undefined}
-        onNodeSelect={handleTermSelect}
-      />
+      {/* メインコンテンツ */}
+      <div className="flex-1 relative">
+        {/* ネットワークグラフコンポーネント */}
+        <NetworkGraph
+          graphData={graphData}
+          activeTagId={activeTagId}
+          allTagIds={activeTagAndChildrenIds || undefined}
+          onNodeSelect={handleTermSelect}
+        />
 
-      {/* タグフィルターコンポーネント */}
-      <TagFilter
-        tags={tags}
-        activeTagId={activeTagId}
-        onTagSelect={handleTagSelect}
-      />
-
-      {/* 検索コンポーネント */}
-      <Search
-        graphData={graphData}
-        onTermSelect={handleTermSelect}
-        onCreateTerm={handleCreateTerm}
-      />
-
-      {/* 用語詳細モーダルコンポーネント */}
-      <TagDetail
-        open={showTermModal}
-        onOpenChange={setShowTermModal}
-        selectedTerm={selectedTerm}
-      />
+        {/* ウェルカムカード */}
+        {/* <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-72">
+          <Card className="bg-background/80 backdrop-blur-sm shadow-lg">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">
+                ナレッジグラフへようこそ
+              </CardTitle>
+              <CardDescription>用語をクリックして詳細を確認</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm mb-4">
+                このグラフは知識のつながりを視覚化しています。タグでフィルタリングしたり、検索して特定の用語を見つけることができます。
+              </p>
+              <Search
+                graphData={graphData}
+                onTermSelect={handleTermSelect}
+                onCreateTerm={handleCreateTerm}
+              />
+            </CardContent>
+          </Card>
+        </div> */}
+        <Search
+          graphData={graphData}
+          onTermSelect={handleTermSelect}
+          onCreateTerm={handleCreateTerm}
+        />
+      </div>
 
       {/* 新規用語作成モーダルコンポーネント */}
       <TagCreate
