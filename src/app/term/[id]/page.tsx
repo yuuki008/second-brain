@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,12 +15,6 @@ interface TermNode {
   id: string;
   name: string;
   tags: { id: string; name: string; color: string }[];
-}
-
-interface TermDetailPageProps {
-  params: {
-    id: string;
-  };
 }
 
 // 関連ノードを取得する関数
@@ -78,22 +72,29 @@ function getRelatedLinks(
   );
 }
 
-const TermDetailPage: React.FC<TermDetailPageProps> = ({ params }) => {
+const TermDetailPage: React.FC = () => {
   const router = useRouter();
-  const { id } = params;
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const definitionRef = useRef<HTMLDivElement>(null);
 
   // タグデータ
   const tags = useMemo(() => tagData, []);
 
   // グラフデータを生成
-  const allGraphData = useMemo(() => generateGraphData(tags), [tags]);
+  const allGraphData = useMemo(() => {
+    return generateGraphData(tags);
+  }, [tags]);
 
   // 選択された用語と関連する用語のみのグラフデータを作成
   const graphData = useMemo(() => {
+    if (allGraphData.nodes.length === 0) {
+      return { nodes: [], links: [] };
+    }
+
     // 関連ノードを取得
     const relatedNodes = getRelatedNodes(
-      id,
+      id || "",
       allGraphData.nodes,
       allGraphData.links
     );
@@ -143,16 +144,9 @@ const TermDetailPage: React.FC<TermDetailPageProps> = ({ params }) => {
       );
     }
 
-    // ランダムに2つの関連用語を選択してリンク化
-    const randomIndex1 = Math.floor(Math.random() * relatedTermNames.length);
-    let randomIndex2 = Math.floor(Math.random() * relatedTermNames.length);
-    while (randomIndex2 === randomIndex1 && relatedTermNames.length > 1) {
-      randomIndex2 = Math.floor(Math.random() * relatedTermNames.length);
-    }
-
-    const relatedTerm1 = relatedTermNames[randomIndex1];
-    const relatedTerm2 =
-      relatedTermNames[randomIndex2 % relatedTermNames.length];
+    // ランダムな選択を避けて、最初の2つの関連用語を使用
+    const relatedTerm1 = relatedTermNames[0] || node.name;
+    const relatedTerm2 = relatedTermNames[1] || node.name;
 
     definition += `<span class="text-blue-600 cursor-pointer underline" data-term-id="${allTerms[relatedTerm1]}">${relatedTerm1}</span>や`;
     definition += `<span class="text-blue-600 cursor-pointer underline" data-term-id="${allTerms[relatedTerm2]}">${relatedTerm2}</span>などの関連用語へのリンクを含んでいます。`;
@@ -188,6 +182,14 @@ const TermDetailPage: React.FC<TermDetailPageProps> = ({ params }) => {
       definitionElement.removeEventListener("click", handleLinkClick);
     };
   }, [router]);
+
+  if (!id) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center">
+        用語が見つかりません
+      </div>
+    );
+  }
 
   // 用語が見つからない場合
   if (!term) {
