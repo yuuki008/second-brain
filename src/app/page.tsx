@@ -7,7 +7,6 @@ import Search from "@/app/components/Search";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import TagCreate from "@/app/components/TagCreate";
 import { tagData, generateGraphData } from "@/data/graphData";
-import { ThemeToggle } from "@/app/components/ThemeToggle";
 
 // D3.js用の型定義
 interface NodeData {
@@ -94,7 +93,6 @@ const TopPage = () => {
           activeTagId={activeTagId}
           onTagSelect={handleTagSelect}
         />
-        <ThemeToggle />
       </div>
 
       {/* メインコンテンツ */}
