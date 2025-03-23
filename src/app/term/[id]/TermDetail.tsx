@@ -66,7 +66,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
     router.push(`/term/${selectedNode.id}`);
 
   return (
-    <div className="h-screen w-full flex flex-col lg:flex-row overflow-hidden">
+    <div className="h-screen w-full max-w-screen-2xl mx-auto  flex flex-col lg:flex-row overflow-hidden">
       <div className="w-full lg:w-1/2 h-1/2 lg:h-full overflow-hidden flex flex-col">
         <div className="flex items-center p-4">
           <Button
