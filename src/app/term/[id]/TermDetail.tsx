@@ -66,7 +66,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
     router.push(`/term/${selectedNode.id}`);
 
   return (
-    <div className="h-screen w-screen flex flex-col lg:flex-row overflow-hidden">
+    <div className="h-screen w-full flex flex-col lg:flex-row overflow-hidden">
       <div className="w-full lg:w-1/2 h-1/2 lg:h-full overflow-hidden flex flex-col">
         <div className="flex items-center p-4">
           <Button
@@ -93,7 +93,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
 
       {/* 右側: ネットワークグラフ */}
       <div className="w-full lg:w-1/2 h-1/2 lg:h-full relative">
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gray-100">
           <NetworkGraph
             graphData={{
               nodes: graphData.nodes,

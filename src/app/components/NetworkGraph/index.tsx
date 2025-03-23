@@ -12,6 +12,7 @@ import {
   convertLinksToNodeReferences,
   runInitialSimulation,
 } from "./helper";
+import { cn } from "@/lib/utils";
 
 // D3.js用の型定義
 export interface NodeData {
@@ -52,6 +53,7 @@ export interface NetworkGraphProps {
   onNodeSelect: (node: NodeData) => void;
   allTagIds?: string[]; // 選択されたタグとその子タグのIDリスト
   centerNodeId?: string; // 中心に配置するノードのID
+  className?: string;
 }
 
 export const NetworkGraph: React.FC<NetworkGraphProps> = ({
@@ -265,7 +267,10 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
   ]);
 
   return (
-    <div ref={containerRef} className="w-full h-full bg-background relative">
+    <div
+      ref={containerRef}
+      className={cn("w-full h-full bg-transparent relative")}
+    >
       <svg ref={svgRef} className="w-full h-full" />
     </div>
   );
