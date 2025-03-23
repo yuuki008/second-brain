@@ -196,7 +196,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
         centerNodeId && d.id === centerNodeId ? centralNodeSize : otherNodeSize
       )
       .attr("fill", (d) =>
-        centerNodeId && d.id === centerNodeId ? "red" : "hsl(var(--primary))"
+        centerNodeId && d.id === centerNodeId ? "blue" : "hsl(var(--primary))"
       )
       .attr("class", "transition-all duration-100")
       .on("mouseover", function () {
