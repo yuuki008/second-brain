@@ -61,7 +61,6 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
 
   // フィルタリングされたノードとリンクのメモ化
   const { filteredNodes, filteredLinks } = useMemo(() => {
@@ -93,9 +92,6 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
 
-    // クリーンアップ関数
-    const cleanupFunctions: (() => void)[] = [];
-
     // コンテナのサイズを取得
     const containerRect = containerRef.current.getBoundingClientRect();
     const width = containerRect.width;
@@ -122,9 +118,6 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .on("zoom", (event) => {
         zoomContainer.attr("transform", event.transform);
       });
-
-    // zoomRefを保存（後でプログラムからズームコントロールするため）
-    zoomRef.current = zoom;
 
     // SVGにズーム動作を適用
     svg.call(zoom);
@@ -256,23 +249,12 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
 
         // リサイズ後にグラフを再フィット
         setTimeout(() => {
-          if (zoomRef.current) {
-            fitGraphToView(
-              nodes,
-              newRect.width,
-              newRect.height,
-              zoomRef.current,
-              svg
-            );
-          }
+          fitGraphToView(nodes, newRect.width, newRect.height, zoom, svg);
         }, 100);
       }
     };
 
     window.addEventListener("resize", handleResize);
-    cleanupFunctions.push(() =>
-      window.removeEventListener("resize", handleResize)
-    );
 
     // グラフ全体が見えるようにズーム調整（遅延実行で位置が安定した後に実行）
     setTimeout(() => {
@@ -281,7 +263,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
 
     // クリーンアップ関数を返す
     return () => {
-      cleanupFunctions.forEach((fn) => fn());
+      window.removeEventListener("resize", handleResize);
     };
   }, [
     filteredNodes,

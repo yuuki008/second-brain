@@ -120,11 +120,6 @@ const TopPage = () => {
               <p className="text-sm mb-4">
                 このグラフは知識のつながりを視覚化しています。タグでフィルタリングしたり、検索して特定の用語を見つけることができます。
               </p>
-              <Search
-                graphData={graphData}
-                onTermSelect={handleTermSelect}
-                onCreateTerm={handleCreateTerm}
-              />
             </CardContent>
           </Card>
         </div> */}
