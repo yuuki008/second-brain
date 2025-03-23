@@ -275,7 +275,9 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
     );
 
     // グラフ全体が見えるようにズーム調整（遅延実行で位置が安定した後に実行）
-    fitGraphToView(nodes, width, height, zoom, svg);
+    setTimeout(() => {
+      fitGraphToView(nodes, width, height, zoom, svg);
+    }, 50);
 
     // クリーンアップ関数を返す
     return () => {
