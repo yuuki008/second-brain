@@ -2,8 +2,6 @@
 
 import React, { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import NetworkGraph from "@/app/components/NetworkGraph";
 
@@ -68,22 +66,12 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   return (
     <div className="h-screen w-full max-w-screen-2xl mx-auto  flex flex-col lg:flex-row overflow-hidden">
       <div className="w-full lg:w-1/2 h-1/2 lg:h-full overflow-hidden flex flex-col">
-        <div className="flex items-center p-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.push("/")}
-            className="mr-2"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-2xl font-bold">{term.name}</h1>
-        </div>
+        <h1 className="text-2xl font-bold p-4">{term.name}</h1>
 
         <ScrollArea className="flex-1">
           <div
             ref={definitionRef}
-            className="prose px-6 max-w-none dark:prose-invert"
+            className="prose px-4 max-w-none dark:prose-invert"
             dangerouslySetInnerHTML={{
               __html: term.definition,
             }}
