@@ -202,8 +202,9 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
     // ノードのラベルの描画
     node
       .append("text")
-      .attr("dx", 10)
-      .attr("dy", ".35em")
+      .attr("dx", 0)
+      .attr("dy", -17)
+      .attr("text-anchor", "middle")
       .attr("class", (d) =>
         centerNodeId && d.id === centerNodeId ? "font-bold text-sm" : "text-xs"
       )
