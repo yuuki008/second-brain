@@ -265,62 +265,9 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({
     centerNodeId,
   ]);
 
-  // ズームコントロール用の関数を公開
-  const handleZoomIn = () => {
-    if (svgRef.current && zoomRef.current) {
-      d3.select(svgRef.current)
-        .transition()
-        .duration(300)
-        .call(zoomRef.current.scaleBy, 1.3);
-    }
-  };
-
-  const handleZoomOut = () => {
-    if (svgRef.current && zoomRef.current) {
-      d3.select(svgRef.current)
-        .transition()
-        .duration(300)
-        .call(zoomRef.current.scaleBy, 0.7);
-    }
-  };
-
-  const handleResetZoom = () => {
-    if (svgRef.current && zoomRef.current) {
-      d3.select(svgRef.current)
-        .transition()
-        .duration(300)
-        .call(zoomRef.current.transform, d3.zoomIdentity);
-    }
-  };
-
   return (
     <div ref={containerRef} className="w-full h-full bg-background relative">
       <svg ref={svgRef} className="w-full h-full" />
-
-      {/* ズームコントロール UI */}
-      <div className="absolute bottom-4 right-4 flex flex-col gap-2">
-        <button
-          onClick={handleZoomIn}
-          className="p-2 bg-background border border-border rounded-md hover:bg-muted"
-          aria-label="ズームイン"
-        >
-          <PlusIcon />
-        </button>
-        <button
-          onClick={handleZoomOut}
-          className="p-2 bg-background border border-border rounded-md hover:bg-muted"
-          aria-label="ズームアウト"
-        >
-          <MinusIcon />
-        </button>
-        <button
-          onClick={handleResetZoom}
-          className="p-2 bg-background border border-border rounded-md hover:bg-muted"
-          aria-label="ズームリセット"
-        >
-          <ResetIcon />
-        </button>
-      </div>
     </div>
   );
 };
@@ -444,64 +391,5 @@ function updateSimulationForResize(
 
   simulation.alpha(0.3).restart();
 }
-
-// シンプルなアイコンコンポーネント
-const PlusIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M8 4V12M4 8H12"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const MinusIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M4 8H12"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const ResetIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M3 8C3 5.23858 5.23858 3 8 3C10.7614 3 13 5.23858 13 8C13 10.7614 10.7614 13 8 13C6.17746 13 4.58013 12.0599 3.7094 10.6187"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M2.5 7V9H4.5"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 export default NetworkGraph;
