@@ -63,16 +63,11 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   }, [router]);
 
   // 選択された用語を中心としたネットワークを表示
-  const handleTermSelect = (selectedNode: TermNode) => {
-    // 別の用語が選択された場合、その用語の詳細ページに遷移
-    if (selectedNode.id !== id) {
-      router.push(`/term/${selectedNode.id}`);
-    }
-  };
+  const handleTermSelect = (selectedNode: TermNode) =>
+    router.push(`/term/${selectedNode.id}`);
 
   return (
     <div className="h-screen w-screen flex flex-col lg:flex-row overflow-hidden">
-      {/* 左側: 用語詳細 */}
       <div className="w-full lg:w-1/2 h-1/2 lg:h-full overflow-hidden flex flex-col">
         <header className="flex items-center p-4 border-b">
           <Button
@@ -88,7 +83,6 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
 
         <ScrollArea className="flex-1 p-6">
           <div className="space-y-6">
-            {/* タグリスト */}
             {term.tags && term.tags.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-4">
                 {term.tags.map((tag) => (
@@ -107,16 +101,6 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
                 __html: term.definition,
               }}
             />
-
-            {/* 関連用語数の表示 */}
-            <div className="text-sm">
-              関連用語: {graphData.nodes.length - 1}個
-            </div>
-
-            {/* 更新日時 */}
-            <div className="text-sm text-muted-foreground">
-              最終更新: {term.updatedAt.toLocaleDateString()}
-            </div>
           </div>
         </ScrollArea>
       </div>
