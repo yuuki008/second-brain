@@ -68,7 +68,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   return (
     <div className="h-screen w-screen flex flex-col lg:flex-row overflow-hidden">
       <div className="w-full lg:w-1/2 h-1/2 lg:h-full overflow-hidden flex flex-col">
-        <header className="flex items-center p-4 border-b">
+        <div className="flex items-center p-4">
           <Button
             variant="ghost"
             size="icon"
@@ -78,12 +78,12 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <h1 className="text-2xl font-bold">{term.name}</h1>
-        </header>
+        </div>
 
         <ScrollArea className="flex-1">
           <div
             ref={definitionRef}
-            className="prose p-6 max-w-none dark:prose-invert"
+            className="prose px-6 max-w-none dark:prose-invert"
             dangerouslySetInnerHTML={{
               __html: term.definition,
             }}
