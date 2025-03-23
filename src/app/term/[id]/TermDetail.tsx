@@ -93,7 +93,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
 
       {/* 右側: ネットワークグラフ */}
       <div className="w-full lg:w-1/2 h-1/2 lg:h-full relative">
-        <div className="absolute inset-0 bg-gray-100">
+        <div className="absolute inset-0 bg-background">
           <NetworkGraph
             graphData={{
               nodes: graphData.nodes,
