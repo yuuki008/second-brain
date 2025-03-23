@@ -184,20 +184,32 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
           ? "node cursor-pointer font-bold"
           : "node cursor-pointer"
       )
-      .call(setupDragBehavior(simulation, centerNodeId))
+      .call(setupDragBehavior(simulation, centerNodeId));
+
+    // ノードの円の描画
+    const centralNodeSize = 12;
+    const otherNodeSize = 7;
+
+    node
+      .append("circle")
+      .attr("r", (d) =>
+        centerNodeId && d.id === centerNodeId ? centralNodeSize : otherNodeSize
+      )
+      .attr("fill", (d) =>
+        centerNodeId && d.id === centerNodeId ? "red" : "hsl(var(--primary))"
+      )
+      .attr("class", "transition-all duration-100")
+      .on("mouseover", function () {
+        d3.select(this).attr("r", centralNodeSize);
+      })
+      .on("mouseout", function (_, d) {
+        if (centerNode?.id === d.id) return;
+
+        d3.select(this).attr("r", otherNodeSize);
+      })
       .on("click", (event, d) => {
         onNodeSelect(d);
       });
-
-    // ノードの円の描画
-    node
-      .append("circle")
-      .attr("r", (d) => (centerNodeId && d.id === centerNodeId ? 10 : 7))
-      .attr("fill", (d) =>
-        centerNodeId && d.id === centerNodeId
-          ? "hsl(var(--primary))"
-          : "hsl(var(--foreground))"
-      );
 
     // ノードのラベルの描画
     node
