@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import { Badge } from "@/components/ui/badge";
@@ -42,19 +42,20 @@ interface TermDetailProps {
   };
 }
 
-const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
-  const router = useRouter();
-  const [content, setContent] = useState(term.definition);
-
-  const handleTermSelect = useCallback(
-    (selectedNode: TermNodeData) => router.push(`/term/${selectedNode.id}`),
-    [router]
-  );
+// エディタ部分のみを扱う別コンポーネント
+const TermEditor = ({
+  id,
+  initialContent,
+}: {
+  id: string;
+  initialContent: string;
+}) => {
+  const [content, setContent] = useState(initialContent);
 
   // コンテンツが変更されたらデータベースに保存する
-  useEffect(() => {
+  React.useEffect(() => {
     // 初期表示時は保存しない
-    if (content === term.definition) return;
+    if (content === initialContent) return;
 
     // デバウンス処理のための変数
     const timer = setTimeout(async () => {
@@ -67,7 +68,18 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
 
     // クリーンアップ関数
     return () => clearTimeout(timer);
-  }, [content, id, term.definition]);
+  }, [content, id, initialContent]);
+
+  return <Editor content={content} onChange={setContent} />;
+};
+
+const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
+  const router = useRouter();
+
+  const handleTermSelect = useCallback(
+    (selectedNode: TermNodeData) => router.push(`/term/${selectedNode.id}`),
+    [router]
+  );
 
   return (
     <div className="h-screen w-full max-w-screen-xl p-10 mx-auto flex overflow-hidden">
@@ -85,7 +97,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
         </div>
 
         <div className="flex-1">
-          <Editor content={content} onChange={setContent} />
+          <TermEditor id={id} initialContent={term.definition} />
         </div>
       </div>
 
