@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import { Badge } from "@/components/ui/badge";
@@ -70,8 +70,10 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   }, [router]);
 
   // 選択された用語を中心としたネットワークを表示
-  const handleTermSelect = (selectedNode: TermNodeData) =>
-    router.push(`/term/${selectedNode.id}`);
+  const handleTermSelect = useCallback(
+    (selectedNode: TermNodeData) => router.push(`/term/${selectedNode.id}`),
+    [router]
+  );
 
   return (
     <div className="h-screen w-full max-w-screen-xl p-10 mx-auto flex overflow-hidden">
