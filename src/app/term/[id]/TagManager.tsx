@@ -32,9 +32,6 @@ export default function TagManager({ nodeId, currentTags }: TagManagerProps) {
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
 
-  // 現在のタグからIDの集合を作成
-  const currentTagIds = new Set(currentTags.map((tag) => tag.id));
-
   // ダイアログを開くときに全タグを取得
   useEffect(() => {
     if (isOpen) {
@@ -48,7 +45,7 @@ export default function TagManager({ nodeId, currentTags }: TagManagerProps) {
             // 現在選択されているタグをセット
             const selected = new Set<string>();
             result.tags.forEach((tag) => {
-              if (currentTagIds.has(tag.id)) {
+              if (currentTags.some((t) => t.id === tag.id)) {
                 selected.add(tag.id);
               }
             });
@@ -63,7 +60,7 @@ export default function TagManager({ nodeId, currentTags }: TagManagerProps) {
 
       fetchTags();
     }
-  }, [isOpen, currentTagIds]);
+  }, [isOpen, currentTags]);
 
   // タグを削除する
   const handleRemoveTag = async (tagId: string) => {
@@ -93,15 +90,15 @@ export default function TagManager({ nodeId, currentTags }: TagManagerProps) {
     try {
       // 追加されたタグ（選択されているが、現在のタグにないもの）
       for (const tagId of selectedTags) {
-        if (!currentTagIds.has(tagId)) {
+        if (!currentTags.some((t) => t.id === tagId)) {
           await addTagToNode(nodeId, tagId);
         }
       }
 
       // 削除されたタグ（現在のタグにあるが、選択されていないもの）
-      for (const tagId of currentTagIds) {
-        if (!selectedTags.has(tagId)) {
-          await removeTagFromNode(nodeId, tagId);
+      for (const tag of currentTags) {
+        if (!selectedTags.has(tag.id)) {
+          await removeTagFromNode(nodeId, tag.id);
         }
       }
 
@@ -121,7 +118,7 @@ export default function TagManager({ nodeId, currentTags }: TagManagerProps) {
           <Badge
             key={tag.id}
             variant="outline"
-            className="bg-muted relative flex items-center"
+            className="bg-muted relative flex items-center px-2 py-1"
           >
             {tag.name}
             <button
