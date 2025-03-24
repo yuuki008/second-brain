@@ -60,7 +60,7 @@
     --accent-foreground: 210 10% 90%;
     --destructive: 0 60% 40%; /* 彩度を下げた赤 */
     --destructive-foreground: 210 10% 90%;
-    --border: 215 10% 17%;
+    --border: 215 10% 25%;
     --input: 215 10% 17%;
     --ring: 210 60% 50%;
     /* ダークモードでの目に優しい色指定 */
