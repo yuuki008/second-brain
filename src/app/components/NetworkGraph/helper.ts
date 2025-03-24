@@ -372,7 +372,6 @@ export function drawGraphElements(
         links,
         link,
         node,
-        centerNodeId,
         centralNodeSize
       );
     })
@@ -402,7 +401,9 @@ export function drawGraphElements(
     .attr("dy", -17)
     .attr("text-anchor", "middle")
     .attr("class", (d) =>
-      centerNodeId && d.id === centerNodeId ? "font-bold text-sm" : "text-xs"
+      centerNodeId && d.id === centerNodeId
+        ? "font-bold text-base"
+        : "font-normal text-xs"
     )
     .attr("fill", "hsl(var(--foreground))")
     .text((d) => d.name);
@@ -417,7 +418,6 @@ export function handleNodeMouseOver(
   links: LinkData[],
   link: d3.Selection<d3.BaseType, LinkData, SVGGElement, unknown>,
   nodeSelection: d3.Selection<SVGGElement, NodeData, SVGGElement, unknown>,
-  centerNodeId?: string,
   centralNodeSize: number = 12
 ) {
   circleSelection.attr("r", centralNodeSize);
@@ -455,7 +455,7 @@ export function handleNodeMouseOver(
           ((l.source as NodeData).id === n.id &&
             (l.target as NodeData).id === node.id)
       );
-    return isConnected ? 1 : 0.3;
+    return isConnected ? 1 : 0.2;
   });
 
   // 関連するノードのテキストも強調
@@ -471,9 +471,14 @@ export function handleNodeMouseOver(
             ((l.source as NodeData).id === n.id &&
               (l.target as NodeData).id === node.id)
         );
-      return isConnected ? 1 : 0.3;
+      return isConnected ? 1 : 0.2;
     })
-    .attr("font-weight", (n) => (n.id === node.id ? "bold" : "normal"));
+    .attr("class", (n) =>
+      cn(
+        "transition-all duration-300 z-20",
+        n.id === node.id ? "text-base font-bold" : "text-xs font-normal"
+      )
+    );
 }
 
 // ノードのマウスアウト処理
@@ -498,8 +503,13 @@ export function handleNodeMouseOut(
   nodeSelection
     .select("text")
     .attr("opacity", 1)
-    .attr("font-weight", (n) =>
-      centerNodeId && n.id === centerNodeId ? "bold" : "normal"
+    .attr("class", (n) =>
+      cn(
+        "transition-all duration-300",
+        centerNodeId && n.id === centerNodeId
+          ? "font-bold text-base"
+          : "font-normal text-xs"
+      )
     );
 }
 
