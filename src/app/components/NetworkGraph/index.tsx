@@ -191,4 +191,4 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
   );
 };
 
-export default NetworkGraph;
+export default React.memo(NetworkGraph);
