@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import { Badge } from "@/components/ui/badge";
 import Editor from "@/components/editor";
+import { updateTermDefinition } from "./actions";
 
 interface TermNodeData {
   id: string;
@@ -43,7 +44,6 @@ interface TermDetailProps {
 
 const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   const router = useRouter();
-
   const [content, setContent] = useState(term.definition);
 
   const handleTermSelect = useCallback(
@@ -51,13 +51,31 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
     [router]
   );
 
+  // コンテンツが変更されたらデータベースに保存する
+  useEffect(() => {
+    // 初期表示時は保存しない
+    if (content === term.definition) return;
+
+    // デバウンス処理のための変数
+    const timer = setTimeout(async () => {
+      try {
+        await updateTermDefinition(id, content);
+      } catch (error) {
+        console.error("保存エラー:", error);
+      }
+    }, 1000); // 1秒のデバウンス
+
+    // クリーンアップ関数
+    return () => clearTimeout(timer);
+  }, [content, id, term.definition]);
+
   return (
     <div className="h-screen w-full max-w-screen-xl p-10 mx-auto flex overflow-hidden">
       {/* 左側: 用語の説明 */}
       <div className="flex-1 min-h-full flex flex-col overflow-y-auto pr-10">
         <div className="mb-9">
           <h1 className="text-[2.5em] font-bold mb-4">{term.name}</h1>
-          <div className="flex gap-2">
+          <div className="flex gap-2 mb-2">
             {term.tags.map((tag) => (
               <Badge key={tag.id} variant="outline" className="bg-muted">
                 {tag.name}
