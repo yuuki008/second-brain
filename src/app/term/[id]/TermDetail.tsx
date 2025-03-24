@@ -3,6 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
+import { Badge } from "@/components/ui/badge";
 
 interface TermNodeData {
   id: string;
@@ -74,6 +75,13 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
       {/* 左側: 用語の説明 */}
       <div className="flex-1 h-full overflow-y-auto pr-10">
         <h1 className="text-[2.5em] font-bold mb-8">{term.name}</h1>
+        <div className="flex gap-2 mb-4">
+          {term.tags.map((tag) => (
+            <Badge key={tag.id} variant="outline" className="bg-muted">
+              {tag.name}
+            </Badge>
+          ))}
+        </div>
 
         <div
           ref={definitionRef}
