@@ -17,7 +17,7 @@
     --secondary-foreground: 210 10% 23%;
     --muted: 210 15% 94%;
     --muted-foreground: 210 10% 45%;
-    --accent: 145 65% 50%; /* #2ECC71 - 目に優しい緑 */
+    --accent: 210 65% 50%;
     --accent-foreground: 210 10% 23%;
     --destructive: 0 72% 51%; /* 彩度を少し下げた赤 */
     --destructive-foreground: 210 20% 98%;
@@ -56,7 +56,7 @@
     --secondary-foreground: 210 10% 90%;
     --muted: 215 10% 17%;
     --muted-foreground: 210 10% 65%;
-    --accent: 145 40% 40%; /* ダークモードでは彩度を下げた緑 */
+    --accent: 210 50% 60%;
     --accent-foreground: 210 10% 90%;
     --destructive: 0 60% 40%; /* 彩度を下げた赤 */
     --destructive-foreground: 210 10% 90%;
