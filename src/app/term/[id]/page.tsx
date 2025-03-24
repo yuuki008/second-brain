@@ -1,9 +1,6 @@
 import { notFound } from "next/navigation";
 import TermDetail from "./TermDetail";
-import { PrismaClient } from "@prisma/client";
-
-// Prismaのクライアントをサーバーコンポーネントで初期化
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 // 用語とその関連ノードを取得する関数
 async function getTermWithRelatedNodes(id: string) {

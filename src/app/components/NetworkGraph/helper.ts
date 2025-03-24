@@ -382,7 +382,6 @@ export function drawGraphElements(
 
       handleNodeMouseOut(
         d3.select(this) as unknown as D3CircleSelection,
-        d,
         link,
         node,
         centerNodeId,
@@ -481,7 +480,6 @@ export function handleNodeMouseOver(
 // ノードのマウスアウト処理
 export function handleNodeMouseOut(
   circleSelection: D3CircleSelection,
-  node: NodeData,
   link: d3.Selection<d3.BaseType, LinkData, SVGGElement, unknown>,
   nodeSelection: d3.Selection<SVGGElement, NodeData, SVGGElement, unknown>,
   centerNodeId?: string,

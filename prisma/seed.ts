@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { faker } from "@faker-js/faker/locale/ja";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 // シードデータの数の設定
 const NODE_COUNT = 150;
