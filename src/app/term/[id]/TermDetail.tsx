@@ -2,7 +2,6 @@
 
 import React, { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import NetworkGraph from "@/app/components/NetworkGraph";
 
 // 用語の型定義
@@ -64,24 +63,23 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
     router.push(`/term/${selectedNode.id}`);
 
   return (
-    <div className="h-screen w-full max-w-screen-2xl mx-auto  flex flex-col lg:flex-row overflow-hidden">
-      <div className="w-full py-10 px-8 lg:w-1/2 h-1/2 lg:h-full overflow-hidden flex flex-col border">
-        <h1 className="text-4xl font-bold mb-8">{term.name}</h1>
+    <div className="h-screen w-full max-w-screen-xl p-10 mx-auto flex overflow-hidden">
+      {/* 左側: 用語の説明 */}
+      <div className="flex-1 h-full overflow-y-auto pr-10">
+        <h1 className="text-[2.5em] font-bold mb-8">{term.name}</h1>
 
-        <ScrollArea className="flex-1">
-          <div
-            ref={definitionRef}
-            className="prose max-w-none dark:prose-invert"
-            dangerouslySetInnerHTML={{
-              __html: term.definition,
-            }}
-          />
-        </ScrollArea>
+        <div
+          ref={definitionRef}
+          className="prose w-full dark:prose-invert leading-[1.9]"
+          dangerouslySetInnerHTML={{
+            __html: term.definition,
+          }}
+        />
       </div>
 
       {/* 右側: ネットワークグラフ */}
-      <div className="w-full lg:w-1/2 h-1/2 lg:h-full relative p-10">
-        <div className="absolute inset-0 bg-background">
+      <div className="w-[350px]">
+        <div className="w-full h-[350px] border rounded-xl">
           <NetworkGraph
             graphData={{
               nodes: graphData.nodes,
