@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import { Badge } from "@/components/ui/badge";
-import { Editor } from "@/components/blocks/editor-00/editor";
-import { SerializedEditorState } from "lexical";
+import Editor from "@/components/editor";
 
 interface TermNodeData {
   id: string;
@@ -44,32 +43,9 @@ interface TermDetailProps {
 
 const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   const router = useRouter();
-  const definitionRef = useRef<HTMLDivElement>(null);
-  const [editorState, setEditorState] = useState<SerializedEditorState>();
 
-  // 定義内のリンクをクリックしたときのイベントハンドラを設定
-  useEffect(() => {
-    const definitionElement = definitionRef.current;
-    if (!definitionElement) return;
+  const [content, setContent] = useState(term.definition);
 
-    const handleLinkClick = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (target.tagName === "SPAN" && target.hasAttribute("data-term-id")) {
-        const termId = target.getAttribute("data-term-id");
-        if (termId) {
-          router.push(`/term/${termId}`);
-        }
-      }
-    };
-
-    definitionElement.addEventListener("click", handleLinkClick);
-
-    return () => {
-      definitionElement.removeEventListener("click", handleLinkClick);
-    };
-  }, [router]);
-
-  // 選択された用語を中心としたネットワークを表示
   const handleTermSelect = useCallback(
     (selectedNode: TermNodeData) => router.push(`/term/${selectedNode.id}`),
     [router]
@@ -88,10 +64,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
           ))}
         </div>
 
-        <Editor
-          editorSerializedState={editorState}
-          onSerializedChange={(value) => setEditorState(value)}
-        />
+        <Editor content={content} onChange={setContent} />
       </div>
 
       {/* 右側: ネットワークグラフ */}
