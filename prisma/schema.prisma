@@ -8,15 +8,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Term {
-  id         String   @id @default(uuid())
-  name       String   @unique
-  definition String
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  tags       Tag[]    @relation("TermToTag")
+model Node {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  content     String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  imageUrl    String?   @map("image_url")
+  tags        Tag[]     @relation("NodeToTag")
+  relations   Relation[] @relation("NodeFromRelation")
+  relatedTo   Relation[] @relation("NodeToRelation")
 
-  @@map("terms")
+  @@map("nodes")
 }
 
 model Tag {
@@ -24,14 +27,19 @@ model Tag {
   name      String   @unique
   color     String   @default("#3B82F6") 
   createdAt DateTime @default(now()) @map("created_at")
-  
-  // 階層構造のための関係
-  parentId  String?  @map("parent_id")
-  parent    Tag?     @relation("TagHierarchy", fields: [parentId], references: [id])
-  children  Tag[]    @relation("TagHierarchy")
-  
-  // 既存の関係
-  terms     Term[]   @relation("TermToTag")
+  nodes     Node[]   @relation("NodeToTag")
 
   @@map("tags")
+}
+
+model Relation {
+  id          String   @id @default(uuid())
+  fromNode    Node     @relation("NodeFromRelation", fields: [fromNodeId], references: [id])
+  fromNodeId  String
+  toNode      Node     @relation("NodeToRelation", fields: [toNodeId], references: [id])
+  toNodeId    String
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@unique([fromNodeId, toNodeId])
+  @@map("relations")
 }
