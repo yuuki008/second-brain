@@ -36,7 +36,7 @@ async function main() {
   const tagPromises = [];
   for (let i = 0; i < TAG_COUNT; i++) {
     const tagData = {
-      name: faker.word.noun(),
+      name: `${i + 1}_${faker.word.adjective()}`,
       color: TAG_COLORS[i % TAG_COLORS.length],
     };
 
@@ -60,7 +60,7 @@ async function main() {
     );
 
     const nodeData = {
-      name: faker.book.title(),
+      name: `${i + 1}_${faker.book.title()}`,
       content: faker.lorem.lines(10),
       imageUrl: faker.image.url(),
       tags: {
