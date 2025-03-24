@@ -51,7 +51,7 @@
     --popover: 220 10% 10%;
     --popover-foreground: 210 10% 90%;
     --primary: 0 0% 98%; /* ダークモードでもモノクロに戻す */
-    --primary-foreground: 210 10% 90%;
+    --primary-foreground: 210 10% 10%;
     --secondary: 215 10% 17%;
     --secondary-foreground: 210 10% 90%;
     --muted: 215 10% 17%;

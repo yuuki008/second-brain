@@ -2,6 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { Node } from "@prisma/client";
+
+export async function createTerm(name: string, content: string): Promise<Node> {
+  return await prisma.node.create({
+    data: { name, content },
+  });
+}
 
 /**
  * 用語の定義を更新するサーバーアクション

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import TagFilter, { HierarchicalTag } from "@/app/components/TagFilter";
 import Search from "@/app/components/Search";
 import NetworkGraph from "@/app/components/NetworkGraph";
-import TagCreate from "@/app/components/TagCreate";
 
 // D3.js用の型定義
 interface NodeData {
@@ -27,7 +26,6 @@ interface TopPageClientProps {
 
 export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
   const router = useRouter();
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [activeTagId, setActiveTagId] = useState<string | null>(null);
 
   // 選択されたタグとその子タグすべてのIDを収集する関数
@@ -78,11 +76,6 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
     router.push(`/term/${term.id}`);
   };
 
-  // 新規用語作成モーダルを表示
-  const handleCreateTerm = () => {
-    setShowCreateModal(true);
-  };
-
   // タグ選択時の処理
   const handleTagSelect = (tagId: string) => {
     setActiveTagId(activeTagId === tagId ? null : tagId);
@@ -109,19 +102,8 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
           onNodeSelect={handleTermSelect}
         />
 
-        <Search
-          graphData={graphData}
-          onTermSelect={handleTermSelect}
-          onCreateTerm={handleCreateTerm}
-        />
+        <Search graphData={graphData} onTermSelect={handleTermSelect} />
       </div>
-
-      {/* 新規用語作成モーダルコンポーネント */}
-      <TagCreate
-        open={showCreateModal}
-        onOpenChange={setShowCreateModal}
-        tags={tags}
-      />
     </div>
   );
 }

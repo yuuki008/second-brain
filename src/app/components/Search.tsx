@@ -9,6 +9,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { createTerm } from "../term/[id]/actions";
+import { useRouter } from "next/navigation";
 
 // 必要な型定義
 interface NodeData {
@@ -28,14 +30,13 @@ interface GraphData {
 interface SearchComponentProps {
   graphData: GraphData;
   onTermSelect: (term: NodeData) => void;
-  onCreateTerm: () => void;
 }
 
 const Search: React.FC<SearchComponentProps> = ({
   graphData,
   onTermSelect,
-  onCreateTerm,
 }) => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -69,12 +70,9 @@ const Search: React.FC<SearchComponentProps> = ({
   };
 
   // 何も見つからなかった場合に新規作成
-  const handleCreateNew = () => {
-    if (searchQuery) {
-      onCreateTerm();
-      setSearchQuery("");
-      setOpen(false);
-    }
+  const handleCreateNew = async () => {
+    const newTerm = await createTerm(searchQuery, "");
+    router.push(`/term/${newTerm.id}`);
   };
 
   return (
