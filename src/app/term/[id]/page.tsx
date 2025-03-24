@@ -125,13 +125,11 @@ async function getTermWithRelatedNodes(id: string) {
 }
 
 interface TermPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function TermPage({ params }: TermPageProps) {
-  const { id } = params;
+  const { id } = await params;
   const termData = await getTermWithRelatedNodes(id);
 
   if (!termData) {
