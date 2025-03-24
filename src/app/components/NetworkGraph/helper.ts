@@ -334,7 +334,7 @@ export function drawGraphElements(
     .selectAll("line")
     .data(links)
     .join("line")
-    .attr("class", cn("transition-all duration-300", "stroke-border"));
+    .attr("class", "transition-all duration-300 stroke-border");
 
   // ノードグループの作成
   const node = zoomContainer
