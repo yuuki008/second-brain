@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import { Badge } from "@/components/ui/badge";
+import { Editor } from "@/components/blocks/editor-00/editor";
+import { SerializedEditorState } from "lexical";
 
 interface TermNodeData {
   id: string;
@@ -43,6 +45,7 @@ interface TermDetailProps {
 const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   const router = useRouter();
   const definitionRef = useRef<HTMLDivElement>(null);
+  const [editorState, setEditorState] = useState<SerializedEditorState>();
 
   // 定義内のリンクをクリックしたときのイベントハンドラを設定
   useEffect(() => {
@@ -83,12 +86,9 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
           ))}
         </div>
 
-        <div
-          ref={definitionRef}
-          className="prose w-full dark:prose-invert leading-[1.9]"
-          dangerouslySetInnerHTML={{
-            __html: term.definition,
-          }}
+        <Editor
+          editorSerializedState={editorState}
+          onSerializedChange={(value) => setEditorState(value)}
         />
       </div>
 
