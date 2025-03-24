@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import Editor from "@/components/editor";
@@ -43,35 +43,35 @@ interface TermDetailProps {
 }
 
 // エディタ部分のみを扱う別コンポーネント
-const TermEditor = ({
-  id,
-  initialContent,
-}: {
-  id: string;
-  initialContent: string;
-}) => {
-  const [content, setContent] = useState(initialContent);
+const TermEditor = React.memo(
+  ({ id, initialContent }: { id: string; initialContent: string }) => {
+    const [content, setContent] = useState(initialContent);
 
-  // コンテンツが変更されたらデータベースに保存する
-  React.useEffect(() => {
-    // 初期表示時は保存しない
-    if (content === initialContent) return;
+    // コンテンツが変更されたらデータベースに保存する
+    React.useEffect(() => {
+      // 初期表示時は保存しない
+      if (content === initialContent) return;
 
-    // デバウンス処理のための変数
-    const timer = setTimeout(async () => {
-      try {
-        await updateTermDefinition(id, content);
-      } catch (error) {
-        console.error("保存エラー:", error);
-      }
-    }, 1000); // 1秒のデバウンス
+      // デバウンス処理のための変数
+      const timer = setTimeout(async () => {
+        try {
+          await updateTermDefinition(id, content);
+        } catch (error) {
+          console.error("保存エラー:", error);
+        }
+      }, 1000); // 1秒のデバウンス
 
-    // クリーンアップ関数
-    return () => clearTimeout(timer);
-  }, [content, id, initialContent]);
+      // クリーンアップ関数
+      return () => clearTimeout(timer);
+    }, [content, id, initialContent]);
 
-  return <Editor content={content} onChange={setContent} />;
-};
+    return <Editor content={content} onChange={setContent} />;
+  }
+);
+TermEditor.displayName = "TermEditor";
+
+// NetworkGraphをメモ化したコンポーネント
+const MemoizedNetworkGraph = React.memo(NetworkGraph);
 
 const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   const router = useRouter();
@@ -79,6 +79,20 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   const handleTermSelect = useCallback(
     (selectedNode: TermNodeData) => router.push(`/term/${selectedNode.id}`),
     [router]
+  );
+
+  // NetworkGraphに渡すpropsをメモ化
+  const networkGraphProps = useMemo(
+    () => ({
+      graphData: {
+        nodes: graphData.nodes,
+        links: graphData.links,
+      },
+      activeTagId: null as string | null,
+      onNodeSelect: handleTermSelect,
+      centerNodeId: id,
+    }),
+    [graphData, handleTermSelect, id]
   );
 
   return (
@@ -98,15 +112,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
       {/* 右側: ネットワークグラフ */}
       <div className="w-[350px]">
         <div className="w-full h-[350px] border rounded-xl">
-          <NetworkGraph
-            graphData={{
-              nodes: graphData.nodes,
-              links: graphData.links,
-            }}
-            activeTagId={null}
-            onNodeSelect={handleTermSelect}
-            centerNodeId={id}
-          />
+          <MemoizedNetworkGraph {...networkGraphProps} />
         </div>
       </div>
     </div>

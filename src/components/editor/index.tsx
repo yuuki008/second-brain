@@ -32,7 +32,7 @@ const Editor = ({ content, onChange, className }: Props) => {
         "prose-h1:text-2xl prose-h1:mb-3",
         "prose-h2:text-xl prose-h2:mb-2",
         "prose-h3:text-lg prose-h3:mb-1",
-        "prose-p:text-base prose-p:text-foreground",
+        "prose-p:text-base prose-p:text-foreground prose-p:leading-relaxed",
         "prose-blockquote:border-l-4 prose-blockquote:border-muted prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground",
         "prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-4",
         "prose-ol:list-decimal prose-ol:pl-6 prose-ol:mb-4",

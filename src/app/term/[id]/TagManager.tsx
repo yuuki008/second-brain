@@ -118,7 +118,7 @@ export default function TagManager({ nodeId, currentTags }: TagManagerProps) {
           <Badge
             key={tag.id}
             variant="outline"
-            className="bg-muted relative flex items-center px-2 py-1"
+            className="bg-secondary relative flex items-center px-2 py-1"
           >
             {tag.name}
             <button
