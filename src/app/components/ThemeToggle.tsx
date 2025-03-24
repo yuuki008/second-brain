@@ -6,7 +6,7 @@ import { Moon, Sun } from "lucide-react";
 
 export function ThemeToggle() {
   // 現在のテーマの状態
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   // テーマの切り替え関数
   const toggleTheme = () => {
