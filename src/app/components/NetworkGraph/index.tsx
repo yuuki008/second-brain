@@ -52,8 +52,8 @@ export interface NetworkGraphProps {
   };
   activeTagId: string | null;
   onNodeSelect: (node: NodeData) => void;
-  allTagIds?: string[]; // 選択されたタグとその子タグのIDリスト
-  centerNodeId?: string; // 中心に配置するノードのID
+  allTagIds?: string[];
+  centerNodeId?: string;
   className?: string;
 }
 
