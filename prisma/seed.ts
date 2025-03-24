@@ -4,9 +4,9 @@ import { faker } from "@faker-js/faker/locale/ja";
 const prisma = new PrismaClient();
 
 // シードデータの数の設定
-const NODE_COUNT = 20;
-const TAG_COUNT = 10;
-const RELATION_COUNT = 15;
+const NODE_COUNT = 150;
+const TAG_COUNT = 15;
+const RELATION_COUNT = 200;
 
 // タグの色のリスト
 const TAG_COLORS = [
