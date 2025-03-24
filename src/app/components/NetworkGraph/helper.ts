@@ -334,8 +334,7 @@ export function drawGraphElements(
     .selectAll("line")
     .data(links)
     .join("line")
-    .attr("stroke", "hsl(var(--border))")
-    .attr("stroke-width", 1.5);
+    .attr("class", cn("transition-all duration-300", "stroke-border"));
 
   // ノードグループの作成
   const node = zoomContainer
@@ -430,17 +429,15 @@ export function handleNodeMouseOver(
         (l.target as NodeData).id === node.id;
       return isConnected ? 1 : 0.1;
     })
-    .attr("stroke-width", (l) => {
+    .attr("class", (l) => {
       const isConnected =
         (l.source as NodeData).id === node.id ||
         (l.target as NodeData).id === node.id;
-      return isConnected ? 3 : 1;
-    })
-    .attr("stroke", (l) => {
-      const isConnected =
-        (l.source as NodeData).id === node.id ||
-        (l.target as NodeData).id === node.id;
-      return isConnected ? "hsl(var(--primary))" : "hsl(var(--border))";
+
+      return cn(
+        "transition-all duration-300",
+        isConnected ? "stroke-blue" : "stroke-border"
+      );
     });
 
   // 関連ノードを強調、それ以外を薄く
@@ -495,8 +492,10 @@ export function handleNodeMouseOut(
   // すべてのリンクを元の状態に戻す
   link
     .attr("stroke-opacity", 1)
-    .attr("stroke-width", 1.5)
-    .attr("stroke", "hsl(var(--border))");
+    .attr(
+      "class",
+      "transition-all duration-300 stroke-border stroke-width-[1.5]"
+    );
 
   // すべてのノードを元の状態に戻す
   nodeSelection.select("circle").attr("opacity", 1);
