@@ -65,13 +65,13 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
 
   return (
     <div className="h-screen w-full max-w-screen-2xl mx-auto  flex flex-col lg:flex-row overflow-hidden">
-      <div className="w-full lg:w-1/2 h-1/2 lg:h-full overflow-hidden flex flex-col">
-        <h1 className="text-2xl font-bold p-4">{term.name}</h1>
+      <div className="w-full py-10 px-8 lg:w-1/2 h-1/2 lg:h-full overflow-hidden flex flex-col border">
+        <h1 className="text-4xl font-bold mb-8">{term.name}</h1>
 
         <ScrollArea className="flex-1">
           <div
             ref={definitionRef}
-            className="prose px-4 max-w-none dark:prose-invert"
+            className="prose max-w-none dark:prose-invert"
             dangerouslySetInnerHTML={{
               __html: term.definition,
             }}
@@ -80,7 +80,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
       </div>
 
       {/* 右側: ネットワークグラフ */}
-      <div className="w-full lg:w-1/2 h-1/2 lg:h-full relative">
+      <div className="w-full lg:w-1/2 h-1/2 lg:h-full relative p-10">
         <div className="absolute inset-0 bg-background">
           <NetworkGraph
             graphData={{
