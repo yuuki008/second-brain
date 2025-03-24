@@ -244,13 +244,13 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
     });
 
     // グラフを表示する前に位置を安定させてからフィットさせる
-    runInitialSimulation(simulation, centerNode ? 100 : 150);
+    runInitialSimulation(simulation, 250);
 
     // グラフ全体が見えるようにズーム調整し、その後表示
     fitGraphToView(nodes, width, height, zoom, svg);
 
     // フィットした後にSVGを表示
-    svg.transition().duration(300).style("opacity", 1);
+    svg.transition().duration(800).style("opacity", 1);
 
     // ウィンドウリサイズに対応
     const handleResize = () => {
