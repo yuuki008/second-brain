@@ -1,5 +1,7 @@
-import { NodeData, LinkData } from ".";
+import { NodeData, LinkData, NetworkGraphProps, D3CircleSelection } from ".";
 import * as d3 from "d3";
+import { cn } from "@/lib/utils";
+import React from "react";
 
 export function setupSimulation(
   nodes: NodeData[],
@@ -200,4 +202,351 @@ export function runInitialSimulation(
   for (let i = 0; i < iterations; i++) {
     simulation.tick();
   }
+}
+
+// フィルタリング関数
+export function filterGraphData(
+  graphData: NetworkGraphProps["graphData"],
+  activeTagId: string | null,
+  allTagIds?: string[]
+) {
+  // タグでフィルタリングされたノード
+  const nodes = activeTagId
+    ? graphData.nodes.filter(
+        (node) =>
+          node.tags &&
+          node.tags.some((tag) =>
+            allTagIds ? allTagIds.includes(tag.id) : tag.id === activeTagId
+          )
+      )
+    : graphData.nodes;
+
+  // フィルタリングされたノードIDのセット
+  const nodeIds = new Set(nodes.map((node) => node.id));
+
+  // リンクもフィルタリング
+  const links = activeTagId
+    ? graphData.links.filter(
+        (link) => nodeIds.has(link.source) && nodeIds.has(link.target)
+      )
+    : graphData.links;
+
+  return { filteredNodes: nodes, filteredLinks: links };
+}
+
+// グラフの初期設定
+export function initializeGraph(
+  svgElement: SVGSVGElement,
+  containerElement: HTMLDivElement
+) {
+  // コンテナのサイズを取得
+  const containerRect = containerElement.getBoundingClientRect();
+  const width = containerRect.width;
+  const height = containerRect.height;
+
+  // 既存のSVGをクリア
+  d3.select(svgElement).selectAll("*").remove();
+
+  // SVGの設定（最初は非表示）
+  const svg = d3
+    .select(svgElement)
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .style("opacity", 0); // 初期状態では見えないように設定
+
+  // ズーム用のコンテナを追加
+  const zoomContainer = svg.append("g");
+
+  // ズーム動作の設定
+  const zoom = d3
+    .zoom<SVGSVGElement, unknown>()
+    .scaleExtent([0.1, 4])
+    .on("zoom", (event) => {
+      zoomContainer.attr("transform", event.transform);
+    });
+
+  // SVGにズーム動作を適用
+  svg.call(zoom);
+
+  // ダブルクリックでズームリセット
+  svg.on("dblclick.zoom", null);
+  svg.on("dblclick", () => {
+    const containerRect = containerElement.getBoundingClientRect();
+    fitGraphToView([], containerRect.width, containerRect.height, zoom, svg);
+  });
+
+  const centerRadius = 150; // 詳細ページでない場合の中心の空白エリア
+  const centerX = width / 2;
+  const centerY = height / 2;
+
+  return {
+    width,
+    height,
+    svg,
+    zoomContainer,
+    zoom,
+    centerRadius,
+    centerX,
+    centerY,
+  };
+}
+
+// グラフデータの準備
+export function prepareGraphData(
+  filteredNodes: NodeData[],
+  filteredLinks: { source: string; target: string }[],
+  centerNodeId?: string,
+  width?: number,
+  height?: number
+) {
+  // グラフデータの準備
+  const nodes: NodeData[] = filteredNodes.map((d) => ({ ...d }));
+  const links: LinkData[] = filteredLinks.map((d) => ({ ...d }));
+
+  // ノードマップの作成とリンクの参照変換
+  const nodeMap = new Map(nodes.map((node) => [node.id, node]));
+  convertLinksToNodeReferences(links, nodeMap);
+
+  // 中心ノードの検索と設定
+  const centerNode = centerNodeId ? nodeMap.get(centerNodeId) || null : null;
+  if (centerNode && width && height) {
+    centerNode.fx = width / 2;
+    centerNode.fy = height / 2;
+  }
+
+  return { nodes, links, nodeMap, centerNode };
+}
+
+// リンクとノードの描画
+export function drawGraphElements(
+  zoomContainer: d3.Selection<SVGGElement, unknown, null, undefined>,
+  links: LinkData[],
+  nodes: NodeData[],
+  simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>,
+  centerNodeId?: string,
+  onNodeSelect?: (node: NodeData) => void
+) {
+  // リンクの描画
+  const link = zoomContainer
+    .append("g")
+    .selectAll("line")
+    .data(links)
+    .join("line")
+    .attr("stroke", "hsl(var(--border))")
+    .attr("stroke-width", 1.5);
+
+  // ノードグループの作成
+  const node = zoomContainer
+    .append("g")
+    .selectAll<SVGGElement, NodeData>(".node")
+    .data(nodes)
+    .join("g")
+    .attr("class", (d) =>
+      centerNodeId && d.id === centerNodeId
+        ? "node cursor-pointer font-bold"
+        : "node cursor-pointer"
+    )
+    .call(setupDragBehavior(simulation, centerNodeId));
+
+  // ノードの円の描画
+  const centralNodeSize = 12;
+  const otherNodeSize = 7;
+
+  node
+    .append("circle")
+    .attr("r", (d) =>
+      centerNodeId && d.id === centerNodeId ? centralNodeSize : otherNodeSize
+    )
+    .attr("class", (d) =>
+      cn(
+        "transition-all duration-100",
+        centerNodeId && d.id === centerNodeId ? "fill-blue" : "fill-primary"
+      )
+    )
+    .on("mouseover", function (event, d) {
+      handleNodeMouseOver(
+        d3.select(this) as unknown as D3CircleSelection,
+        d,
+        links,
+        link,
+        node,
+        centerNodeId,
+        centralNodeSize
+      );
+    })
+    .on("mouseout", function (_, d) {
+      const centerNode = centerNodeId
+        ? nodes.find((n) => n.id === centerNodeId)
+        : null;
+      if (centerNode?.id === d.id) return;
+
+      handleNodeMouseOut(
+        d3.select(this) as unknown as D3CircleSelection,
+        d,
+        link,
+        node,
+        centerNodeId,
+        otherNodeSize
+      );
+    })
+    .on("click", (event, d) => {
+      if (onNodeSelect) onNodeSelect(d);
+    });
+
+  // ノードのラベルの描画
+  node
+    .append("text")
+    .attr("dx", 0)
+    .attr("dy", -17)
+    .attr("text-anchor", "middle")
+    .attr("class", (d) =>
+      centerNodeId && d.id === centerNodeId ? "font-bold text-sm" : "text-xs"
+    )
+    .attr("fill", "hsl(var(--foreground))")
+    .text((d) => d.name);
+
+  return { link, node };
+}
+
+// ノードのマウスオーバー処理
+export function handleNodeMouseOver(
+  circleSelection: D3CircleSelection,
+  node: NodeData,
+  links: LinkData[],
+  link: d3.Selection<d3.BaseType, LinkData, SVGGElement, unknown>,
+  nodeSelection: d3.Selection<SVGGElement, NodeData, SVGGElement, unknown>,
+  centerNodeId?: string,
+  centralNodeSize: number = 12
+) {
+  circleSelection.attr("r", centralNodeSize);
+
+  // ホバーしたノードに関連するリンクとノードを強調
+  link
+    .attr("stroke-opacity", (l) => {
+      const isConnected =
+        (l.source as NodeData).id === node.id ||
+        (l.target as NodeData).id === node.id;
+      return isConnected ? 1 : 0.1;
+    })
+    .attr("stroke-width", (l) => {
+      const isConnected =
+        (l.source as NodeData).id === node.id ||
+        (l.target as NodeData).id === node.id;
+      return isConnected ? 3 : 1;
+    })
+    .attr("stroke", (l) => {
+      const isConnected =
+        (l.source as NodeData).id === node.id ||
+        (l.target as NodeData).id === node.id;
+      return isConnected ? "hsl(var(--primary))" : "hsl(var(--border))";
+    });
+
+  // 関連ノードを強調、それ以外を薄く
+  nodeSelection.select("circle").attr("opacity", (n) => {
+    // ホバーしているノード自身または接続されているノード
+    const isConnected =
+      n.id === node.id ||
+      links.some(
+        (l) =>
+          ((l.source as NodeData).id === node.id &&
+            (l.target as NodeData).id === n.id) ||
+          ((l.source as NodeData).id === n.id &&
+            (l.target as NodeData).id === node.id)
+      );
+    return isConnected ? 1 : 0.3;
+  });
+
+  // 関連するノードのテキストも強調
+  nodeSelection
+    .select("text")
+    .attr("opacity", (n) => {
+      const isConnected =
+        n.id === node.id ||
+        links.some(
+          (l) =>
+            ((l.source as NodeData).id === node.id &&
+              (l.target as NodeData).id === n.id) ||
+            ((l.source as NodeData).id === n.id &&
+              (l.target as NodeData).id === node.id)
+        );
+      return isConnected ? 1 : 0.3;
+    })
+    .attr("font-weight", (n) => (n.id === node.id ? "bold" : "normal"));
+}
+
+// ノードのマウスアウト処理
+export function handleNodeMouseOut(
+  circleSelection: D3CircleSelection,
+  node: NodeData,
+  link: d3.Selection<d3.BaseType, LinkData, SVGGElement, unknown>,
+  nodeSelection: d3.Selection<SVGGElement, NodeData, SVGGElement, unknown>,
+  centerNodeId?: string,
+  otherNodeSize: number = 7
+) {
+  circleSelection.attr("r", otherNodeSize);
+
+  // すべてのリンクを元の状態に戻す
+  link
+    .attr("stroke-opacity", 1)
+    .attr("stroke-width", 1.5)
+    .attr("stroke", "hsl(var(--border))");
+
+  // すべてのノードを元の状態に戻す
+  nodeSelection.select("circle").attr("opacity", 1);
+  nodeSelection
+    .select("text")
+    .attr("opacity", 1)
+    .attr("font-weight", (n) =>
+      centerNodeId && n.id === centerNodeId ? "bold" : "normal"
+    );
+}
+
+// シミュレーションのティック処理設定
+export function setupSimulationTick(
+  simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>,
+  nodes: NodeData[],
+  centerNode: NodeData | null,
+  centerNodeId: string | undefined,
+  centerX: number,
+  centerY: number,
+  centerRadius: number,
+  link: d3.Selection<d3.BaseType, LinkData, SVGGElement, unknown>,
+  node: d3.Selection<SVGGElement, NodeData, SVGGElement, unknown>
+) {
+  simulation.on("tick", () => {
+    // 中心付近を避けるように調整（詳細ページでは適用しない）
+    if (!centerNodeId) {
+      avoidCenter(nodes, centerNode, centerX, centerY, centerRadius);
+    }
+
+    // 要素の位置更新
+    updatePositions(link, node);
+  });
+}
+
+// リサイズハンドラの作成
+export function createResizeHandler(
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>,
+  centerRadius: number,
+  centerNodeId: string | undefined,
+  nodes: NodeData[],
+  zoom: d3.ZoomBehavior<SVGSVGElement, unknown>,
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>
+) {
+  return () => {
+    if (containerRef.current) {
+      const newRect = containerRef.current.getBoundingClientRect();
+      updateSimulationForResize(
+        simulation,
+        newRect,
+        centerRadius,
+        centerNodeId
+      );
+
+      fitGraphToView(nodes, newRect.width, newRect.height, zoom, svg);
+    }
+  };
 }
