@@ -3,9 +3,9 @@
 import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
-import { Badge } from "@/components/ui/badge";
 import Editor from "@/components/editor";
 import { updateTermDefinition } from "./actions";
+import TagManager from "./TagManager";
 
 interface TermNodeData {
   id: string;
@@ -87,13 +87,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
       <div className="flex-1 min-h-full flex flex-col overflow-y-auto pr-10">
         <div className="mb-9">
           <h1 className="text-[2.5em] font-bold mb-4">{term.name}</h1>
-          <div className="flex gap-2 mb-2">
-            {term.tags.map((tag) => (
-              <Badge key={tag.id} variant="outline" className="bg-muted">
-                {tag.name}
-              </Badge>
-            ))}
-          </div>
+          <TagManager nodeId={id} currentTags={term.tags} />
         </div>
 
         <div className="flex-1">
