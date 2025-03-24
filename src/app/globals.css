@@ -2,114 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   :root {
+    /* ライトモードでの目に優しい色設定 */
+    --background: 210 20% 98%; /* #F8F9FA に近い、わずかに青みがかった柔らかい背景 */
+    --foreground: 210 10% 23%; /* #333333 に近い、純粋な黒よりも柔らかいダークグレー */
+    --card: 210 20% 98%;
+    --card-foreground: 210 10% 23%;
+    --popover: 210 20% 98%;
+    --popover-foreground: 210 10% 23%;
+    --primary: 0 0% 9%; /* モノクロに戻す */
+    --primary-foreground: 210 20% 98%;
+    --secondary: 210 15% 94%;
+    --secondary-foreground: 210 10% 23%;
+    --muted: 210 15% 94%;
+    --muted-foreground: 210 10% 45%;
+    --accent: 145 65% 50%; /* #2ECC71 - 目に優しい緑 */
+    --accent-foreground: 210 10% 23%;
+    --destructive: 0 72% 51%; /* 彩度を少し下げた赤 */
+    --destructive-foreground: 210 20% 98%;
+    --border: 210 15% 90%;
+    --input: 210 15% 90%;
+    --ring: 210 100% 50%;
+    /* 目に優しい色指定 */
+    --blue: 210 65% 50%; /* 彩度を抑えた青 #3498DB */
+    --green: 145 50% 45%; /* 彩度を抑えた緑 #2ECC71 */
+    --yellow: 45 65% 60%; /* 彩度を抑えたイエロー #F1C40F */
+    --orange: 25 70% 55%; /* 彩度を抑えたオレンジ #E67E22 */
+    --red: 0 65% 50%; /* 彩度を抑えた赤 #E74C3C */
+    --purple: 270 50% 50%; /* 彩度を抑えた紫 #9B59B6 */
+    --teal: 180 45% 50%; /* 彩度を抑えたティール #1ABC9C */
 
-    --background: 0 0% 100%;
-
-    --foreground: 0 0% 3.9%;
-
-    --card: 0 0% 100%;
-
-    --card-foreground: 0 0% 3.9%;
-
-    --popover: 0 0% 100%;
-
-    --popover-foreground: 0 0% 3.9%;
-
-    --primary: 0 0% 9%;
-
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 0 0% 96.1%;
-
-    --secondary-foreground: 0 0% 9%;
-
-    --muted: 0 0% 96.1%;
-
-    --muted-foreground: 0 0% 45.1%;
-
-    --accent: 0 0% 96.1%;
-
-    --accent-foreground: 0 0% 9%;
-
-    --destructive: 0 84.2% 60.2%;
-
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 89.8%;
-
-    --input: 0 0% 89.8%;
-
-    --ring: 0 0% 3.9%;
-
-    --chart-1: 12 76% 61%;
-
-    --chart-2: 173 58% 39%;
-
-    --chart-3: 197 37% 24%;
-
-    --chart-4: 43 74% 66%;
-
-    --chart-5: 27 87% 67%;
-
-    --radius: 0.5rem
+    /* チャート色 - 彩度を抑えた色を使用 */
+    --chart-1: 210 65% 55%; /* 青系 */
+    --chart-2: 145 50% 45%; /* 緑系 */
+    --chart-3: 180 45% 50%; /* ティール系 */
+    --chart-4: 45 65% 60%; /* イエロー系 */
+    --chart-5: 25 70% 55%; /* オレンジ系 */
+    --radius: 0.5rem;
   }
+
   .dark {
+    /* ダークモードでの目に優しい色設定 */
+    --background: 220 10% 10%; /* #121212 に近い、純粋な黒よりも柔らかいダークグレー */
+    --foreground: 210 10% 90%; /* #E0E0E0 に近い、純粋な白よりも柔らかいライトグレー */
+    --card: 220 10% 10%;
+    --card-foreground: 210 10% 90%;
+    --popover: 220 10% 10%;
+    --popover-foreground: 210 10% 90%;
+    --primary: 0 0% 98%; /* ダークモードでもモノクロに戻す */
+    --primary-foreground: 210 10% 90%;
+    --secondary: 215 10% 17%;
+    --secondary-foreground: 210 10% 90%;
+    --muted: 215 10% 17%;
+    --muted-foreground: 210 10% 65%;
+    --accent: 145 40% 40%; /* ダークモードでは彩度を下げた緑 */
+    --accent-foreground: 210 10% 90%;
+    --destructive: 0 60% 40%; /* 彩度を下げた赤 */
+    --destructive-foreground: 210 10% 90%;
+    --border: 215 10% 17%;
+    --input: 215 10% 17%;
+    --ring: 210 60% 50%;
+    /* ダークモードでの目に優しい色指定 */
+    --blue: 210 50% 60%; /* ダークモードでの彩度を抑えた青 */
+    --green: 145 40% 50%; /* ダークモードでの彩度を抑えた緑 */
+    --yellow: 45 50% 65%; /* ダークモードでの彩度を抑えたイエロー */
+    --orange: 25 55% 60%; /* ダークモードでの彩度を抑えたオレンジ */
+    --red: 0 55% 55%; /* ダークモードでの彩度を抑えた赤 */
+    --purple: 270 40% 55%; /* ダークモードでの彩度を抑えた紫 */
+    --teal: 180 35% 55%; /* ダークモードでの彩度を抑えたティール */
 
-    --background: 0 0% 3.9%;
-
-    --foreground: 0 0% 98%;
-
-    --card: 0 0% 3.9%;
-
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 3.9%;
-
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 14.9%;
-
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 14.9%;
-
-    --muted-foreground: 0 0% 63.9%;
-
-    --accent: 0 0% 14.9%;
-
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 14.9%;
-
-    --input: 0 0% 14.9%;
-
-    --ring: 0 0% 83.1%;
-
-    --chart-1: 220 70% 50%;
-
-    --chart-2: 160 60% 45%;
-
-    --chart-3: 30 80% 55%;
-
-    --chart-4: 280 65% 60%;
-
-    --chart-5: 340 75% 55%
+    /* ダークモードのチャート色 - 明度を上げて彩度を抑えた色を使用 */
+    --chart-1: 210 50% 60%; /* 青系 */
+    --chart-2: 145 40% 50%; /* 緑系 */
+    --chart-3: 180 35% 55%; /* ティール系 */
+    --chart-4: 45 50% 65%; /* イエロー系 */
+    --chart-5: 25 55% 60%; /* オレンジ系 */
   }
 }
-
-
 
 @layer base {
   * {

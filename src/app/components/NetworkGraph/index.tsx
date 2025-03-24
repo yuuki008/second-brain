@@ -198,9 +198,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .attr("class", (d) =>
         cn(
           "transition-all duration-100",
-          centerNodeId && d.id === centerNodeId
-            ? "fill-blue-300 dark:fill-blue-500"
-            : "fill-primary"
+          centerNodeId && d.id === centerNodeId ? "fill-blue" : "fill-primary"
         )
       )
       .on("mouseover", function () {
