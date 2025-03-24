@@ -1,9 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { HierarchicalTag } from "@/app/components/TagFilter";
 import TopPageClient from "@/app/components/TopPageClient";
-
-// Prismaクライアントの初期化
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 // タグデータを取得する関数
 async function getTags() {
