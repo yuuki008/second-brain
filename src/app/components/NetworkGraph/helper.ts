@@ -452,7 +452,7 @@ export function handleNodeMouseOver(
           ((l.source as NodeData).id === n.id &&
             (l.target as NodeData).id === node.id)
       );
-    return isConnected ? 1 : 0.2;
+    return isConnected ? 1 : 0.1;
   });
 
   // 関連するノードのテキストも強調
@@ -468,7 +468,7 @@ export function handleNodeMouseOver(
             ((l.source as NodeData).id === n.id &&
               (l.target as NodeData).id === node.id)
         );
-      return isConnected ? 1 : 0.2;
+      return isConnected ? 1 : 0.1;
     })
     .attr("class", (n) =>
       cn(
