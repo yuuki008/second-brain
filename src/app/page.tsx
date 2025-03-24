@@ -1,141 +1,85 @@
-"use client";
+import { PrismaClient } from "@prisma/client";
+import { HierarchicalTag } from "@/app/components/TagFilter";
+import TopPageClient from "@/app/components/TopPageClient";
 
-import React, { useState, useMemo, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import TagFilter, { HierarchicalTag } from "@/app/components/TagFilter";
-import Search from "@/app/components/Search";
-import NetworkGraph from "@/app/components/NetworkGraph";
-import TagCreate from "@/app/components/TagCreate";
-import { tagData, generateGraphData } from "@/data/graphData";
+// Prismaクライアントの初期化
+const prisma = new PrismaClient();
 
-// D3.js用の型定義
-interface NodeData {
-  id: string;
-  name: string;
-  tags: { id: string; name: string; color: string }[];
+// タグデータを取得する関数
+async function getTags() {
+  try {
+    const tags = await prisma.tag.findMany();
+
+    // 階層構造を持つタグ形式に変換（現在はフラットなので簡易的に変換）
+    const hierarchicalTags: HierarchicalTag[] = tags.map((tag) => ({
+      id: tag.id,
+      name: tag.name,
+      color: tag.color,
+      parentId: "root",
+      children: [],
+    }));
+
+    return hierarchicalTags;
+  } catch (error) {
+    console.error("タグの取得エラー:", error);
+    return [];
+  }
 }
 
-const TopPage = () => {
-  const router = useRouter();
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [activeTagId, setActiveTagId] = useState<string | null>(null);
+// ノードデータを取得する関数
+async function getNodes() {
+  try {
+    const nodes = await prisma.node.findMany({
+      include: {
+        tags: true,
+      },
+    });
 
-  // 階層構造を持つタグのサンプルデータ
-  const tags = useMemo<HierarchicalTag[]>(() => tagData, []);
+    // NetworkGraphコンポーネント用の形式に変換
+    return nodes.map((node) => ({
+      id: node.id,
+      name: node.name,
+      tags: node.tags.map((tag) => ({
+        id: tag.id,
+        name: tag.name,
+        color: tag.color,
+      })),
+    }));
+  } catch (error) {
+    console.error("ノードの取得エラー:", error);
+    return [];
+  }
+}
 
-  // 選択されたタグとその子タグすべてのIDを収集する関数
-  const collectTagAndChildrenIds = useCallback(
-    (tagId: string | null): string[] => {
-      if (!tagId) return [];
+// リレーションデータを取得する関数
+async function getRelations() {
+  try {
+    const relations = await prisma.relation.findMany();
 
-      const results: string[] = [tagId];
-      const collectChildIds = (tags: HierarchicalTag[]) => {
-        for (const tag of tags) {
-          if (tag.id === tagId) {
-            // このタグが見つかった場合、すべての子タグのIDを収集
-            const collectIds = (tag: HierarchicalTag) => {
-              if (tag.children && tag.children.length > 0) {
-                for (const child of tag.children) {
-                  results.push(child.id);
-                  collectIds(child);
-                }
-              }
-            };
-            collectIds(tag);
-            return true;
-          }
+    // NetworkGraphコンポーネント用の形式に変換
+    return relations.map((relation) => ({
+      source: relation.fromNodeId,
+      target: relation.toNodeId,
+    }));
+  } catch (error) {
+    console.error("リレーションの取得エラー:", error);
+    return [];
+  }
+}
 
-          if (tag.children && tag.children.length > 0) {
-            if (collectChildIds(tag.children)) {
-              return true;
-            }
-          }
-        }
-        return false;
-      };
+export default async function HomePage() {
+  // データを並行して取得
+  const [tags, nodes, links] = await Promise.all([
+    getTags(),
+    getNodes(),
+    getRelations(),
+  ]);
 
-      collectChildIds(tags);
-      return results;
-    },
-    [tags]
-  );
-
-  // 選択されたタグとその全ての子タグのID
-  const activeTagAndChildrenIds = useMemo(
-    () => (activeTagId ? collectTagAndChildrenIds(activeTagId) : null),
-    [activeTagId, collectTagAndChildrenIds]
-  );
-
-  // 100個のノードを持つグラフデータを生成
-  const graphData = useMemo(() => generateGraphData(tags), [tags]);
-
-  // 用語選択時の処理
-  const handleTermSelect = (term: NodeData) => {
-    router.push(`/term/${term.id}`);
+  // クライアントコンポーネント用のデータ
+  const graphData = {
+    nodes,
+    links,
   };
 
-  // 新規用語作成モーダルを表示
-  const handleCreateTerm = () => {
-    setShowCreateModal(true);
-  };
-
-  // タグ選択時の処理
-  const handleTagSelect = (tagId: string) => {
-    setActiveTagId(activeTagId === tagId ? null : tagId);
-  };
-
-  return (
-    <div className="h-screen w-screen relative overflow-hidden flex flex-col">
-      {/* ヘッダー */}
-      <div className="fixed top-0 left-0 right-0 flex justify-end p-4 z-20">
-        <TagFilter
-          tags={tags}
-          activeTagId={activeTagId}
-          onTagSelect={handleTagSelect}
-        />
-      </div>
-
-      {/* メインコンテンツ */}
-      <div className="flex-1 relative">
-        {/* ネットワークグラフコンポーネント */}
-        <NetworkGraph
-          graphData={graphData}
-          activeTagId={activeTagId}
-          allTagIds={activeTagAndChildrenIds || undefined}
-          onNodeSelect={handleTermSelect}
-        />
-
-        {/* ウェルカムカード */}
-        {/* <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-72">
-          <Card className="bg-background/80 backdrop-blur-sm shadow-lg">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">
-                ナレッジグラフへようこそ
-              </CardTitle>
-              <CardDescription>用語をクリックして詳細を確認</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm mb-4">
-                このグラフは知識のつながりを視覚化しています。タグでフィルタリングしたり、検索して特定の用語を見つけることができます。
-              </p>
-            </CardContent>
-          </Card>
-        </div> */}
-        <Search
-          graphData={graphData}
-          onTermSelect={handleTermSelect}
-          onCreateTerm={handleCreateTerm}
-        />
-      </div>
-
-      {/* 新規用語作成モーダルコンポーネント */}
-      <TagCreate
-        open={showCreateModal}
-        onOpenChange={setShowCreateModal}
-        tags={tags}
-      />
-    </div>
-  );
-};
-
-export default TopPage;
+  return <TopPageClient tags={tags} graphData={graphData} />;
+}

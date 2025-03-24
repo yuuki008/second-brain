@@ -4,27 +4,34 @@ import React, { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 
-// 用語の型定義
-interface TermNode {
+interface TermNodeData {
   id: string;
   name: string;
-  tags: { id: string; name: string; color: string }[];
+  tags: {
+    id: string;
+    name: string;
+    color: string;
+  }[];
 }
 
-interface Term {
+interface TermData {
   id: string;
   name: string;
   definition: string;
   createdAt: Date;
   updatedAt: Date;
-  tags: { id: string; name: string; color: string }[];
+  tags: {
+    id: string;
+    name: string;
+    color: string;
+  }[];
 }
 
 interface TermDetailProps {
   id: string;
-  term: Term;
+  term: TermData;
   graphData: {
-    nodes: TermNode[];
+    nodes: TermNodeData[];
     links: {
       source: string;
       target: string;
@@ -59,7 +66,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   }, [router]);
 
   // 選択された用語を中心としたネットワークを表示
-  const handleTermSelect = (selectedNode: TermNode) =>
+  const handleTermSelect = (selectedNode: TermNodeData) =>
     router.push(`/term/${selectedNode.id}`);
 
   return (

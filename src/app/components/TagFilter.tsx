@@ -91,9 +91,6 @@ const TagFilter: React.FC<TagFilterComponentProps> = ({
 }) => {
   const [showTagList, setShowTagList] = useState(false);
 
-  // トップレベルのタグのみをフィルタリング
-  const rootTags = tags.filter((tag) => tag.parentId === null);
-
   return (
     <div className="absolute top-4 left-4 z-10">
       <Popover open={showTagList} onOpenChange={setShowTagList}>
@@ -109,10 +106,10 @@ const TagFilter: React.FC<TagFilterComponentProps> = ({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-2" align="start">
-          <ScrollArea className="max-h-80">
+        <PopoverContent className="w-auto pl-0 py-2 pr-2" align="start">
+          <ScrollArea className="max-h-80 overflow-y-auto">
             <div className="space-y-1">
-              {rootTags.map((tag) => (
+              {tags.map((tag) => (
                 <TagNode
                   key={tag.id}
                   tag={tag}
