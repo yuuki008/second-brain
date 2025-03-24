@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { HierarchicalTag } from "@/app/components/TagFilter";
 import TopPageClient from "@/app/components/TopPageClient";
+import { sleep } from "@/lib/utils";
 
 // Prismaクライアントの初期化
 const prisma = new PrismaClient();
@@ -80,6 +81,8 @@ export default async function HomePage() {
     nodes,
     links,
   };
+
+  await sleep(100000);
 
   return <TopPageClient tags={tags} graphData={graphData} />;
 }
