@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import TermDetail from "./TermDetail";
 import { PrismaClient } from "@prisma/client";
-import { sleep } from "@/lib/utils";
 
 // Prismaのクライアントをサーバーコンポーネントで初期化
 const prisma = new PrismaClient();
@@ -141,8 +140,6 @@ export default async function TermPage({ params }: TermPageProps) {
   if (!termData) {
     notFound();
   }
-
-  await sleep(2000);
 
   return (
     <TermDetail id={id} term={termData.term} graphData={termData.graphData} />
