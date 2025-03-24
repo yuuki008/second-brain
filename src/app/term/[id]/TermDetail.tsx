@@ -54,17 +54,21 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   return (
     <div className="h-screen w-full max-w-screen-xl p-10 mx-auto flex overflow-hidden">
       {/* 左側: 用語の説明 */}
-      <div className="flex-1 h-full overflow-y-auto pr-10">
-        <h1 className="text-[2.5em] font-bold mb-8">{term.name}</h1>
-        <div className="flex gap-2 mb-4">
-          {term.tags.map((tag) => (
-            <Badge key={tag.id} variant="outline" className="bg-muted">
-              {tag.name}
-            </Badge>
-          ))}
+      <div className="flex-1 min-h-full flex flex-col overflow-y-auto pr-10">
+        <div className="">
+          <h1 className="text-[2.5em] font-bold mb-8">{term.name}</h1>
+          <div className="flex gap-2 mb-4">
+            {term.tags.map((tag) => (
+              <Badge key={tag.id} variant="outline" className="bg-muted">
+                {tag.name}
+              </Badge>
+            ))}
+          </div>
         </div>
 
-        <Editor content={content} onChange={setContent} />
+        <div className="flex-1">
+          <Editor content={content} onChange={setContent} />
+        </div>
       </div>
 
       {/* 右側: ネットワークグラフ */}
