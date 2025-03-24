@@ -195,10 +195,14 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
       .attr("r", (d) =>
         centerNodeId && d.id === centerNodeId ? centralNodeSize : otherNodeSize
       )
-      .attr("fill", (d) =>
-        centerNodeId && d.id === centerNodeId ? "blue" : "hsl(var(--primary))"
+      .attr("class", (d) =>
+        cn(
+          "transition-all duration-100",
+          centerNodeId && d.id === centerNodeId
+            ? "fill-blue-300 dark:fill-blue-500"
+            : "fill-primary"
+        )
       )
-      .attr("class", "transition-all duration-100")
       .on("mouseover", function () {
         d3.select(this).attr("r", centralNodeSize);
       })
