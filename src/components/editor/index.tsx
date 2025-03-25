@@ -1,6 +1,7 @@
 import { useEditor, EditorContent, AnyExtension } from "@tiptap/react";
-import { extensions } from "./extensitions";
+import { extensions } from "./extensions";
 import { cn } from "@/lib/utils";
+import { TextMenu } from "./components/TextMenu";
 
 type Props = {
   content: string;
@@ -10,6 +11,8 @@ type Props = {
 
 const Editor = ({ content, onChange, className }: Props) => {
   const editor = useEditor({
+    immediatelyRender: false,
+    shouldRerenderOnTransaction: false,
     autofocus: true,
     extensions: extensions as AnyExtension[],
     content: content,
@@ -23,6 +26,8 @@ const Editor = ({ content, onChange, className }: Props) => {
       },
     },
   });
+
+  if (!editor) return <></>;
 
   return (
     <div
@@ -57,6 +62,7 @@ const Editor = ({ content, onChange, className }: Props) => {
       )}
     >
       <EditorContent className="h-full" editor={editor} />
+      <TextMenu editor={editor} />
     </div>
   );
 };
