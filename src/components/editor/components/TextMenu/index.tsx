@@ -54,7 +54,7 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
       shouldShow={states.shouldShow}
       updateDelay={100}
     >
-      <div className="flex items-center space-x-1 p-2 border rounded-lg">
+      <div className="flex bg-background items-center space-x-1 p-2 border rounded-lg">
         <MemoContentTypePicker options={blockOptions} />
         <MemoFontFamilyPicker
           onChange={commands.onSetFont}
