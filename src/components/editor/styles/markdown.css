@@ -1,0 +1,103 @@
+.markdown-editor {
+  @apply w-full min-h-full border-none bg-transparent;
+}
+
+.markdown-editor h1 {
+  @apply text-2xl mb-3 mt-10 font-bold text-accent;
+}
+
+.markdown-editor h2 {
+  @apply text-xl mb-2 mt-8 font-bold text-accent;
+}
+
+.markdown-editor h3 {
+  @apply text-lg mb-1 mt-6 font-bold text-accent;
+}
+
+.markdown-editor p {
+  @apply text-base text-foreground leading-[1.9] mb-0 mt-4;
+}
+
+.markdown-editor blockquote {
+  @apply border-l-4 border-muted pl-4 italic text-muted-foreground;
+}
+
+.markdown-editor ul {
+  @apply list-disc pl-6 my-1;
+}
+
+.markdown-editor ol {
+  @apply list-decimal pl-6 my-1;
+}
+
+.markdown-editor li {
+  @apply my-0 pl-0;
+}
+
+.markdown-editor li p {
+  @apply my-0;
+}
+
+.markdown-editor code {
+  @apply bg-muted text-foreground px-1 py-0.5 rounded-md text-sm;
+}
+
+.markdown-editor pre {
+  @apply bg-muted text-foreground p-4 rounded-md overflow-auto;
+}
+
+.markdown-editor pre code {
+  @apply text-foreground bg-transparent;
+}
+
+.markdown-editor img {
+  @apply max-w-full rounded-md;
+}
+
+.markdown-editor a {
+  @apply text-primary underline hover:text-primary/80;
+}
+
+.markdown-editor hr {
+  @apply border-muted my-4;
+}
+
+.markdown-editor table {
+  @apply w-full border-collapse;
+}
+
+.markdown-editor th {
+  @apply border border-muted bg-muted/50 p-2 text-left;
+}
+
+.markdown-editor td {
+  @apply border border-muted p-2;
+}
+
+.markdown-editor thead {
+  @apply bg-muted/30;
+}
+
+.markdown-editor ul.task-list {
+  @apply pl-0 list-none;
+}
+
+.markdown-editor ul.task-list li {
+  @apply flex items-start gap-2;
+}
+
+.markdown-editor ul.task-list li input {
+  @apply h-4 w-4 mt-1;
+}
+
+.markdown-editor .ProseMirror-selectednode {
+  @apply outline-none ring-2 ring-primary;
+}
+
+.markdown-editor iframe.youtube-video {
+  @apply w-full rounded-lg shadow-md;
+}
+
+.markdown-editor pre {
+  @apply font-mono text-sm;
+}
