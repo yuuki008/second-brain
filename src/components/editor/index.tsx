@@ -41,7 +41,7 @@ const Editor = ({ content, onChange, className }: Props) => {
         "prose-blockquote:border-l-4 prose-blockquote:border-muted prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground",
         "prose-ul:list-disc prose-ul:pl-6 prose-ul:my-0",
         "prose-ol:list-decimal prose-ol:pl-6 prose-ol:my-0",
-        "prose-li:my-0",
+        "prose-li:my-0 prose-li:pl-0",
         "prose-code:bg-muted prose-code:text-foreground prose-code:px-1 prose-code:py-0.5 prose-code:rounded-md prose-code:text-sm",
         "prose-pre:bg-muted prose-pre:text-foreground prose-pre:p-4 prose-pre:rounded-md prose-pre:overflow-auto",
         "prose-img:max-w-full prose-img:rounded-md",
