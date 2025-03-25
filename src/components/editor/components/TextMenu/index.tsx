@@ -6,7 +6,6 @@ import { useTextmenuContentTypes } from "./hooks/useTextmenuContentTypes";
 import { ContentTypePicker } from "./components/ContentTypePicker";
 import { EditLinkPopover } from "./components/EditLinkPopover";
 import { Icon } from "@/components/ui/icon";
-import { OtherOptionPicker } from "./components/OtherOptionPicker";
 import { Editor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react";
 import { memo } from "react";
@@ -116,7 +115,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
         </MemoButton>
 
         <EditLinkPopover editor={editor} />
-        <OtherOptionPicker editor={editor} />
       </div>
     </BubbleMenu>
   );
