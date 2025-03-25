@@ -34,9 +34,9 @@ const Editor = ({ content, onChange, className }: Props) => {
       className={cn(
         "w-full h-full overflow-auto border-none bg-transparent",
         "prose-headings:font-bold prose-headings:text-foreground",
-        "prose-h1:text-2xl prose-h1:mb-3",
-        "prose-h2:text-xl prose-h2:mb-2",
-        "prose-h3:text-lg prose-h3:mb-1",
+        "prose-h1:text-2xl prose-h1:mb-3 prose-h1:text-accent prose-h1:mt-10",
+        "prose-h2:text-xl prose-h2:mb-2 prose-h2:text-accent prose-h2:mt-8",
+        "prose-h3:text-lg prose-h3:mb-1 prose-h3:text-accent prose-h3:mt-6",
         "prose-p:text-base prose-p:text-foreground prose-p:leading-relaxed prose-p:my-0",
         "prose-blockquote:border-l-4 prose-blockquote:border-muted prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground",
         "prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-4",
