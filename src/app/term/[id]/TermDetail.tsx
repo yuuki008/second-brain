@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import Editor from "@/components/editor";
@@ -48,7 +48,7 @@ const TermEditor = React.memo(
     const [content, setContent] = useState(initialContent);
 
     // コンテンツが変更されたらデータベースに保存する
-    React.useEffect(() => {
+    useEffect(() => {
       // 初期表示時は保存しない
       if (content === initialContent) return;
 
@@ -70,30 +70,10 @@ const TermEditor = React.memo(
 );
 TermEditor.displayName = "TermEditor";
 
-// NetworkGraphをメモ化したコンポーネント
-const MemoizedNetworkGraph = React.memo(NetworkGraph);
-
 const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   const router = useRouter();
 
-  const handleTermSelect = useCallback(
-    (selectedNode: TermNodeData) => router.push(`/term/${selectedNode.id}`),
-    [router]
-  );
-
-  // NetworkGraphに渡すpropsをメモ化
-  const networkGraphProps = useMemo(
-    () => ({
-      graphData: {
-        nodes: graphData.nodes,
-        links: graphData.links,
-      },
-      activeTagId: null as string | null,
-      onNodeSelect: handleTermSelect,
-      centerNodeId: id,
-    }),
-    [graphData, handleTermSelect, id]
-  );
+  const onNodeSelect = (node: TermNodeData) => router.push(`/term/${node.id}`);
 
   return (
     <div className="h-screen w-full max-w-screen-xl p-10 mx-auto flex overflow-hidden">
@@ -112,7 +92,13 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
       {/* 右側: ネットワークグラフ */}
       <div className="w-[350px]">
         <div className="w-full h-[350px] border rounded-xl">
-          <MemoizedNetworkGraph {...networkGraphProps} />
+          <NetworkGraph
+            key={id}
+            graphData={graphData}
+            activeTagId={null}
+            onNodeSelect={onNodeSelect}
+            centerNodeId={id}
+          />
         </div>
       </div>
     </div>
