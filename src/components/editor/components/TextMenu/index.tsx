@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { FontSizePicker } from "./components/FontSizePicker";
 import { useTextmenuCommands } from "./hooks/useTextmenuCommands";
 import { useTextmenuStates } from "./hooks/useTextmenuStates";
 import { useTextmenuContentTypes } from "./hooks/useTextmenuContentTypes";
@@ -10,10 +9,10 @@ import { Editor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react";
 import { memo } from "react";
 import { FontFamilyPicker } from "./components/FontFamilyPicker";
+import { Separator } from "@/components/ui/separator";
 
 const MemoButton = memo(Button);
 const MemoFontFamilyPicker = memo(FontFamilyPicker);
-const MemoFontSizePicker = memo(FontSizePicker);
 const MemoContentTypePicker = memo(ContentTypePicker);
 
 export type TextMenuProps = {
@@ -59,12 +58,8 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
           onChange={commands.onSetFont}
           value={states.currentFont || ""}
         />
-        <MemoFontSizePicker
-          onChange={commands.onSetFontSize}
-          value={states.currentSize || ""}
-        />
         {/* セパレーター */}
-        <div className="w-[1px] h-6 bg-gray-300" />
+        <Separator orientation="vertical" className="h-7 !mx-2" />
         <MemoButton
           variant={states.isBold ? "default" : "ghost"}
           onClick={commands.onBold}
