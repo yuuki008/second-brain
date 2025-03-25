@@ -26,9 +26,6 @@ export async function updateTermDefinition(termId: string, definition: string) {
       },
     });
 
-    // キャッシュを再検証して最新データを表示
-    revalidatePath(`/term/${termId}`);
-
     return { success: true };
   } catch (error) {
     console.error("Error updating term definition:", error);

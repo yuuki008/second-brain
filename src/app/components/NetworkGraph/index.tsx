@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import {
   setupSimulation,
@@ -76,9 +76,11 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // フィルタリングされたノードとリンクのメモ化
-  const { filteredNodes, filteredLinks } = useMemo(() => {
-    return filterGraphData(graphData, activeTagId, allTagIds);
-  }, [graphData, activeTagId, allTagIds]);
+  const { filteredNodes, filteredLinks } = filterGraphData(
+    graphData,
+    activeTagId,
+    allTagIds
+  );
 
   // D3.jsを使ったネットワークグラフの初期化
   useEffect(() => {
