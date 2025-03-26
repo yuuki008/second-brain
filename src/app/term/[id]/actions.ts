@@ -153,19 +153,12 @@ export async function getAllTags() {
  * @param name - タグの名前
  */
 export async function createTag(name: string) {
-  try {
-    const tag = await prisma.tag.create({
-      data: {
-        name,
-        color: "#000000", // デフォルトの色
-      },
-    });
-
-    return { success: true, tag };
-  } catch (error) {
-    console.error("Error creating tag:", error);
-    return { success: false, error: (error as Error).message };
-  }
+  return await prisma.tag.create({
+    data: {
+      name,
+      color: "#000000", // デフォルトの色
+    },
+  });
 }
 
 export async function updateTagHierarchy(

@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { addTagToNode, removeTagFromNode } from "./actions";
+import { addTagToNode, createTag, removeTagFromNode } from "./actions";
 import { Tag } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Check } from "lucide-react";
+import { Plus, Check, PlusCircle } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -52,6 +52,16 @@ const TagManager: React.FC<TagManagerProps> = ({
     tag.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleCreateTag = async (tagName: string) => {
+    try {
+      const tag = await createTag(tagName);
+      await addTagToNode(nodeId, tag.id);
+      setSearch("");
+    } catch (error) {
+      console.error("タグの作成に失敗しました:", error);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
@@ -90,6 +100,18 @@ const TagManager: React.FC<TagManagerProps> = ({
                       </CommandItem>
                     );
                   })}
+                  {search.length > 0 && (
+                    <CommandItem
+                      onSelect={() => handleCreateTag(search)}
+                      className="cursor-pointer"
+                    >
+                      <PlusCircle className="w-4 h-4 mr-3" />
+                      <div className="">
+                        Create
+                        <span className="text-accent ml-2">{search}</span>
+                      </div>
+                    </CommandItem>
+                  )}
                 </CommandGroup>
               </CommandList>
             </Command>

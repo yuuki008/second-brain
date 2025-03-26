@@ -153,7 +153,6 @@ const Search: React.FC = () => {
                           {filteredNodes.map((node) => (
                             <CommandItem
                               key={node.id}
-                              onClick={() => handleSelectItem(node)}
                               onSelect={() => handleSelectItem(node)}
                               className="cursor-pointer py-2"
                             >
@@ -177,7 +176,6 @@ const Search: React.FC = () => {
                           {searchQuery.length > 0 && (
                             <CommandItem
                               onClick={handleCreateNew}
-                              onSelect={handleCreateNew}
                               className="cursor-pointer py-2"
                             >
                               <PlusCircle className="w-4 h-4 mr-3" />
