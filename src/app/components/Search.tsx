@@ -148,7 +148,7 @@ const Search: React.FC = () => {
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <CommandList className="overflow-y-auto max-h-96">
+                      <CommandList className="overflow-y-auto max-h-96 py-1">
                         <CommandGroup className="p-2 text-sm">
                           {filteredNodes.map((node) => (
                             <CommandItem
