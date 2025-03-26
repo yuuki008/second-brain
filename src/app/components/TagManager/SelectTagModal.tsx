@@ -28,6 +28,7 @@ import { Tag } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createTag } from "@/app/term/[id]/actions";
+import { cn } from "@/lib/utils";
 
 interface SelectTagModalProps {
   isOpen: boolean;
@@ -202,11 +203,12 @@ export const SelectTagModal: React.FC<SelectTagModalProps> = ({
                 {tags.map((tag) => (
                   <div
                     key={tag.id}
-                    className={`flex items-center gap-2 cursor-pointer p-2 rounded-lg transition-colors ${
+                    className={cn(
+                      "flex items-center gap-2 cursor-pointer p-1 rounded-lg transition-colors",
                       selectedTags.has(tag.id)
                         ? "bg-primary/10 hover:bg-primary/20"
                         : "hover:bg-muted"
-                    }`}
+                    )}
                     onClick={() => handleTagToggle(tag.id)}
                   >
                     <SortableTagItem tag={tag} />
