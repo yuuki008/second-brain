@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import Editor from "@/components/editor";
-import { updateTermDefinition } from "./actions";
+import { updateTermDefinition, updateTermName } from "./actions";
 import TagManager, { TagWithChildren } from "./TagManager";
 import { cn } from "@/lib/utils";
 import { Node, Tag } from "@prisma/client";
@@ -60,6 +60,29 @@ const TermEditor = React.memo(
 );
 TermEditor.displayName = "TermEditor";
 
+// 用語名を編集するコンポーネント
+const TermNameEditor = React.memo(
+  ({ id, initialName }: { id: string; initialName: string }) => {
+    const [termName, setTermName] = useState(initialName);
+
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        updateTermName(id, termName);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }, [termName, id]);
+
+    return (
+      <input
+        className="w-full border-none text-4xl font-bold mb-4 bg-transparent focus:outline-none focus:ring-0"
+        value={termName}
+        onChange={(e) => setTermName(e.target.value)}
+      />
+    );
+  }
+);
+TermNameEditor.displayName = "TermNameEditor";
+
 // ウィンドウ幅を監視するカスタムフック
 function useWindowWidth() {
   const [width, setWidth] = useState(0);
@@ -96,7 +119,8 @@ const TermDetail: React.FC<TermDetailProps> = ({
         )}
       >
         <div>
-          <h1 className="text-3xl font-bold mb-4">{term.name}</h1>
+          <TermNameEditor id={id} initialName={term.name} />
+
           <TagManager nodeId={id} currentTags={term.tags} allTags={allTags} />
         </div>
 

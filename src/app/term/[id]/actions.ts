@@ -10,6 +10,12 @@ export async function createTerm(name: string, content: string): Promise<Node> {
   });
 }
 
+export async function updateTermName(termId: string, name: string) {
+  return await prisma.node.update({
+    where: { id: termId },
+    data: { name },
+  });
+}
 /**
  * 用語の定義を更新するサーバーアクション
  * @param termId - 更新する用語のID
