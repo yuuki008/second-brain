@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { SelectTagModal } from "@/app/components/TagManager/SelectTagModal";
 import { addTagToNode, removeTagFromNode } from "./actions";
 import { Tag } from "@prisma/client";
+import { Badge } from "@/components/ui/badge";
+import { Plus } from "lucide-react";
 
 export interface TagWithChildren extends Tag {
   children: TagWithChildren[];
@@ -45,30 +47,20 @@ const TagManager: React.FC<TagManagerProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap gap-2">
+        {currentTags.map((tag) => (
+          <Badge key={tag.id} variant="outline" className="text-sm relative">
+            {tag.name}
+          </Badge>
+        ))}
         <Button
-          variant="outline"
+          variant="secondary"
           size="sm"
           onClick={() => setIsModalOpen(true)}
         >
-          タグを管理
+          <Plus className="w-4 h-4" />
+          タグの追加
         </Button>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {currentTags.map((tag) => (
-          <div
-            key={tag.id}
-            className="flex items-center gap-1 px-2 py-1 rounded-full text-sm"
-            style={{ backgroundColor: `${tag.color}20` }}
-          >
-            <div
-              className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: tag.color }}
-            />
-            <span>{tag.name}</span>
-          </div>
-        ))}
       </div>
 
       <SelectTagModal
