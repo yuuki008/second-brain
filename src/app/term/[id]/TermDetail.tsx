@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import Editor from "@/components/editor";
 import { updateTermDefinition, updateTermName } from "./actions";
-import TagManager, { TagWithChildren } from "./TagManager";
+import TagManager from "./TagManager";
 import { cn } from "@/lib/utils";
 import { Node, Tag } from "@prisma/client";
 
@@ -22,7 +22,7 @@ interface TermNodeData {
 interface TermDetailProps {
   id: string;
   term: Node & { tags: Tag[] };
-  allTags: TagWithChildren[];
+  allTags: Tag[];
   graphData: {
     nodes: TermNodeData[];
     links: {

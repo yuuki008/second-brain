@@ -2,20 +2,29 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { SelectTagModal } from "@/app/components/TagManager/SelectTagModal";
 import { addTagToNode, removeTagFromNode } from "./actions";
 import { Tag } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
-import { Plus } from "lucide-react";
-
-export interface TagWithChildren extends Tag {
-  children: TagWithChildren[];
-}
+import { Plus, Check } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface TagManagerProps {
   nodeId: string;
   currentTags: Tag[];
-  allTags: TagWithChildren[];
+  allTags: Tag[];
 }
 
 const TagManager: React.FC<TagManagerProps> = ({
@@ -23,53 +32,76 @@ const TagManager: React.FC<TagManagerProps> = ({
   currentTags,
   allTags,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
-  const handleTagSelect = async (selectedTagIds: string[]) => {
+  const handleTagToggle = async (tagId: string, isSelected: boolean) => {
     try {
-      // 追加されたタグ（選択されているが、現在のタグにないもの）
-      for (const tagId of selectedTagIds) {
-        if (!currentTags.some((t) => t.id === tagId)) {
-          await addTagToNode(nodeId, tagId);
-        }
-      }
-
-      // 削除されたタグ（現在のタグにあるが、選択されていないもの）
-      for (const tag of currentTags) {
-        if (!selectedTagIds.includes(tag.id)) {
-          await removeTagFromNode(nodeId, tag.id);
-        }
+      if (isSelected) {
+        await addTagToNode(nodeId, tagId);
+      } else {
+        await removeTagFromNode(nodeId, tagId);
       }
     } catch (error) {
       console.error("タグの更新に失敗しました:", error);
     }
   };
 
+  // 検索に基づいてタグをフィルタリング
+  const filteredTags = allTags.filter((tag) =>
+    tag.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="secondary" size="sm">
+              <Plus className="w-4 h-4 mr-1" />
+              タグの追加
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0" align="start">
+            <Command>
+              <CommandInput
+                placeholder="タグを検索..."
+                value={search}
+                onValueChange={setSearch}
+              />
+              <CommandEmpty>タグが見つかりません</CommandEmpty>
+              <CommandList>
+                <CommandGroup className="max-h-[200px] overflow-auto">
+                  {filteredTags.map((tag) => {
+                    const isSelected = currentTags.some((t) => t.id === tag.id);
+                    return (
+                      <CommandItem
+                        key={tag.id}
+                        onSelect={() => handleTagToggle(tag.id, !isSelected)}
+                        className="flex items-center justify-between"
+                      >
+                        {tag.name}
+                        <Check
+                          className={cn(
+                            "h-4 w-4",
+                            isSelected ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                      </CommandItem>
+                    );
+                  })}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+
         {currentTags.map((tag) => (
           <Badge key={tag.id} variant="outline" className="text-sm relative">
             {tag.name}
           </Badge>
         ))}
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => setIsModalOpen(true)}
-        >
-          <Plus className="w-4 h-4" />
-          タグの追加
-        </Button>
       </div>
-
-      <SelectTagModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        allTags={allTags}
-        currentTags={currentTags}
-        onTagSelect={handleTagSelect}
-      />
     </div>
   );
 };
