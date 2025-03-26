@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { getAllNodes, createNewNode } from "../actions/search";
 import { Node, Tag } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
+import { FileText, Plus } from "lucide-react";
 
 const Search: React.FC = () => {
   const router = useRouter();
@@ -139,22 +140,8 @@ const Search: React.FC = () => {
                       transition={{ duration: 0.2 }}
                     >
                       <CommandList className="overflow-y-auto max-h-96">
-                        <CommandGroup className="p-0 text-sm">
+                        <CommandGroup className="p-2 text-sm">
                           <div>
-                            {searchQuery.length > 0 && (
-                              <CommandItem
-                                onClick={handleCreateNew}
-                                onSelect={handleCreateNew}
-                                className="cursor-pointer py-2"
-                              >
-                                <div className="font-medium">
-                                  新規作成
-                                  <span className="text-red-500">
-                                    「{searchQuery}」
-                                  </span>
-                                </div>
-                              </CommandItem>
-                            )}
                             {filteredNodes.map((node) => (
                               <CommandItem
                                 key={node.id}
@@ -162,9 +149,8 @@ const Search: React.FC = () => {
                                 onSelect={() => handleSelectItem(node)}
                                 className="cursor-pointer py-2"
                               >
-                                <div className="font-medium mr-2">
-                                  {node.name}
-                                </div>
+                                <FileText className="w-4 h-4 mr-3" />
+                                <div className="mr-4">{node.name}</div>
                                 {node.tags && node.tags.length > 0 && (
                                   <div className="flex flex-wrap gap-1">
                                     {node.tags.map((tag) => (
@@ -181,6 +167,21 @@ const Search: React.FC = () => {
                                 )}
                               </CommandItem>
                             ))}
+                            {searchQuery.length > 0 && (
+                              <CommandItem
+                                onClick={handleCreateNew}
+                                onSelect={handleCreateNew}
+                                className="cursor-pointer py-2"
+                              >
+                                <Plus className="w-4 h-4 mr-3" />
+                                <div className="">
+                                  新規作成
+                                  <span className="text-red-500">
+                                    「{searchQuery}」
+                                  </span>
+                                </div>
+                              </CommandItem>
+                            )}
                           </div>
                         </CommandGroup>
                       </CommandList>
