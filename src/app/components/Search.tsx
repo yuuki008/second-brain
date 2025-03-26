@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { getAllNodes, createNewNode } from "../actions/search";
 import { Node, Tag } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Plus } from "lucide-react";
+import { FileText, PlusCircle } from "lucide-react";
 
 const Search: React.FC = () => {
   const router = useRouter();
@@ -166,7 +166,6 @@ const Search: React.FC = () => {
                                       key={tag.id}
                                       variant="secondary"
                                       className="text-xs"
-                                      style={{ backgroundColor: tag.color }}
                                     >
                                       {tag.name}
                                     </Badge>
@@ -181,11 +180,11 @@ const Search: React.FC = () => {
                               onSelect={handleCreateNew}
                               className="cursor-pointer py-2"
                             >
-                              <Plus className="w-4 h-4 mr-3" />
+                              <PlusCircle className="w-4 h-4 mr-3" />
                               <div className="">
-                                新規作成
-                                <span className="text-red-500">
-                                  「{searchQuery}」
+                                Create
+                                <span className="text-accent ml-2">
+                                  {searchQuery}
                                 </span>
                               </div>
                             </CommandItem>
