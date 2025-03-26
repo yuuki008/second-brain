@@ -93,7 +93,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   const onNodeSelect = (node: TermNodeData) => router.push(`/term/${node.id}`);
 
   return (
-    <div className="h-screen w-[95%] max-w-screen-xl mx-auto flex overflow-hidden">
+    <div className="h-screen w-[90%] max-w-screen-xl mx-auto flex overflow-hidden">
       {/* 左側: 用語の説明 */}
       <div
         className={cn(

@@ -1,5 +1,5 @@
 .markdown-editor {
-  @apply w-full min-h-full border-none bg-transparent;
+  @apply w-full min-h-full border-none bg-transparent text-sm;
 }
 
 .markdown-editor h1 {
@@ -15,7 +15,7 @@
 }
 
 .markdown-editor p {
-  @apply text-base text-foreground leading-[1.9] mb-0 mt-4;
+  @apply text-foreground leading-[1.9] mb-0 mt-4;
 }
 
 .markdown-editor blockquote {
