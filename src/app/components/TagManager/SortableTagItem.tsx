@@ -4,7 +4,6 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { TagWithChildren } from "@/app/term/[id]/TagManager";
-import { TagItem } from "./TagItem";
 
 interface SortableTagItemProps {
   tag: TagWithChildren;
@@ -28,7 +27,7 @@ export const SortableTagItem: React.FC<SortableTagItemProps> = ({ tag }) => {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <TagItem tag={tag} />
+      <div className="text-sm">{tag.name}</div>
       {tag.children.length > 0 && (
         <div className="ml-6 mt-2 space-y-2">
           {tag.children.map((child) => (

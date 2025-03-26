@@ -16,7 +16,6 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableTagItem } from "./SortableTagItem";
-import { TagItem } from "./TagItem";
 import {
   Dialog,
   DialogContent,
@@ -85,8 +84,10 @@ export const SelectTagModal: React.FC<SelectTagModalProps> = ({
       } else {
         newSet.add(tagId);
       }
-      // タグの選択状態が変更されたら、親コンポーネントに通知
-      onTagSelect(Array.from(newSet));
+      // 状態更新後にonTagSelectを呼び出す
+      setTimeout(() => {
+        onTagSelect(Array.from(newSet));
+      }, 0);
       return newSet;
     });
   };
@@ -183,14 +184,14 @@ export const SelectTagModal: React.FC<SelectTagModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>タグを選択</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-4 mt-4">
           {/* タグ一覧 */}
-          <div className="border rounded-lg p-4 min-h-[300px] max-h-[400px] overflow-y-auto">
+          <div className="min-h-[300px] max-h-[400px] overflow-y-auto">
             <DndContext
               sensors={sensors}
               onDragStart={handleDragStart}
@@ -200,26 +201,27 @@ export const SelectTagModal: React.FC<SelectTagModalProps> = ({
                 items={tags.map((tag) => tag.id)}
                 strategy={verticalListSortingStrategy}
               >
-                {tags.map((tag) => (
-                  <div
-                    key={tag.id}
-                    className={cn(
-                      "flex items-center gap-2 cursor-pointer p-1 rounded-lg transition-colors",
-                      selectedTags.has(tag.id)
-                        ? "bg-primary/10 hover:bg-primary/20"
-                        : "hover:bg-muted"
-                    )}
-                    onClick={() => handleTagToggle(tag.id)}
-                  >
-                    <SortableTagItem tag={tag} />
-                  </div>
-                ))}
+                <div className="flex flex-col gap-2">
+                  {tags.map((tag) => (
+                    <div
+                      key={tag.id}
+                      className={cn(
+                        "flex items-center gap-2 cursor-pointer p-2 rounded-lg transition-colors",
+                        selectedTags.has(tag.id)
+                          ? "bg-primary/10 hover:bg-primary/20"
+                          : "hover:bg-muted"
+                      )}
+                      onClick={() => handleTagToggle(tag.id)}
+                    >
+                      <SortableTagItem tag={tag} />
+                    </div>
+                  ))}
+                </div>
               </SortableContext>
               <DragOverlay>
                 {activeId ? (
-                  <TagItem
+                  <SortableTagItem
                     tag={findTagById(tags, activeId) || tags[0]}
-                    isDragging
                   />
                 ) : null}
               </DragOverlay>
