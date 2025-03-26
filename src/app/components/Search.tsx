@@ -93,7 +93,7 @@ const Search: React.FC = () => {
       const newNode = await createNewNode(searchQuery);
       // 新規作成した用語をallNodesに追加
       setAllNodes((prev) => [...prev, newNode]);
-      router.push(`/node/${newNode.id}`);
+      router.push(`/term/${newNode.id}`);
       setSearchQuery("");
       setOpen(false);
     } catch (error) {
