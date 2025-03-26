@@ -110,7 +110,7 @@ const TermDetail: React.FC<TermDetailProps> = ({
   const onNodeSelect = (node: TermNodeData) => router.push(`/term/${node.id}`);
 
   return (
-    <div className="h-screen w-[90%] max-w-screen-xl mx-auto flex overflow-hidden">
+    <div className="h-screen w-[90%] max-w-screen-lg mx-auto flex overflow-hidden">
       {/* 左側: 用語の説明 */}
       <div
         className={cn(
@@ -130,7 +130,7 @@ const TermDetail: React.FC<TermDetailProps> = ({
       </div>
 
       {/* 右側: ネットワークグラフ */}
-      {windowWidth > 1280 && (
+      {windowWidth > 1100 && (
         <div className="w-[350px] py-10">
           <div className="w-full h-[350px] border rounded-xl">
             <NetworkGraph
