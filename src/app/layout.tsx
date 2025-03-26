@@ -9,6 +9,10 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Second Brain",
   description: "Your personal knowledge management system",
+  icons: {
+    icon: [{ url: "/brain.png", type: "image/png" }],
+    apple: "/brain.png",
+  },
 };
 
 export default function RootLayout({

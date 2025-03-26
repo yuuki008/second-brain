@@ -17,6 +17,8 @@ import Color from "@tiptap/extension-color";
 import FontFamily from "@tiptap/extension-font-family";
 import Highlight from "@tiptap/extension-highlight";
 import FontSize from "@tiptap/extension-font-size";
+import { TaskList } from "@tiptap/extension-task-list";
+import { TaskItem } from "@tiptap/extension-task-item";
 
 export const extensions = [
   StarterKit,
@@ -38,4 +40,6 @@ export const extensions = [
   FontFamily,
   Highlight,
   FontSize,
+  TaskItem,
+  TaskList,
 ];
