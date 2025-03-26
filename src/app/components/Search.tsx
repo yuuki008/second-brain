@@ -134,7 +134,7 @@ const Search: React.FC = () => {
                   />
                   <Badge
                     variant="outline"
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 font-normal"
                     onClick={() => setOpen(false)}
                   >
                     Esc
