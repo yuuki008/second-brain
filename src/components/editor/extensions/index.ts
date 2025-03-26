@@ -19,6 +19,7 @@ import Highlight from "@tiptap/extension-highlight";
 import FontSize from "@tiptap/extension-font-size";
 import { TaskList } from "@tiptap/extension-task-list";
 import { TaskItem } from "@tiptap/extension-task-item";
+import { TweetExtension } from "./Tweet";
 
 export const extensions = [
   StarterKit,
@@ -43,4 +44,5 @@ export const extensions = [
   TaskItem,
   TaskList,
   Youtube,
+  TweetExtension,
 ];

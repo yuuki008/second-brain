@@ -91,7 +91,7 @@
 }
 
 .markdown-editor .ProseMirror-selectednode {
-  @apply outline-none ring-2 ring-primary;
+  @apply outline-none;
 }
 
 .markdown-editor iframe.youtube-video {
