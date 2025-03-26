@@ -101,3 +101,7 @@
 .markdown-editor pre {
   @apply font-mono text-sm;
 }
+
+.markdown-editor [data-youtube-video] > iframe {
+  width: 100%;
+}
