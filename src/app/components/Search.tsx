@@ -124,13 +124,22 @@ const Search: React.FC = () => {
                 className="rounded-lg border shadow-lg w-full h-auto"
                 shouldFilter={false}
               >
-                <CommandInput
-                  value={searchQuery}
-                  onValueChange={setSearchQuery}
-                  placeholder="What are you searching for?"
-                  className="flex h-12 w-full bg-transparent text-sm placeholder:text-muted-foreground"
-                  autoFocus={true}
-                />
+                <div className="relative">
+                  <CommandInput
+                    value={searchQuery}
+                    onValueChange={setSearchQuery}
+                    placeholder="What are you searching for?"
+                    className="flex h-14 w-full bg-transparent text-sm placeholder:text-muted-foreground"
+                    autoFocus={true}
+                  />
+                  <Badge
+                    variant="outline"
+                    className="absolute right-2 top-1/2 -translate-y-1/2"
+                    onClick={() => setOpen(false)}
+                  >
+                    Esc
+                  </Badge>
+                </div>
                 <AnimatePresence>
                   {open && (
                     <motion.div
@@ -141,48 +150,46 @@ const Search: React.FC = () => {
                     >
                       <CommandList className="overflow-y-auto max-h-96">
                         <CommandGroup className="p-2 text-sm">
-                          <div>
-                            {filteredNodes.map((node) => (
-                              <CommandItem
-                                key={node.id}
-                                onClick={() => handleSelectItem(node)}
-                                onSelect={() => handleSelectItem(node)}
-                                className="cursor-pointer py-2"
-                              >
-                                <FileText className="w-4 h-4 mr-3" />
-                                <div className="mr-4">{node.name}</div>
-                                {node.tags && node.tags.length > 0 && (
-                                  <div className="flex flex-wrap gap-1">
-                                    {node.tags.map((tag) => (
-                                      <Badge
-                                        key={tag.id}
-                                        variant="secondary"
-                                        className="text-xs"
-                                        style={{ backgroundColor: tag.color }}
-                                      >
-                                        {tag.name}
-                                      </Badge>
-                                    ))}
-                                  </div>
-                                )}
-                              </CommandItem>
-                            ))}
-                            {searchQuery.length > 0 && (
-                              <CommandItem
-                                onClick={handleCreateNew}
-                                onSelect={handleCreateNew}
-                                className="cursor-pointer py-2"
-                              >
-                                <Plus className="w-4 h-4 mr-3" />
-                                <div className="">
-                                  新規作成
-                                  <span className="text-red-500">
-                                    「{searchQuery}」
-                                  </span>
+                          {filteredNodes.map((node) => (
+                            <CommandItem
+                              key={node.id}
+                              onClick={() => handleSelectItem(node)}
+                              onSelect={() => handleSelectItem(node)}
+                              className="cursor-pointer py-2"
+                            >
+                              <FileText className="w-4 h-4 mr-3" />
+                              <div className="mr-4">{node.name}</div>
+                              {node.tags && node.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1">
+                                  {node.tags.map((tag) => (
+                                    <Badge
+                                      key={tag.id}
+                                      variant="secondary"
+                                      className="text-xs"
+                                      style={{ backgroundColor: tag.color }}
+                                    >
+                                      {tag.name}
+                                    </Badge>
+                                  ))}
                                 </div>
-                              </CommandItem>
-                            )}
-                          </div>
+                              )}
+                            </CommandItem>
+                          ))}
+                          {searchQuery.length > 0 && (
+                            <CommandItem
+                              onClick={handleCreateNew}
+                              onSelect={handleCreateNew}
+                              className="cursor-pointer py-2"
+                            >
+                              <Plus className="w-4 h-4 mr-3" />
+                              <div className="">
+                                新規作成
+                                <span className="text-red-500">
+                                  「{searchQuery}」
+                                </span>
+                              </div>
+                            </CommandItem>
+                          )}
                         </CommandGroup>
                       </CommandList>
                     </motion.div>
