@@ -43,7 +43,7 @@
 }
 
 .markdown-editor pre {
-  @apply bg-muted text-foreground p-4 rounded-md overflow-auto;
+  @apply bg-muted text-foreground p-4 rounded-md overflow-auto my-2;
 }
 
 .markdown-editor pre code {
