@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import Editor from "@/components/editor";
 import { updateTermDefinition } from "./actions";
-import TagManager, { TagWithChildren } from "./TagManager";
+import TagManager from "./TagManager";
 import { cn } from "@/lib/utils";
+import { Node, Tag } from "@prisma/client";
 
 interface TermNodeData {
   id: string;
@@ -18,18 +19,9 @@ interface TermNodeData {
   }[];
 }
 
-interface TermData {
-  id: string;
-  name: string;
-  definition: string;
-  createdAt: Date;
-  updatedAt: Date;
-  tags: TagWithChildren[];
-}
-
 interface TermDetailProps {
   id: string;
-  term: TermData;
+  term: Node & { tags: Tag[] };
   graphData: {
     nodes: TermNodeData[];
     links: {
@@ -103,7 +95,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
         </div>
 
         <div className="flex-1">
-          <TermEditor id={id} initialContent={term.definition} />
+          <TermEditor id={id} initialContent={term.content} />
         </div>
       </div>
 

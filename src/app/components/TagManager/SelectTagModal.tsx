@@ -15,38 +15,37 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { SortableTagItem } from "./SortableTagItem";
+import { TagItem } from "./TagItem";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { createTag } from "@/app/term/[id]/actions";
-import { Tag } from "@prisma/client";
-import { TagItem } from "./TagItem";
-import { SortableTagItem } from "./SortableTagItem";
 import { TagWithChildren } from "@/app/term/[id]/TagManager";
+import { Tag } from "@prisma/client";
 
-interface TagCreateModalProps {
+interface SelectTagModalProps {
   isOpen: boolean;
   onClose: () => void;
   allTags: TagWithChildren[];
-  onTagCreate: (newTag: Tag) => void;
-  onTagUpdate: (updatedTags: Tag[]) => void;
+  currentTags: Tag[];
+  onTagSelect: (selectedTagIds: string[]) => void;
 }
 
-export const TagCreateModal: React.FC<TagCreateModalProps> = ({
+export const SelectTagModal: React.FC<SelectTagModalProps> = ({
   isOpen,
   onClose,
   allTags,
-  onTagCreate,
-  onTagUpdate,
+  currentTags,
+  onTagSelect,
 }) => {
-  const [newTagName, setNewTagName] = useState("");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [tags, setTags] = useState<TagWithChildren[]>(allTags);
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(
+    new Set(currentTags.map((tag) => tag.id))
+  );
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
@@ -70,25 +69,20 @@ export const TagCreateModal: React.FC<TagCreateModalProps> = ({
     // 親子関係を更新
     const updatedTags = updateTagHierarchy(tags, activeTag.id, overTag.id);
     setTags(updatedTags);
-    onTagUpdate(updatedTags);
   };
 
-  const handleCreateTag = async () => {
-    if (!newTagName.trim()) return;
-
-    try {
-      const newTag = await createTag(newTagName);
-      const tagWithChildren: TagWithChildren = {
-        ...newTag,
-        children: [],
-      };
-
-      setTags([...tags, tagWithChildren]);
-      onTagCreate(tagWithChildren);
-      setNewTagName("");
-    } catch (error) {
-      console.error("タグの作成に失敗しました:", error);
-    }
+  const handleTagToggle = (tagId: string) => {
+    setSelectedTags((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(tagId)) {
+        newSet.delete(tagId);
+      } else {
+        newSet.add(tagId);
+      }
+      // タグの選択状態が変更されたら、親コンポーネントに通知
+      onTagSelect(Array.from(newSet));
+      return newSet;
+    });
   };
 
   const findTagById = (
@@ -135,7 +129,6 @@ export const TagCreateModal: React.FC<TagCreateModalProps> = ({
           tags[i].children.push(tagToInsert);
           return true;
         }
-
         if (findAndInsertTag(tags[i].children, targetId, tagToInsert)) {
           return true;
         }
@@ -158,7 +151,7 @@ export const TagCreateModal: React.FC<TagCreateModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>タグの管理</DialogTitle>
+          <DialogTitle>タグを選択</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -174,7 +167,17 @@ export const TagCreateModal: React.FC<TagCreateModalProps> = ({
                 strategy={verticalListSortingStrategy}
               >
                 {tags.map((tag) => (
-                  <SortableTagItem key={tag.id} tag={tag} />
+                  <div
+                    key={tag.id}
+                    className={`flex items-center gap-2 cursor-pointer p-2 rounded-lg transition-colors ${
+                      selectedTags.has(tag.id)
+                        ? "bg-primary/10 hover:bg-primary/20"
+                        : "hover:bg-muted"
+                    }`}
+                    onClick={() => handleTagToggle(tag.id)}
+                  >
+                    <SortableTagItem tag={tag} />
+                  </div>
                 ))}
               </SortableContext>
               <DragOverlay>
@@ -186,21 +189,6 @@ export const TagCreateModal: React.FC<TagCreateModalProps> = ({
                 ) : null}
               </DragOverlay>
             </DndContext>
-          </div>
-
-          {/* タグ作成フォーム */}
-          <div className="flex gap-2">
-            <Input
-              value={newTagName}
-              onChange={(e) => setNewTagName(e.target.value)}
-              placeholder="新しいタグの名前"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleCreateTag();
-                }
-              }}
-            />
-            <Button onClick={handleCreateTag}>作成</Button>
           </div>
         </div>
       </DialogContent>

@@ -89,30 +89,8 @@ async function getTermWithRelatedNodes(id: string) {
       })),
     ];
 
-    // HTML形式の定義を作成（ノードリンクを含む）
-    const enhancedDefinition = term.content.replace(
-      /\[\[(.*?)\]\]/g,
-      (_, nodeName) => {
-        const linkedNode = uniqueNodes.find((n) => n.name === nodeName);
-        return linkedNode
-          ? `<span class="dark:bg-blue-500 bg-blue-300 hover:bg-blue-500 cursor-pointer dark:hover:bg-blue-600 transition-colors rounded-xs px-1 py-0.5" data-term-id="${linkedNode.id}">${nodeName}</span>`
-          : nodeName;
-      }
-    );
-
     return {
-      term: {
-        id: term.id,
-        name: term.name,
-        definition: enhancedDefinition,
-        createdAt: term.createdAt,
-        updatedAt: term.updatedAt,
-        tags: term.tags.map((tag) => ({
-          id: tag.id,
-          name: tag.name,
-          color: tag.color,
-        })),
-      },
+      term: term,
       graphData: {
         nodes: uniqueNodes,
         links,

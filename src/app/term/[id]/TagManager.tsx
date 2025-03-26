@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { TagCreateModal } from "@/app/components/TagManager/TagCreateModal";
-import { updateTagHierarchy } from "./actions";
+import { SelectTagModal } from "@/app/components/TagManager/SelectTagModal";
+import { getAllTags, addTagToNode, removeTagFromNode } from "./actions";
 import { Tag } from "@prisma/client";
 
 export interface TagWithChildren extends Tag {
@@ -12,33 +12,50 @@ export interface TagWithChildren extends Tag {
 
 interface TagManagerProps {
   nodeId: string;
-  currentTags: TagWithChildren[];
-  allTags?: TagWithChildren[];
+  currentTags: Tag[];
 }
 
-const TagManager: React.FC<TagManagerProps> = ({
-  currentTags,
-  allTags = [],
-}) => {
+const TagManager: React.FC<TagManagerProps> = ({ nodeId, currentTags }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [allTags, setAllTags] = useState<TagWithChildren[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleTagCreate = (newTag: Tag) => {
-    // 新しいタグが作成された後の処理
-    console.log("新しいタグが作成されました:", newTag);
-  };
+  // 全タグを取得
+  useEffect(() => {
+    const fetchTags = async () => {
+      setIsLoading(true);
+      try {
+        const result = await getAllTags();
+        if (result.success) {
+          setAllTags(result.tags);
+        }
+      } catch (error) {
+        console.error("タグの取得に失敗しました:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const handleTagUpdate = async (updatedTags: Tag[]) => {
+    fetchTags();
+  }, []);
+
+  const handleTagSelect = async (selectedTagIds: string[]) => {
     try {
-      // タグの階層構造を更新
-      await updateTagHierarchy(
-        updatedTags.map((tag) => ({
-          id: tag.id,
-          parentId: tag.parentId,
-        }))
-      );
-      console.log("タグの階層が更新されました:", updatedTags);
+      // 追加されたタグ（選択されているが、現在のタグにないもの）
+      for (const tagId of selectedTagIds) {
+        if (!currentTags.some((t) => t.id === tagId)) {
+          await addTagToNode(nodeId, tagId);
+        }
+      }
+
+      // 削除されたタグ（現在のタグにあるが、選択されていないもの）
+      for (const tag of currentTags) {
+        if (!selectedTagIds.includes(tag.id)) {
+          await removeTagFromNode(nodeId, tag.id);
+        }
+      }
     } catch (error) {
-      console.error("タグの階層更新に失敗しました:", error);
+      console.error("タグの更新に失敗しました:", error);
     }
   };
 
@@ -49,6 +66,7 @@ const TagManager: React.FC<TagManagerProps> = ({
           variant="outline"
           size="sm"
           onClick={() => setIsModalOpen(true)}
+          disabled={isLoading}
         >
           タグを管理
         </Button>
@@ -70,12 +88,12 @@ const TagManager: React.FC<TagManagerProps> = ({
         ))}
       </div>
 
-      <TagCreateModal
+      <SelectTagModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         allTags={allTags}
-        onTagCreate={handleTagCreate}
-        onTagUpdate={handleTagUpdate}
+        currentTags={currentTags}
+        onTagSelect={handleTagSelect}
       />
     </div>
   );

@@ -99,6 +99,15 @@ export async function addTagToNode(nodeId: string, tagId: string) {
   }
 }
 
+interface TagWithChildren {
+  id: string;
+  name: string;
+  color: string;
+  createdAt: Date;
+  parentId: string | null;
+  children: TagWithChildren[];
+}
+
 /**
  * 利用可能なすべてのタグを取得するサーバーアクション
  */
@@ -106,9 +115,27 @@ export async function getAllTags() {
   try {
     const tags = await prisma.tag.findMany({
       orderBy: { name: "asc" },
+      include: {
+        children: true,
+      },
     });
 
-    return { success: true, tags };
+    // 階層構造を構築
+    const buildHierarchy = (
+      tags: TagWithChildren[],
+      parentId: string | null = null
+    ): TagWithChildren[] => {
+      return tags
+        .filter((tag) => tag.parentId === parentId)
+        .map((tag) => ({
+          ...tag,
+          children: buildHierarchy(tags, tag.id),
+        }));
+    };
+
+    const hierarchicalTags = buildHierarchy(tags as TagWithChildren[]);
+
+    return { success: true, tags: hierarchicalTags };
   } catch (error) {
     console.error("Error fetching tags:", error);
     return { success: false, error: (error as Error).message, tags: [] };
