@@ -1,183 +1,84 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { X, Plus } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { removeTagFromNode, addTagToNode, getAllTags } from "./actions";
+import { TagCreateModal } from "@/app/components/TagManager/TagCreateModal";
+import { updateTagHierarchy } from "./actions";
+import { Tag } from "@prisma/client";
 
-interface Tag {
-  id: string;
-  name: string;
-  color: string;
+export interface TagWithChildren extends Tag {
+  children: TagWithChildren[];
 }
 
 interface TagManagerProps {
   nodeId: string;
-  currentTags: Tag[];
+  currentTags: TagWithChildren[];
+  allTags?: TagWithChildren[];
 }
 
-export default function TagManager({ nodeId, currentTags }: TagManagerProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
-  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
-  const [isLoading, setIsLoading] = useState(false);
+const TagManager: React.FC<TagManagerProps> = ({
+  currentTags,
+  allTags = [],
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // ダイアログを開くときに全タグを取得
-  useEffect(() => {
-    if (isOpen) {
-      const fetchTags = async () => {
-        setIsLoading(true);
-        try {
-          const result = await getAllTags();
-          if (result.success) {
-            setAvailableTags(result.tags);
-
-            // 現在選択されているタグをセット
-            const selected = new Set<string>();
-            result.tags.forEach((tag) => {
-              if (currentTags.some((t) => t.id === tag.id)) {
-                selected.add(tag.id);
-              }
-            });
-            setSelectedTags(selected);
-          }
-        } catch (error) {
-          console.error("タグの取得に失敗しました:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      fetchTags();
-    }
-  }, [isOpen, currentTags]);
-
-  // タグを削除する
-  const handleRemoveTag = async (tagId: string) => {
-    try {
-      await removeTagFromNode(nodeId, tagId);
-    } catch (error) {
-      console.error("タグの削除に失敗しました:", error);
-    }
+  const handleTagCreate = (newTag: Tag) => {
+    // 新しいタグが作成された後の処理
+    console.log("新しいタグが作成されました:", newTag);
   };
 
-  // タグの選択状態を切り替える
-  const toggleTag = (tagId: string) => {
-    setSelectedTags((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(tagId)) {
-        newSet.delete(tagId);
-      } else {
-        newSet.add(tagId);
-      }
-      return newSet;
-    });
-  };
-
-  // 選択されたタグを保存
-  const saveSelectedTags = async () => {
-    setIsLoading(true);
+  const handleTagUpdate = async (updatedTags: Tag[]) => {
     try {
-      // 追加されたタグ（選択されているが、現在のタグにないもの）
-      for (const tagId of selectedTags) {
-        if (!currentTags.some((t) => t.id === tagId)) {
-          await addTagToNode(nodeId, tagId);
-        }
-      }
-
-      // 削除されたタグ（現在のタグにあるが、選択されていないもの）
-      for (const tag of currentTags) {
-        if (!selectedTags.has(tag.id)) {
-          await removeTagFromNode(nodeId, tag.id);
-        }
-      }
-
-      setIsOpen(false);
+      // タグの階層構造を更新
+      await updateTagHierarchy(
+        updatedTags.map((tag) => ({
+          id: tag.id,
+          parentId: tag.parentId,
+        }))
+      );
+      console.log("タグの階層が更新されました:", updatedTags);
     } catch (error) {
-      console.error("タグの更新に失敗しました:", error);
-    } finally {
-      setIsLoading(false);
+      console.error("タグの階層更新に失敗しました:", error);
     }
   };
 
   return (
-    <div>
-      {/* 現在のタグ表示 */}
-      <div className="flex flex-wrap gap-4">
-        {currentTags.map((tag) => (
-          <Badge
-            key={tag.id}
-            variant="outline"
-            className="bg-secondary relative flex items-center px-2 py-1"
-          >
-            {tag.name}
-            <button
-              onClick={() => handleRemoveTag(tag.id)}
-              className="absolute p-[3px] right-[-10px] top-[-10px] h-auto rounded-full border bg-muted hover:bg-muted-foreground/20"
-              aria-label={`${tag.name}タグを削除`}
-            >
-              <X className="h-3 w-3" />
-            </button>
-          </Badge>
-        ))}
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-1">
-              <Plus className="h-3.5 w-3.5" />
-              タグを追加
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>タグを管理</DialogTitle>
-              <DialogDescription>
-                用語に関連するタグを選択してください
-              </DialogDescription>
-            </DialogHeader>
-            <div className="py-4">
-              {isLoading ? (
-                <div className="text-center">読み込み中...</div>
-              ) : (
-                <div className="max-h-[300px] overflow-y-auto grid grid-cols-2 gap-2">
-                  {availableTags.map((tag) => (
-                    <div key={tag.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`tag-${tag.id}`}
-                        checked={selectedTags.has(tag.id)}
-                        onCheckedChange={() => toggleTag(tag.id)}
-                      />
-                      <label
-                        htmlFor={`tag-${tag.id}`}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                      >
-                        {tag.name}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsOpen(false)}>
-                キャンセル
-              </Button>
-              <Button onClick={saveSelectedTags} disabled={isLoading}>
-                保存
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setIsModalOpen(true)}
+        >
+          タグを管理
+        </Button>
       </div>
+
+      <div className="flex flex-wrap gap-2">
+        {currentTags.map((tag) => (
+          <div
+            key={tag.id}
+            className="flex items-center gap-1 px-2 py-1 rounded-full text-sm"
+            style={{ backgroundColor: `${tag.color}20` }}
+          >
+            <div
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: tag.color }}
+            />
+            <span>{tag.name}</span>
+          </div>
+        ))}
+      </div>
+
+      <TagCreateModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        allTags={allTags}
+        onTagCreate={handleTagCreate}
+        onTagUpdate={handleTagUpdate}
+      />
     </div>
   );
-}
+};
+
+export default TagManager;

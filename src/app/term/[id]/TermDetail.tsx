@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import Editor from "@/components/editor";
 import { updateTermDefinition } from "./actions";
-import TagManager from "./TagManager";
+import TagManager, { TagWithChildren } from "./TagManager";
 import { cn } from "@/lib/utils";
 
 interface TermNodeData {
@@ -24,11 +24,7 @@ interface TermData {
   definition: string;
   createdAt: Date;
   updatedAt: Date;
-  tags: {
-    id: string;
-    name: string;
-    color: string;
-  }[];
+  tags: TagWithChildren[];
 }
 
 interface TermDetailProps {

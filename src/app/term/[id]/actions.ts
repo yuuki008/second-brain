@@ -114,3 +114,47 @@ export async function getAllTags() {
     return { success: false, error: (error as Error).message, tags: [] };
   }
 }
+
+export async function createTag(name: string) {
+  try {
+    const response = await fetch("/api/tags", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+
+    if (!response.ok) {
+      throw new Error("タグの作成に失敗しました");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("タグの作成エラー:", error);
+    throw error;
+  }
+}
+
+export async function updateTagHierarchy(
+  tags: { id: string; parentId: string | null }[]
+) {
+  try {
+    const response = await fetch("/api/tags/hierarchy", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ tags }),
+    });
+
+    if (!response.ok) {
+      throw new Error("タグの階層更新に失敗しました");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("タグの階層更新エラー:", error);
+    throw error;
+  }
+}
