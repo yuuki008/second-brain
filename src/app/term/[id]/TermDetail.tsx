@@ -79,7 +79,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
     <div className="h-screen w-[95%] max-w-screen-xl mx-auto flex overflow-hidden">
       {/* 左側: 用語の説明 */}
       <div className="flex-1 min-h-full flex flex-col overflow-y-auto py-10 pr-10">
-        <div className="mb-6">
+        <div>
           <h1 className="text-[2.5em] font-bold mb-4">{term.name}</h1>
           <TagManager nodeId={id} currentTags={term.tags} />
         </div>
