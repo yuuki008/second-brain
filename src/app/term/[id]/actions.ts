@@ -117,19 +117,14 @@ export async function getAllTags() {
 
 export async function createTag(name: string) {
   try {
-    const response = await fetch("/api/tags", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const tag = await prisma.tag.create({
+      data: {
+        name,
       },
-      body: JSON.stringify({ name }),
     });
 
-    if (!response.ok) {
-      throw new Error("タグの作成に失敗しました");
-    }
-
-    return await response.json();
+    revalidatePath("/term/[id]");
+    return tag;
   } catch (error) {
     console.error("タグの作成エラー:", error);
     throw error;
@@ -140,19 +135,18 @@ export async function updateTagHierarchy(
   tags: { id: string; parentId: string | null }[]
 ) {
   try {
-    const response = await fetch("/api/tags/hierarchy", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ tags }),
-    });
+    // トランザクションを使用して一括更新
+    await prisma.$transaction(
+      tags.map((tag) =>
+        prisma.tag.update({
+          where: { id: tag.id },
+          data: { parentId: tag.parentId },
+        })
+      )
+    );
 
-    if (!response.ok) {
-      throw new Error("タグの階層更新に失敗しました");
-    }
-
-    return await response.json();
+    revalidatePath("/term/[id]");
+    return { success: true };
   } catch (error) {
     console.error("タグの階層更新エラー:", error);
     throw error;
