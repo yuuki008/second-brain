@@ -25,6 +25,9 @@ import {
 } from "@/components/ui/dialog";
 import { TagWithChildren } from "@/app/term/[id]/TagManager";
 import { Tag } from "@prisma/client";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { createTag } from "@/app/term/[id]/actions";
 
 interface SelectTagModalProps {
   isOpen: boolean;
@@ -46,6 +49,8 @@ export const SelectTagModal: React.FC<SelectTagModalProps> = ({
   const [selectedTags, setSelectedTags] = useState<Set<string>>(
     new Set(currentTags.map((tag) => tag.id))
   );
+  const [newTagName, setNewTagName] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
@@ -83,6 +88,34 @@ export const SelectTagModal: React.FC<SelectTagModalProps> = ({
       onTagSelect(Array.from(newSet));
       return newSet;
     });
+  };
+
+  const handleCreateTag = async () => {
+    if (!newTagName.trim()) return;
+
+    setIsCreating(true);
+    try {
+      const result = await createTag(newTagName.trim());
+      if (result.success && result.tag) {
+        // 新しいタグをリストに追加
+        const newTag: TagWithChildren = {
+          ...result.tag,
+          children: [],
+        };
+        setTags((prev) => [...prev, newTag]);
+        setNewTagName("");
+      }
+    } catch (error) {
+      console.error("Error creating tag:", error);
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleCreateTag();
+    }
   };
 
   const findTagById = (
@@ -189,6 +222,23 @@ export const SelectTagModal: React.FC<SelectTagModalProps> = ({
                 ) : null}
               </DragOverlay>
             </DndContext>
+          </div>
+
+          {/* タグ作成フォーム */}
+          <div className="flex gap-2">
+            <Input
+              placeholder="新しいタグを作成"
+              value={newTagName}
+              onChange={(e) => setNewTagName(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={isCreating}
+            />
+            <Button
+              onClick={handleCreateTag}
+              disabled={!newTagName.trim() || isCreating}
+            >
+              {isCreating ? "作成中..." : "作成"}
+            </Button>
           </div>
         </div>
       </DialogContent>

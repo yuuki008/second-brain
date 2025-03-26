@@ -135,26 +135,30 @@ export async function getAllTags() {
 
     const hierarchicalTags = buildHierarchy(tags as TagWithChildren[]);
 
-    return { success: true, tags: hierarchicalTags };
+    return hierarchicalTags;
   } catch (error) {
     console.error("Error fetching tags:", error);
-    return { success: false, error: (error as Error).message, tags: [] };
+    return [];
   }
 }
 
+/**
+ * 新しいタグを作成するサーバーアクション
+ * @param name - タグの名前
+ */
 export async function createTag(name: string) {
   try {
     const tag = await prisma.tag.create({
       data: {
         name,
+        color: "#000000", // デフォルトの色
       },
     });
 
-    revalidatePath("/term/[id]");
-    return tag;
+    return { success: true, tag };
   } catch (error) {
-    console.error("タグの作成エラー:", error);
-    throw error;
+    console.error("Error creating tag:", error);
+    return { success: false, error: (error as Error).message };
   }
 }
 

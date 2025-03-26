@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import TermDetail from "./TermDetail";
 import { prisma } from "@/lib/prisma";
+import { getAllTags } from "./actions";
 
 // 用語とその関連ノードを取得する関数
 async function getTermWithRelatedNodes(id: string) {
@@ -109,12 +110,18 @@ interface TermPageProps {
 export default async function TermPage({ params }: TermPageProps) {
   const { id } = await params;
   const termData = await getTermWithRelatedNodes(id);
+  const allTags = await getAllTags();
 
   if (!termData) {
     notFound();
   }
 
   return (
-    <TermDetail id={id} term={termData.term} graphData={termData.graphData} />
+    <TermDetail
+      id={id}
+      term={termData.term}
+      graphData={termData.graphData}
+      allTags={allTags}
+    />
   );
 }

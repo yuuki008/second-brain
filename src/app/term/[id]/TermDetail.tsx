@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import Editor from "@/components/editor";
 import { updateTermDefinition } from "./actions";
-import TagManager from "./TagManager";
+import TagManager, { TagWithChildren } from "./TagManager";
 import { cn } from "@/lib/utils";
 import { Node, Tag } from "@prisma/client";
 
@@ -22,6 +22,7 @@ interface TermNodeData {
 interface TermDetailProps {
   id: string;
   term: Node & { tags: Tag[] };
+  allTags: TagWithChildren[];
   graphData: {
     nodes: TermNodeData[];
     links: {
@@ -74,7 +75,12 @@ function useWindowWidth() {
   return width;
 }
 
-const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
+const TermDetail: React.FC<TermDetailProps> = ({
+  id,
+  term,
+  graphData,
+  allTags,
+}) => {
   const router = useRouter();
   const windowWidth = useWindowWidth();
 
@@ -91,7 +97,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
       >
         <div>
           <h1 className="text-3xl font-bold mb-4">{term.name}</h1>
-          <TagManager nodeId={id} currentTags={term.tags} />
+          <TagManager nodeId={id} currentTags={term.tags} allTags={allTags} />
         </div>
 
         <div className="flex-1">

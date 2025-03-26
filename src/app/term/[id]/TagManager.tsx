@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SelectTagModal } from "@/app/components/TagManager/SelectTagModal";
-import { getAllTags, addTagToNode, removeTagFromNode } from "./actions";
+import { addTagToNode, removeTagFromNode } from "./actions";
 import { Tag } from "@prisma/client";
 
 export interface TagWithChildren extends Tag {
@@ -13,31 +13,15 @@ export interface TagWithChildren extends Tag {
 interface TagManagerProps {
   nodeId: string;
   currentTags: Tag[];
+  allTags: TagWithChildren[];
 }
 
-const TagManager: React.FC<TagManagerProps> = ({ nodeId, currentTags }) => {
+const TagManager: React.FC<TagManagerProps> = ({
+  nodeId,
+  currentTags,
+  allTags,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [allTags, setAllTags] = useState<TagWithChildren[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // 全タグを取得
-  useEffect(() => {
-    const fetchTags = async () => {
-      setIsLoading(true);
-      try {
-        const result = await getAllTags();
-        if (result.success) {
-          setAllTags(result.tags);
-        }
-      } catch (error) {
-        console.error("タグの取得に失敗しました:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTags();
-  }, []);
 
   const handleTagSelect = async (selectedTagIds: string[]) => {
     try {
@@ -66,7 +50,6 @@ const TagManager: React.FC<TagManagerProps> = ({ nodeId, currentTags }) => {
           variant="outline"
           size="sm"
           onClick={() => setIsModalOpen(true)}
-          disabled={isLoading}
         >
           タグを管理
         </Button>
