@@ -29,6 +29,9 @@ model Tag {
   color     String   @default("#3B82F6") 
   createdAt DateTime @default(now()) @map("created_at")
   nodes     Node[]   @relation("NodeToTag")
+  parent    Tag?     @relation("TagToTag", fields: [parentId], references: [id])
+  parentId  String?
+  children  Tag[]    @relation("TagToTag")
 
   @@map("tags")
 }
