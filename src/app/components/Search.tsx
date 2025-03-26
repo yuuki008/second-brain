@@ -12,6 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import { getAllNodes, createNewNode } from "../actions/search";
 import { Node, Tag } from "@prisma/client";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Search: React.FC = () => {
   const router = useRouter();
@@ -98,67 +99,99 @@ const Search: React.FC = () => {
     }
   };
 
-  if (!open) return <></>;
-
   return (
-    <>
-      <div className="fade-in-30 fixed top-0 left-0 w-full h-full z-50 bg-background/70" />
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 z-[60] w-full max-w-lg">
-        <Command className="rounded-lg border" shouldFilter={false}>
-          <CommandInput
-            value={searchQuery}
-            onValueChange={setSearchQuery}
-            placeholder="What are you searching for?"
-            className="flex h-12 w-full bg-transparent text-sm placeholder:text-muted-foreground"
-            autoFocus={true}
-          />
-          {open && (
-            <CommandList className="max-h-96 overflow-y-auto border-none">
-              <CommandGroup className="p-0">
-                {searchQuery.length > 0 ? (
-                  <div className="border-t">
-                    <CommandItem
-                      onSelect={handleCreateNew}
-                      className="cursor-pointer py-2"
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-0 left-0 w-screen h-screen z-50 bg-background/70 backdrop-blur-sm flex items-center justify-center"
+            onClick={() => setOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="max-w-lg mx-auto w-full"
+            >
+              <Command
+                className="rounded-lg border shadow-lg w-full"
+                shouldFilter={false}
+              >
+                <CommandInput
+                  value={searchQuery}
+                  onValueChange={setSearchQuery}
+                  placeholder="What are you searching for?"
+                  className="flex h-12 w-full bg-transparent text-sm placeholder:text-muted-foreground"
+                  autoFocus={true}
+                />
+                <AnimatePresence>
+                  {open && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
                     >
-                      <div className="font-medium">
-                        Create new
-                        <span className="text-red-500">「{searchQuery}」</span>
-                      </div>
-                    </CommandItem>
-                    {filteredNodes.map((node) => (
-                      <CommandItem
-                        key={node.id}
-                        onSelect={() => handleSelectItem(node)}
-                        className="cursor-pointer py-2"
-                      >
-                        <div className="font-medium mr-2">{node.name}</div>
-                        {node.tags && node.tags.length > 0 && (
-                          <div className="mt-1 flex flex-wrap gap-1">
-                            {node.tags.map((tag) => (
-                              <Badge
-                                key={tag.id}
-                                variant="secondary"
-                                className="text-xs"
-                                style={{ backgroundColor: tag.color }}
+                      <CommandList className="max-h-96 overflow-y-auto border-none">
+                        <CommandGroup className="p-0">
+                          {searchQuery.length > 0 ? (
+                            <div className="border-t">
+                              <CommandItem
+                                onSelect={handleCreateNew}
+                                className="cursor-pointer py-2"
                               >
-                                {tag.name}
-                              </Badge>
-                            ))}
-                          </div>
-                        )}
-                      </CommandItem>
-                    ))}
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </CommandGroup>
-            </CommandList>
-          )}
-        </Command>
-      </div>
-    </>
+                                <div className="font-medium">
+                                  新規作成
+                                  <span className="text-red-500">
+                                    「{searchQuery}」
+                                  </span>
+                                </div>
+                              </CommandItem>
+                              {filteredNodes.map((node) => (
+                                <CommandItem
+                                  key={node.id}
+                                  onSelect={() => handleSelectItem(node)}
+                                  className="cursor-pointer py-2"
+                                >
+                                  <div className="font-medium mr-2">
+                                    {node.name}
+                                  </div>
+                                  {node.tags && node.tags.length > 0 && (
+                                    <div className="mt-1 flex flex-wrap gap-1">
+                                      {node.tags.map((tag) => (
+                                        <Badge
+                                          key={tag.id}
+                                          variant="secondary"
+                                          className="text-xs"
+                                          style={{ backgroundColor: tag.color }}
+                                        >
+                                          {tag.name}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                  )}
+                                </CommandItem>
+                              ))}
+                            </div>
+                          ) : (
+                            <></>
+                          )}
+                        </CommandGroup>
+                      </CommandList>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Command>
+            </motion.div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 };
 
