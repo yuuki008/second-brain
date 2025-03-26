@@ -111,13 +111,13 @@ const Search: React.FC = () => {
           autoFocus={true}
         />
         {open && (
-          <CommandList className="max-h-96 overflow-y-auto">
+          <CommandList className="max-h-96 overflow-y-auto border-none">
             <CommandGroup className="p-0">
               {searchQuery.length > 0 ? (
-                <>
+                <div className="border-t">
                   <CommandItem
                     onSelect={handleCreateNew}
-                    className="cursor-pointer"
+                    className="cursor-pointer py-2"
                   >
                     <div className="font-medium">
                       新規作成
@@ -128,7 +128,7 @@ const Search: React.FC = () => {
                     <CommandItem
                       key={node.id}
                       onSelect={() => handleSelectItem(node)}
-                      className="cursor-pointer"
+                      className="cursor-pointer py-2"
                     >
                       <div className="font-medium mr-2">{node.name}</div>
                       {node.tags && node.tags.length > 0 && (
@@ -147,7 +147,7 @@ const Search: React.FC = () => {
                       )}
                     </CommandItem>
                   ))}
-                </>
+                </div>
               ) : (
                 <></>
               )}
