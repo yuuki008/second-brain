@@ -101,61 +101,64 @@ const Search: React.FC = () => {
   if (!open) return <></>;
 
   return (
-    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-lg">
-      <Command className="rounded-lg border shadow-md" shouldFilter={false}>
-        <CommandInput
-          value={searchQuery}
-          onValueChange={setSearchQuery}
-          placeholder="検索するには ⌘K を押す..."
-          className="flex h-12 w-full bg-transparent text-sm placeholder:text-muted-foreground"
-          autoFocus={true}
-        />
-        {open && (
-          <CommandList className="max-h-96 overflow-y-auto border-none">
-            <CommandGroup className="p-0">
-              {searchQuery.length > 0 ? (
-                <div className="border-t">
-                  <CommandItem
-                    onSelect={handleCreateNew}
-                    className="cursor-pointer py-2"
-                  >
-                    <div className="font-medium">
-                      新規作成
-                      <span className="text-red-500">「{searchQuery}」</span>
-                    </div>
-                  </CommandItem>
-                  {filteredNodes.map((node) => (
+    <>
+      <div className="fade-in-30 fixed top-0 left-0 w-full h-full z-50 bg-background/70" />
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 z-[60] w-full max-w-lg">
+        <Command className="rounded-lg border" shouldFilter={false}>
+          <CommandInput
+            value={searchQuery}
+            onValueChange={setSearchQuery}
+            placeholder="What are you searching for?"
+            className="flex h-12 w-full bg-transparent text-sm placeholder:text-muted-foreground"
+            autoFocus={true}
+          />
+          {open && (
+            <CommandList className="max-h-96 overflow-y-auto border-none">
+              <CommandGroup className="p-0">
+                {searchQuery.length > 0 ? (
+                  <div className="border-t">
                     <CommandItem
-                      key={node.id}
-                      onSelect={() => handleSelectItem(node)}
+                      onSelect={handleCreateNew}
                       className="cursor-pointer py-2"
                     >
-                      <div className="font-medium mr-2">{node.name}</div>
-                      {node.tags && node.tags.length > 0 && (
-                        <div className="mt-1 flex flex-wrap gap-1">
-                          {node.tags.map((tag) => (
-                            <Badge
-                              key={tag.id}
-                              variant="secondary"
-                              className="text-xs"
-                              style={{ backgroundColor: tag.color }}
-                            >
-                              {tag.name}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
+                      <div className="font-medium">
+                        Create new
+                        <span className="text-red-500">「{searchQuery}」</span>
+                      </div>
                     </CommandItem>
-                  ))}
-                </div>
-              ) : (
-                <></>
-              )}
-            </CommandGroup>
-          </CommandList>
-        )}
-      </Command>
-    </div>
+                    {filteredNodes.map((node) => (
+                      <CommandItem
+                        key={node.id}
+                        onSelect={() => handleSelectItem(node)}
+                        className="cursor-pointer py-2"
+                      >
+                        <div className="font-medium mr-2">{node.name}</div>
+                        {node.tags && node.tags.length > 0 && (
+                          <div className="mt-1 flex flex-wrap gap-1">
+                            {node.tags.map((tag) => (
+                              <Badge
+                                key={tag.id}
+                                variant="secondary"
+                                className="text-xs"
+                                style={{ backgroundColor: tag.color }}
+                              >
+                                {tag.name}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </CommandItem>
+                    ))}
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </CommandGroup>
+            </CommandList>
+          )}
+        </Command>
+      </div>
+    </>
   );
 };
 
