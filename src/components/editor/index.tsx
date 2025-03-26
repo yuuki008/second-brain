@@ -22,7 +22,8 @@ const Editor = ({ content, onChange, className }: Props) => {
     },
     editorProps: {
       attributes: {
-        class: "markdown-editor focus:outline-none dark:prose-invert h-full",
+        class:
+          "markdown-editor focus:outline-none dark:prose-invert h-full px-1",
       },
     },
   });
