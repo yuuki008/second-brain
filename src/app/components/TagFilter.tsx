@@ -1,18 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { ChevronRight, Tag, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
 
-// 階層構造を持つタグの型定義
 export interface HierarchicalTag {
   id: string;
   name: string;
@@ -23,102 +13,29 @@ export interface HierarchicalTag {
 
 interface TagFilterComponentProps {
   tags: HierarchicalTag[];
-  activeTagId: string | null;
-  onTagSelect: (tagId: string) => void;
+  selectedTagIds: string[];
+  onTagToggle: (tagId: string) => void;
 }
-
-const TagNode: React.FC<{
-  tag: HierarchicalTag;
-  activeTagId: string | null;
-  onTagSelect: (tagId: string) => void;
-  level: number;
-}> = ({ tag, activeTagId, onTagSelect, level }) => {
-  const [expanded, setExpanded] = useState(true);
-  const hasChildren = tag.children && tag.children.length > 0;
-
-  return (
-    <div className="w-full">
-      <div className={cn("flex items-center py-1 rounded-md")}>
-        {hasChildren ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-5 w-5 p-0"
-            onClick={() => setExpanded(!expanded)}
-          >
-            {expanded ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
-          </Button>
-        ) : (
-          <div className="w-5"></div>
-        )}
-        <Badge
-          onClick={() => onTagSelect(tag.id)}
-          variant={activeTagId === tag.id ? "default" : "secondary"}
-          className="cursor-pointer px-1"
-        >
-          {tag.name}
-        </Badge>
-      </div>
-
-      {hasChildren && expanded && (
-        <div className="pl-3">
-          {tag.children!.map((child) => (
-            <TagNode
-              key={child.id}
-              tag={child}
-              activeTagId={activeTagId}
-              onTagSelect={onTagSelect}
-              level={level + 1}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
 
 const TagFilter: React.FC<TagFilterComponentProps> = ({
   tags,
-  activeTagId,
-  onTagSelect,
+  selectedTagIds,
+  onTagToggle,
 }) => {
-  const [showTagList, setShowTagList] = useState(false);
-
   return (
-    <div className="absolute top-4 left-4 z-10">
-      <Popover open={showTagList} onOpenChange={setShowTagList}>
-        <PopoverTrigger asChild>
-          <Button
-            variant={activeTagId ? "default" : "outline"}
-            size="icon"
-            className="rounded-full h-10 w-10 relative"
+    <div className="fixed top-4 left-4 z-10">
+      <div className="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <Badge
+            key={tag.id}
+            onClick={() => onTagToggle(tag.id)}
+            variant={selectedTagIds.includes(tag.id) ? "default" : "secondary"}
+            className="cursor-pointer hover:opacity-80 transition-opacity"
           >
-            <Tag className="h-5 w-5" />
-            {activeTagId && (
-              <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto pl-0 py-2 pr-2" align="start">
-          <ScrollArea className="max-h-80 overflow-y-auto">
-            <div className="space-y-1">
-              {tags.map((tag) => (
-                <TagNode
-                  key={tag.id}
-                  tag={tag}
-                  activeTagId={activeTagId}
-                  onTagSelect={onTagSelect}
-                  level={0}
-                />
-              ))}
-            </div>
-          </ScrollArea>
-        </PopoverContent>
-      </Popover>
+            {tag.name}
+          </Badge>
+        ))}
+      </div>
     </div>
   );
 };

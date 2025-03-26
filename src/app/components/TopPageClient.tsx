@@ -25,17 +25,17 @@ interface TopPageClientProps {
 
 export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
   const router = useRouter();
-  const [activeTagId, setActiveTagId] = useState<string | null>(null);
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
 
   // 選択されたタグとその子タグすべてのIDを収集する関数
   const collectTagAndChildrenIds = useCallback(
-    (tagId: string | null): string[] => {
-      if (!tagId) return [];
+    (tagIds: string[]): string[] => {
+      if (tagIds.length === 0) return [];
 
-      const results: string[] = [tagId];
+      const results: string[] = [...tagIds];
       const collectChildIds = (tags: HierarchicalTag[]) => {
         for (const tag of tags) {
-          if (tag.id === tagId) {
+          if (tagIds.includes(tag.id)) {
             // このタグが見つかった場合、すべての子タグのIDを収集
             const collectIds = (tag: HierarchicalTag) => {
               if (tag.children && tag.children.length > 0) {
@@ -46,28 +46,27 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
               }
             };
             collectIds(tag);
-            return true;
           }
 
           if (tag.children && tag.children.length > 0) {
-            if (collectChildIds(tag.children)) {
-              return true;
-            }
+            collectChildIds(tag.children);
           }
         }
-        return false;
       };
 
       collectChildIds(tags);
-      return results;
+      return [...new Set(results)]; // 重複を除去
     },
     [tags]
   );
 
   // 選択されたタグとその全ての子タグのID
   const activeTagAndChildrenIds = useMemo(
-    () => (activeTagId ? collectTagAndChildrenIds(activeTagId) : null),
-    [activeTagId, collectTagAndChildrenIds]
+    () =>
+      selectedTagIds.length > 0
+        ? collectTagAndChildrenIds(selectedTagIds)
+        : null,
+    [selectedTagIds, collectTagAndChildrenIds]
   );
 
   // 用語選択時の処理
@@ -76,8 +75,12 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
   };
 
   // タグ選択時の処理
-  const handleTagSelect = (tagId: string) => {
-    setActiveTagId(activeTagId === tagId ? null : tagId);
+  const handleTagToggle = (tagId: string) => {
+    setSelectedTagIds((prev) =>
+      prev.includes(tagId)
+        ? prev.filter((id) => id !== tagId)
+        : [...prev, tagId]
+    );
   };
 
   return (
@@ -86,8 +89,8 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
       <div className="fixed top-0 left-0 right-0 flex justify-end p-4 z-20">
         <TagFilter
           tags={tags}
-          activeTagId={activeTagId}
-          onTagSelect={handleTagSelect}
+          selectedTagIds={selectedTagIds}
+          onTagToggle={handleTagToggle}
         />
       </div>
 
@@ -96,7 +99,7 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
         {/* ネットワークグラフコンポーネント */}
         <NetworkGraph
           graphData={graphData}
-          activeTagId={activeTagId}
+          activeTagId={selectedTagIds.length === 1 ? selectedTagIds[0] : null}
           allTagIds={activeTagAndChildrenIds || undefined}
           onNodeSelect={handleTermSelect}
         />
