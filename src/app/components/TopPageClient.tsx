@@ -3,7 +3,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import TagFilter, { HierarchicalTag } from "@/app/components/TagFilter";
-import Search from "@/app/components/Search";
 import NetworkGraph from "@/app/components/NetworkGraph";
 
 // D3.js用の型定義
@@ -101,8 +100,6 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
           allTagIds={activeTagAndChildrenIds || undefined}
           onNodeSelect={handleTermSelect}
         />
-
-        <Search graphData={graphData} onTermSelect={handleTermSelect} />
       </div>
     </div>
   );
