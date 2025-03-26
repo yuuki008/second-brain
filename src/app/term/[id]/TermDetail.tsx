@@ -6,6 +6,7 @@ import NetworkGraph from "@/app/components/NetworkGraph";
 import Editor from "@/components/editor";
 import { updateTermDefinition } from "./actions";
 import TagManager from "./TagManager";
+import { cn } from "@/lib/utils";
 
 interface TermNodeData {
   id: string;
@@ -70,15 +71,36 @@ const TermEditor = React.memo(
 );
 TermEditor.displayName = "TermEditor";
 
+// ウィンドウ幅を監視するカスタムフック
+function useWindowWidth() {
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return width;
+}
+
 const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
   const router = useRouter();
+  const windowWidth = useWindowWidth();
 
   const onNodeSelect = (node: TermNodeData) => router.push(`/term/${node.id}`);
 
   return (
     <div className="h-screen w-[95%] max-w-screen-xl mx-auto flex overflow-hidden">
       {/* 左側: 用語の説明 */}
-      <div className="flex-1 min-h-full flex flex-col overflow-y-auto py-10 pr-10">
+      <div
+        className={cn(
+          "flex-1 min-h-full flex flex-col overflow-y-auto py-10",
+          windowWidth <= 1280 ? "pr-0 max-w-3xl mx-auto" : "pr-10"
+        )}
+      >
         <div>
           <h1 className="text-[2.5em] font-bold mb-4">{term.name}</h1>
           <TagManager nodeId={id} currentTags={term.tags} />
@@ -90,17 +112,19 @@ const TermDetail: React.FC<TermDetailProps> = ({ id, term, graphData }) => {
       </div>
 
       {/* 右側: ネットワークグラフ */}
-      <div className="w-[350px] py-10">
-        <div className="w-full h-[350px] border rounded-xl">
-          <NetworkGraph
-            key={id}
-            graphData={graphData}
-            activeTagId={null}
-            onNodeSelect={onNodeSelect}
-            centerNodeId={id}
-          />
+      {windowWidth > 1280 && (
+        <div className="w-[350px] py-10">
+          <div className="w-full h-[350px] border rounded-xl">
+            <NetworkGraph
+              key={id}
+              graphData={graphData}
+              activeTagId={null}
+              onNodeSelect={onNodeSelect}
+              centerNodeId={id}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
