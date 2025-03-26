@@ -1,13 +1,19 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 
 export default function Loading() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-background">
       <div className="flex flex-col items-center">
         <Image
           className="animate-pulse"
-          src="/brain.png"
+          src={isDark ? "/brain-dark.png" : "/brain-light.png"}
           alt="logo"
           width={250}
           height={250}
