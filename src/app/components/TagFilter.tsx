@@ -59,9 +59,6 @@ const TagNode: React.FC<{
           onClick={() => onTagSelect(tag.id)}
           variant={activeTagId === tag.id ? "default" : "secondary"}
           className="cursor-pointer px-1"
-          style={{
-            backgroundColor: activeTagId === tag.id ? tag.color : undefined,
-          }}
         >
           {tag.name}
         </Badge>
