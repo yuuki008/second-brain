@@ -136,7 +136,6 @@ const TermDetail: React.FC<TermDetailProps> = ({
             <NetworkGraph
               key={id}
               graphData={graphData}
-              activeTagId={null}
               onNodeSelect={onNodeSelect}
               centerNodeId={id}
             />

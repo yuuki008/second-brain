@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import {
   setupSimulation,
-  filterGraphData,
   initializeGraph,
   prepareGraphData,
   drawGraphElements,
@@ -50,9 +49,7 @@ export interface NetworkGraphProps {
       target: string;
     }[];
   };
-  activeTagId: string | null;
   onNodeSelect: (node: NodeData) => void;
-  allTagIds?: string[];
   centerNodeId?: string;
   className?: string;
 }
@@ -67,20 +64,11 @@ export type D3CircleSelection = d3.Selection<
 
 export const NetworkGraph: React.FC<NetworkGraphProps> = ({
   graphData,
-  activeTagId,
   onNodeSelect,
-  allTagIds,
   centerNodeId,
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-
-  // フィルタリングされたノードとリンクのメモ化
-  const { filteredNodes, filteredLinks } = filterGraphData(
-    graphData,
-    activeTagId,
-    allTagIds
-  );
 
   // D3.jsを使ったネットワークグラフの初期化
   useEffect(() => {
@@ -100,8 +88,8 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
 
     // グラフデータの準備
     const { nodes, links, centerNode } = prepareGraphData(
-      filteredNodes,
-      filteredLinks,
+      graphData.nodes,
+      graphData.links,
       centerNodeId,
       width,
       height
@@ -174,14 +162,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
       window.removeEventListener("resize", handleResize);
       simulation.stop();
     };
-  }, [
-    filteredNodes,
-    filteredLinks,
-    activeTagId,
-    allTagIds,
-    onNodeSelect,
-    centerNodeId,
-  ]);
+  }, [graphData, onNodeSelect, centerNodeId]);
 
   return (
     <div

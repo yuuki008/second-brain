@@ -103,5 +103,5 @@
 }
 
 .markdown-editor [data-youtube-video] > iframe {
-  width: 100%;
+  @apply w-full my-4;
 }

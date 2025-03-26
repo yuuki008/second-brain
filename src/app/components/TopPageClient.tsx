@@ -69,6 +69,30 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
     [selectedTagIds, collectTagAndChildrenIds]
   );
 
+  // フィルタリングされたグラフデータ
+  const filteredGraphData = useMemo(() => {
+    if (!activeTagAndChildrenIds) return graphData;
+
+    // 選択されたタグに関連するノードをフィルタリング
+    const filteredNodes = graphData.nodes.filter((node) =>
+      node.tags.some((tag) => activeTagAndChildrenIds.includes(tag.id))
+    );
+
+    // フィルタリングされたノードのIDセットを作成
+    const filteredNodeIds = new Set(filteredNodes.map((node) => node.id));
+
+    // フィルタリングされたノード間のリンクのみを保持
+    const filteredLinks = graphData.links.filter(
+      (link) =>
+        filteredNodeIds.has(link.source) && filteredNodeIds.has(link.target)
+    );
+
+    return {
+      nodes: filteredNodes,
+      links: filteredLinks,
+    };
+  }, [graphData, activeTagAndChildrenIds]);
+
   // 用語選択時の処理
   const handleTermSelect = (term: NodeData) => {
     router.push(`/term/${term.id}`);
@@ -98,9 +122,7 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
       <div className="flex-1 relative">
         {/* ネットワークグラフコンポーネント */}
         <NetworkGraph
-          graphData={graphData}
-          activeTagId={selectedTagIds.length === 1 ? selectedTagIds[0] : null}
-          allTagIds={activeTagAndChildrenIds || undefined}
+          graphData={filteredGraphData}
           onNodeSelect={handleTermSelect}
         />
       </div>
