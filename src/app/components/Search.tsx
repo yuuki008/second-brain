@@ -29,6 +29,7 @@ const Search: React.FC = () => {
       try {
         const nodes = await getAllNodes();
         setAllNodes(nodes);
+        setFilteredNodes(nodes);
       } catch (error) {
         console.error("データ取得エラー:", error);
       }
@@ -57,7 +58,7 @@ const Search: React.FC = () => {
   // 検索クエリが変更されたら検索を実行
   useEffect(() => {
     if (!searchQuery) {
-      setFilteredNodes([]);
+      setFilteredNodes(allNodes);
       return;
     }
 
@@ -80,7 +81,7 @@ const Search: React.FC = () => {
 
   // 検索結果をクリックしたときの処理
   const handleSelectItem = (node: Node & { tags: Tag[] }) => {
-    router.push(`/node/${node.id}`);
+    router.push(`/term/${node.id}`);
     setSearchQuery("");
     setOpen(false);
   };
@@ -108,7 +109,7 @@ const Search: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-0 left-0 w-screen h-screen z-50 bg-background/70 backdrop-blur-sm flex items-center justify-center"
+            className="fixed top-0 left-0 w-screen h-screen z-50 bg-background/70 backdrop-blur-sm flex justify-center"
             onClick={() => setOpen(false)}
           >
             <motion.div
@@ -116,10 +117,10 @@ const Search: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="max-w-lg mx-auto w-full"
+              className="max-w-xl w-full mt-[15vh]"
             >
               <Command
-                className="rounded-lg border shadow-lg w-full"
+                className="rounded-lg border shadow-lg w-full h-auto"
                 shouldFilter={false}
               >
                 <CommandInput
@@ -137,11 +138,12 @@ const Search: React.FC = () => {
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <CommandList className="max-h-96 overflow-y-auto border-none">
-                        <CommandGroup className="p-0">
-                          {searchQuery.length > 0 ? (
-                            <div className="border-t">
+                      <CommandList className="overflow-y-auto max-h-96">
+                        <CommandGroup className="p-0 text-sm">
+                          <div>
+                            {searchQuery.length > 0 && (
                               <CommandItem
+                                onClick={handleCreateNew}
                                 onSelect={handleCreateNew}
                                 className="cursor-pointer py-2"
                               >
@@ -152,35 +154,34 @@ const Search: React.FC = () => {
                                   </span>
                                 </div>
                               </CommandItem>
-                              {filteredNodes.map((node) => (
-                                <CommandItem
-                                  key={node.id}
-                                  onSelect={() => handleSelectItem(node)}
-                                  className="cursor-pointer py-2"
-                                >
-                                  <div className="font-medium mr-2">
-                                    {node.name}
+                            )}
+                            {filteredNodes.map((node) => (
+                              <CommandItem
+                                key={node.id}
+                                onClick={() => handleSelectItem(node)}
+                                onSelect={() => handleSelectItem(node)}
+                                className="cursor-pointer py-2"
+                              >
+                                <div className="font-medium mr-2">
+                                  {node.name}
+                                </div>
+                                {node.tags && node.tags.length > 0 && (
+                                  <div className="flex flex-wrap gap-1">
+                                    {node.tags.map((tag) => (
+                                      <Badge
+                                        key={tag.id}
+                                        variant="secondary"
+                                        className="text-xs"
+                                        style={{ backgroundColor: tag.color }}
+                                      >
+                                        {tag.name}
+                                      </Badge>
+                                    ))}
                                   </div>
-                                  {node.tags && node.tags.length > 0 && (
-                                    <div className="mt-1 flex flex-wrap gap-1">
-                                      {node.tags.map((tag) => (
-                                        <Badge
-                                          key={tag.id}
-                                          variant="secondary"
-                                          className="text-xs"
-                                          style={{ backgroundColor: tag.color }}
-                                        >
-                                          {tag.name}
-                                        </Badge>
-                                      ))}
-                                    </div>
-                                  )}
-                                </CommandItem>
-                              ))}
-                            </div>
-                          ) : (
-                            <></>
-                          )}
+                                )}
+                              </CommandItem>
+                            ))}
+                          </div>
                         </CommandGroup>
                       </CommandList>
                     </motion.div>
