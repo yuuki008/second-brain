@@ -21,6 +21,7 @@ import { TaskList } from "@tiptap/extension-task-list";
 import { TaskItem } from "@tiptap/extension-task-item";
 import { TweetExtension } from "./Tweet";
 import { EmojiExtension } from "./Emoji";
+import { OGPLink } from "./open-graph";
 
 export const extensions = [
   StarterKit,
@@ -47,4 +48,5 @@ export const extensions = [
   Youtube,
   TweetExtension,
   EmojiExtension,
+  OGPLink,
 ];

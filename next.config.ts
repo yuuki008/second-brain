@@ -6,11 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "twemoji.maxcdn.com",
-      },
-      {
-        protocol: "https",
-        hostname: "cdn.jsdelivr.net",
+        hostname: "*", // Allow images from all domains
       },
     ],
   },
