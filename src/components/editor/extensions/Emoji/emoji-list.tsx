@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, {
   forwardRef,
@@ -78,12 +79,13 @@ export const EmojiList = forwardRef<EmojiListRef, EmojiListProps>(
     );
 
     return (
-      <div className="dropdown-menu">
+      <div className="w-[160px] overflow-y-auto rounded-lg border shadow-md">
         {items.map((item, index) => (
-          <button
-            className={index === selectedIndex ? "is-selected" : ""}
+          <Button
+            variant={index === selectedIndex ? "default" : "ghost"}
             key={index}
             onClick={() => selectItem(index)}
+            className="w-full justify-start overflow-hidden"
           >
             {item.fallbackImage ? (
               <Image
@@ -96,8 +98,8 @@ export const EmojiList = forwardRef<EmojiListRef, EmojiListProps>(
             ) : (
               item.emoji
             )}
-            :{item.name}:
-          </button>
+            {item.name}
+          </Button>
         ))}
       </div>
     );
