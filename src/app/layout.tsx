@@ -23,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body suppressHydrationWarning className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Search />
           <ThemeToggle />
