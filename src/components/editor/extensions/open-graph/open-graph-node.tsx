@@ -94,7 +94,7 @@ export function OpenGraphNode(props: NodeViewProps) {
                   />
                 </div>
               )}
-              <div className="flex-1 space-y-2 flex flex-col justify-center">
+              <div className="flex-1 space-y-1 flex flex-col justify-center">
                 <div className="font-semibold line-clamp-1 text-accent text-lg">
                   {ogData.title}
                 </div>
