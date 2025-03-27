@@ -30,7 +30,7 @@ const TagFilter: React.FC<TagFilterComponentProps> = ({
             key={tag.id}
             onClick={() => onTagToggle(tag.id)}
             variant={selectedTagIds.includes(tag.id) ? "default" : "secondary"}
-            className="cursor-pointer hover:opacity-80 transition-opacity"
+            className="cursor-pointer py-1 hover:opacity-80 transition-opacity"
           >
             {tag.name}
           </Badge>
