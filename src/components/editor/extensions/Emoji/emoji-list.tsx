@@ -79,7 +79,7 @@ export const EmojiList = forwardRef<EmojiListRef, EmojiListProps>(
     );
 
     return (
-      <div className="w-[160px] overflow-y-auto rounded-lg border shadow-md">
+      <div className="w-[160px] overflow-y-auto rounded-lg border shadow-md z-20 bg-background">
         {items.map((item, index) => (
           <Button
             variant={index === selectedIndex ? "default" : "ghost"}
