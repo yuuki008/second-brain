@@ -75,7 +75,7 @@ export function OpenGraphNode(props: NodeViewProps) {
 
   return (
     <NodeViewWrapper>
-      <Card className="w-full overflow-hidden my-4 hover:bg-accent/50 transition-colors">
+      <Card className="w-full rounded-lg overflow-hidden my-4 hover:bg-accent/50 transition-colors">
         <Link
           href={ogData.url}
           target="_blank"
