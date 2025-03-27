@@ -1,5 +1,5 @@
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
@@ -10,12 +10,11 @@ interface OpenGraphData {
   title: string;
   description: string;
   image: string;
-  url: string;
 }
 
-export function OpenGraphNode(props: NodeViewProps) {
+function OpenGraphNodeComponent(props: NodeViewProps) {
   const url = props.node.attrs.url;
-  const [ogData, setOgData] = useState<OpenGraphData | undefined>();
+  const [ogData, setOgData] = useState<OpenGraphData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,8 +24,9 @@ export function OpenGraphNode(props: NodeViewProps) {
         const data = await getOpenGraphData(url);
         setOgData(data);
       } catch (error) {
+        console.log(error);
         console.error("Error fetching OpenGraph data:", error);
-        setOgData(undefined);
+        setOgData(null);
       } finally {
         setIsLoading(false);
       }
@@ -75,7 +75,7 @@ export function OpenGraphNode(props: NodeViewProps) {
     <NodeViewWrapper>
       <Card className="w-full rounded-lg overflow-hidden my-4 hover:bg-accent/50 transition-colors">
         <Link
-          href={ogData.url}
+          href={url}
           target="_blank"
           rel="noopener noreferrer"
           className="block !no-underline"
@@ -101,9 +101,7 @@ export function OpenGraphNode(props: NodeViewProps) {
                     {ogData.description}
                   </p>
                 )}
-                <p className="text-xs text-muted-foreground truncate">
-                  {ogData.url}
-                </p>
+                <p className="text-xs text-muted-foreground truncate">{url}</p>
               </div>
             </div>
           </CardContent>
@@ -112,3 +110,5 @@ export function OpenGraphNode(props: NodeViewProps) {
     </NodeViewWrapper>
   );
 }
+
+export const OpenGraphNode = memo(OpenGraphNodeComponent);
