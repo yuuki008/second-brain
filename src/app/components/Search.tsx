@@ -89,8 +89,10 @@ const Search: React.FC = () => {
 
   // 何も見つからなかった場合に新規作成
   const handleCreateNew = async () => {
+    console.log(searchQuery);
     try {
       const newNode = await createNewNode(searchQuery);
+      console.log(newNode);
       // 新規作成した用語をallNodesに追加
       setAllNodes((prev) => [...prev, newNode]);
       router.push(`/term/${newNode.id}`);
@@ -175,7 +177,7 @@ const Search: React.FC = () => {
                           ))}
                           {searchQuery.length > 0 && (
                             <CommandItem
-                              onClick={handleCreateNew}
+                              onSelect={handleCreateNew}
                               className="cursor-pointer py-2"
                             >
                               <PlusCircle className="w-4 h-4 mr-3" />
