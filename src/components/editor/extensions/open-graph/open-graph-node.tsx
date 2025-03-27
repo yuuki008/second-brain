@@ -59,16 +59,14 @@ export function OpenGraphNode(props: NodeViewProps) {
   if (!ogData) {
     return (
       <NodeViewWrapper>
-        <div className="my-4">
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
-          >
-            {url}
-          </a>
-        </div>
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          {url}
+        </a>
       </NodeViewWrapper>
     );
   }
