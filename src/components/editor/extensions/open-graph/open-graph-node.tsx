@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
+import { getOpenGraphData } from "@/app/actions/open-graph";
 
 interface OpenGraphData {
   title: string;
@@ -21,11 +22,7 @@ export function OpenGraphNode(props: NodeViewProps) {
     async function fetchOGData() {
       try {
         setIsLoading(true);
-        const response = await fetch(
-          `/api/open-graph?url=${encodeURIComponent(url)}`
-        );
-        if (!response.ok) throw new Error("Failed to fetch OpenGraph data");
-        const data = await response.json();
+        const data = await getOpenGraphData(url);
         setOgData(data);
       } catch (error) {
         console.error("Error fetching OpenGraph data:", error);
