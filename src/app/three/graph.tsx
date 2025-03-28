@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Grid, Stars } from "@react-three/drei";
 import * as THREE from "three";
 import { memo, useMemo, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -116,6 +116,8 @@ const Node = memo(
           hovered.current = false;
           document.body.style.cursor = "auto";
         }}
+        castShadow
+        receiveShadow
       >
         <sphereGeometry args={[0.5, 32, 32]} />
         <meshStandardMaterial
@@ -215,7 +217,6 @@ const NodeDetails = ({ node }: NodeDetailsProps) => {
     <Card className="absolute bottom-4 left-4 w-72 bg-background/80 backdrop-blur-sm">
       <CardContent className="p-4">
         <h3 className="text-lg font-medium">{node.name}</h3>
-        <p className="mt-2 text-sm">{node.content}</p>
       </CardContent>
     </Card>
   );
@@ -235,9 +236,9 @@ const NetworkGraph = ({ graphData }: { graphData: GraphData }) => {
       return {
         ...node,
         position: new THREE.Vector3(
-          Math.random() * 16 - 8, // -8 から 8 の範囲
-          Math.random() * 16 - 8,
-          Math.random() * 16 - 8
+          Math.random() * 14 - 7, // -7 から 7 の範囲
+          Math.random() * 14 - 7,
+          Math.random() * 14 - 7
         ),
       };
     });
@@ -282,11 +283,53 @@ const NetworkGraph = ({ graphData }: { graphData: GraphData }) => {
       <Canvas
         camera={{ position: [0, 0, 20], fov: 60 }}
         className="bg-background"
+        shadows
       >
-        <ambientLight intensity={0.4} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} />
+        {/* メインライト - 影を投射 */}
+        <ambientLight intensity={0.2} />
+        <directionalLight
+          position={[10, 10, 10]}
+          intensity={0.8}
+          castShadow
+          shadow-mapSize-width={1024}
+          shadow-mapSize-height={1024}
+          shadow-camera-far={50}
+          shadow-camera-left={-10}
+          shadow-camera-right={10}
+          shadow-camera-top={10}
+          shadow-camera-bottom={-10}
+        />
+        <pointLight position={[-10, -10, -10]} intensity={0.3} />
         <hemisphereLight intensity={0.2} />
+
+        {/* 背景に星空効果を追加 */}
+        <Stars
+          radius={50}
+          depth={50}
+          count={1000}
+          factor={4}
+          saturation={0}
+          fade
+          speed={0.5}
+        />
+
+        {/* グリッドを追加 */}
+        <Grid
+          position={[0, -8, 0]}
+          args={[32, 32]}
+          cellSize={1}
+          cellThickness={0.5}
+          cellColor={theme === "dark" ? "#333" : "#aaa"}
+          sectionSize={4}
+          sectionThickness={1}
+          sectionColor={theme === "dark" ? "#444" : "#999"}
+          fadeDistance={50}
+          infiniteGrid
+        />
+
+        {/* 座標軸を追加 */}
+        <axesHelper args={[10]} />
+
         <OrbitControls
           enableDamping
           dampingFactor={0.05}
