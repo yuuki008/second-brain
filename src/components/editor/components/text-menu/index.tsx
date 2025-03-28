@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useTextmenuCommands } from "./hooks/useTextmenuCommands";
 import { useTextmenuStates } from "./hooks/useTextmenuStates";
 import { useTextmenuContentTypes } from "./hooks/useTextmenuContentTypes";
-import { ContentTypePicker } from "./components/ContentTypePicker";
+import { ContentTypePicker } from "./components/content-type-picker";
 import { EditLinkPopover } from "./components/EditLinkPopover";
 import { Icon } from "@/components/ui/icon";
 import { Editor } from "@tiptap/react";
