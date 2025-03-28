@@ -1,28 +1,26 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-      <div className="text-center max-w-md space-y-6">
-        <h1 className="text-4xl font-bold tracking-tight">
-          ページが見つかりません
-        </h1>
-
-        <div className="bg-muted rounded-lg p-6 shadow-sm">
-          <p className="text-muted-foreground mb-4">
-            お探しの用語が見つからないか、削除された可能性があります。
-            別の用語を検索するか、トップページに戻ってください。
-          </p>
-
-          <Button asChild className="w-full gap-2">
-            <Link href="/">
-              <ArrowLeft className="h-4 w-4" />
-              トップページに戻る
-            </Link>
-          </Button>
-        </div>
+    <div className="h-screen w-full flex flex-col items-center justify-center">
+      <div className="w-[300px] h-[300px] relative">
+        <Image
+          src="/sob-brain.png"
+          alt="sob-brain"
+          layout="fill"
+          objectFit="contain"
+        />
+      </div>
+      <div className="text-center font-medium text-base">
+        <p>404 error, page not found</p>
+        <p>
+          click{" "}
+          <Link href="/" className="text-blue-500">
+            here
+          </Link>{" "}
+          to go back to the home page
+        </p>
       </div>
     </div>
   );
