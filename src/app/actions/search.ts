@@ -8,6 +8,9 @@ export async function getAllNodes(): Promise<(Node & { tags: Tag[] })[]> {
     include: {
       tags: true,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
 
   return nodes;
