@@ -31,6 +31,7 @@ interface NodeProps {
   };
   onHover: (id: string | null) => void;
   isActive: boolean;
+  isHighlighted: boolean;
   theme: string | undefined;
 }
 
@@ -39,70 +40,98 @@ const black = new THREE.Color(0x171717);
 const darkBlue = new THREE.Color(0x3b82f6);
 const lightBlue = new THREE.Color(0x3b82f6);
 
-const Node = memo(({ position, node, onHover, isActive, theme }: NodeProps) => {
-  const ref = useRef<THREE.Mesh>(null);
-  const hovered = useRef(false);
-  const [glowIntensity, setGlowIntensity] = useState(0);
+const Node = memo(
+  ({ position, node, onHover, isActive, isHighlighted, theme }: NodeProps) => {
+    const ref = useRef<THREE.Mesh>(null);
+    const hovered = useRef(false);
+    const [glowIntensity, setGlowIntensity] = useState(0);
 
-  // カラー定義
-  const activeColor = useMemo(() => {
-    // CSS変数から取得するのが理想的だが、React Three Fiberの制約上直接参照できないため近似値を使用
-    return theme === "dark" ? darkBlue : lightBlue;
-  }, [theme]);
+    // カラー定義
+    const activeColor = useMemo(() => {
+      // CSS変数から取得するのが理想的だが、React Three Fiberの制約上直接参照できないため近似値を使用
+      return theme === "dark" ? darkBlue : lightBlue;
+    }, [theme]);
 
-  const inactiveColor = useMemo(() => {
-    return theme === "dark" ? white : black;
-  }, [theme]);
+    const inactiveColor = useMemo(() => {
+      return theme === "dark" ? white : black;
+    }, [theme]);
 
-  useFrame(() => {
-    if (ref.current) {
-      if (isActive) {
-        // アクティブなノードは青く光る
-        setGlowIntensity((prev) => Math.min(prev + 0.05, 1));
-        (ref.current.material as THREE.MeshStandardMaterial).emissive.set(
-          activeColor.clone().multiplyScalar(glowIntensity)
-        );
-        (ref.current.material as THREE.MeshStandardMaterial).color.set(
-          activeColor
-        );
-      } else {
-        // 非アクティブなノードは暗くなる
-        setGlowIntensity((prev) => Math.max(prev - 0.05, 0));
-        (ref.current.material as THREE.MeshStandardMaterial).emissive.set(
-          new THREE.Color(0, 0, 0)
-        );
-        (ref.current.material as THREE.MeshStandardMaterial).color.set(
-          inactiveColor
-        );
+    // 非ハイライト状態の色を定義
+    const dimmedColor = useMemo(() => {
+      return theme === "dark"
+        ? new THREE.Color(0x444444)
+        : new THREE.Color(0xbbbbbb);
+    }, [theme]);
+
+    useFrame(() => {
+      if (ref.current) {
+        const material = ref.current.material as THREE.MeshStandardMaterial;
+
+        if (isActive) {
+          // アクティブなノードは青く光る
+          setGlowIntensity((prev) => Math.min(prev + 0.1, 1)); // 光る速度を上げる
+          material.emissive.set(
+            activeColor.clone().multiplyScalar(glowIntensity)
+          );
+          material.color.set(activeColor);
+          // アクティブノードはより大きく
+          ref.current.scale.set(1.2, 1.2, 1.2);
+        } else if (isHighlighted) {
+          setGlowIntensity((prev) => Math.min(prev + 0.1, 1));
+          material.emissive.set(
+            activeColor.clone().multiplyScalar(glowIntensity)
+          );
+          material.color.set(activeColor);
+          ref.current.scale.set(1, 1, 1);
+        } else {
+          // 関連のないノードは暗く小さく
+          setGlowIntensity((prev) => Math.max(prev - 0.05, 0));
+          material.emissive.set(new THREE.Color(0, 0, 0));
+          material.color.set(dimmedColor);
+          ref.current.scale.setScalar(0.8);
+          // 透明度も下げる
+          material.transparent = true;
+          material.opacity = 0.4;
+        }
+
+        // 非アクティブノードが不透明でない場合は透明度を戻す
+        if ((isActive || isHighlighted) && material.transparent) {
+          material.transparent = false;
+          material.opacity = 1.0;
+        }
       }
-    }
-  });
+    });
 
-  return (
-    <mesh
-      ref={ref}
-      position={position}
-      onPointerOver={() => {
-        onHover(node.id);
-        hovered.current = true;
-        document.body.style.cursor = "pointer";
-      }}
-      onPointerOut={() => {
-        onHover(null);
-        hovered.current = false;
-        document.body.style.cursor = "auto";
-      }}
-    >
-      <sphereGeometry args={[0.5, 32, 32]} />
-      <meshStandardMaterial
-        color={isActive ? activeColor : inactiveColor}
-        roughness={0.2}
-        metalness={0.6}
-        envMapIntensity={1.5}
-      />
-    </mesh>
-  );
-});
+    return (
+      <mesh
+        ref={ref}
+        position={position}
+        onPointerOver={() => {
+          onHover(node.id);
+          hovered.current = true;
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={() => {
+          onHover(null);
+          hovered.current = false;
+          document.body.style.cursor = "auto";
+        }}
+      >
+        <sphereGeometry args={[0.5, 32, 32]} />
+        <meshStandardMaterial
+          color={
+            isActive ? activeColor : isHighlighted ? inactiveColor : dimmedColor
+          }
+          roughness={0.2}
+          metalness={0.6}
+          envMapIntensity={1.5}
+          transparent={!isActive && !isHighlighted}
+          opacity={!isActive && !isHighlighted ? 0.4 : 1.0}
+        />
+      </mesh>
+    );
+  }
+);
 
 Node.displayName = "Node";
 
@@ -110,48 +139,64 @@ interface LinkProps {
   start: THREE.Vector3;
   end: THREE.Vector3;
   isActive: boolean;
+  isHighlighted: boolean;
   theme: string | undefined;
 }
 
-const Link = memo(({ start, end, isActive, theme }: LinkProps) => {
-  const materialRef = useRef<THREE.LineBasicMaterial>(null!);
+const Link = memo(
+  ({ start, end, isActive, isHighlighted, theme }: LinkProps) => {
+    // カラー定義
+    const linkColor = useMemo(() => {
+      return theme === "dark" ? white : black;
+    }, [theme]);
 
-  // カラー定義
-  const linkColor = useMemo(() => {
-    return theme === "dark" ? white : black;
-  }, [theme]);
+    const activeColor = useMemo(() => {
+      return theme === "dark" ? darkBlue : lightBlue;
+    }, [theme]);
 
-  const activeColor = useMemo(() => {
-    return theme === "dark" ? darkBlue : lightBlue;
-  }, [theme]);
+    // 非ハイライト状態の色を定義
+    const dimmedColor = useMemo(() => {
+      return theme === "dark"
+        ? new THREE.Color(0x444444)
+        : new THREE.Color(0xbbbbbb);
+    }, [theme]);
 
-  const geometry = useMemo(() => {
-    const points = [start, end];
-    return new THREE.BufferGeometry().setFromPoints(points);
-  }, [start, end]);
+    const geometry = useMemo(() => {
+      const points = [start, end];
+      return new THREE.BufferGeometry().setFromPoints(points);
+    }, [start, end]);
 
-  const material = useMemo(() => {
-    return new THREE.LineBasicMaterial({
-      color: isActive ? activeColor : linkColor,
-      transparent: isActive ? false : true,
-      opacity: isActive ? 0.8 : 0.5,
-    });
-  }, [isActive, activeColor, linkColor]);
+    const material = useMemo(() => {
+      return new THREE.LineBasicMaterial({
+        color: isActive ? activeColor : isHighlighted ? linkColor : dimmedColor,
+        transparent: true,
+        opacity: isActive ? 1.0 : isHighlighted ? 0.8 : 0.2,
+        linewidth: 1,
+      });
+    }, [isActive, isHighlighted, activeColor, linkColor, dimmedColor]);
 
-  useFrame(() => {
-    if (materialRef.current) {
-      if (isActive) {
-        materialRef.current.color.set(activeColor);
-        materialRef.current.opacity = 0.8;
-      } else {
-        materialRef.current.color.set(linkColor);
-        materialRef.current.opacity = 0.5;
+    const line = useMemo(() => {
+      return new THREE.Line(geometry, material);
+    }, [geometry, material]);
+
+    useFrame(() => {
+      if (material) {
+        if (isActive) {
+          material.color.set(activeColor);
+          material.opacity = 1.0;
+        } else if (isHighlighted) {
+          material.color.set(linkColor);
+          material.opacity = 0.8;
+        } else {
+          material.color.set(dimmedColor);
+          material.opacity = 0.2;
+        }
       }
-    }
-  });
+    });
 
-  return <primitive object={new THREE.Line(geometry, material)} />;
-});
+    return <primitive object={line} />;
+  }
+);
 
 Link.displayName = "Link";
 
@@ -170,7 +215,7 @@ const NodeDetails = ({ node }: NodeDetailsProps) => {
     <Card className="absolute bottom-4 left-4 w-72 bg-background/80 backdrop-blur-sm">
       <CardContent className="p-4">
         <h3 className="text-lg font-medium">{node.name}</h3>
-        <p className="text-sm text-muted-foreground mt-1">{node.content}</p>
+        <p className="mt-2 text-sm">{node.content}</p>
       </CardContent>
     </Card>
   );
@@ -197,6 +242,25 @@ const NetworkGraph = ({ graphData }: { graphData: GraphData }) => {
       };
     });
   }, [graphData.nodes]);
+
+  // アクティブノードに関連するノードのIDのセットを計算
+  const relatedNodeIds = useMemo(() => {
+    if (!activeNode) return new Set<string>();
+
+    const relatedIds = new Set<string>();
+    relatedIds.add(activeNode); // アクティブノード自体も含める
+
+    // アクティブノードに接続されているリンクを検索
+    graphData.links.forEach((link) => {
+      if (link.source === activeNode) {
+        relatedIds.add(link.target);
+      } else if (link.target === activeNode) {
+        relatedIds.add(link.source);
+      }
+    });
+
+    return relatedIds;
+  }, [activeNode, graphData.links]);
 
   const handleNodeHover = (id: string | null) => {
     setActiveNode(id);
@@ -231,24 +295,23 @@ const NetworkGraph = ({ graphData }: { graphData: GraphData }) => {
         />
 
         {nodesWithPosition.map(
-          (node: NodeData & { position: THREE.Vector3 }) => (
-            <Node
-              key={node.id}
-              node={node}
-              position={node.position}
-              onHover={handleNodeHover}
-              isActive={
-                activeNode !== null &&
-                (activeNode === node.id ||
-                  graphData.links.some(
-                    (link: { source: string; target: string }) =>
-                      (link.source === activeNode && link.target === node.id) ||
-                      (link.target === activeNode && link.source === node.id)
-                  ))
-              }
-              theme={theme}
-            />
-          )
+          (node: NodeData & { position: THREE.Vector3 }) => {
+            const isNodeActive = activeNode === node.id;
+            const isNodeHighlighted =
+              activeNode !== null && relatedNodeIds.has(node.id);
+
+            return (
+              <Node
+                key={node.id}
+                node={node}
+                position={node.position}
+                onHover={handleNodeHover}
+                isActive={isNodeActive}
+                isHighlighted={isNodeHighlighted && !isNodeActive}
+                theme={theme}
+              />
+            );
+          }
         )}
 
         {graphData.links.map(
@@ -264,15 +327,27 @@ const NetworkGraph = ({ graphData }: { graphData: GraphData }) => {
 
             if (!startNode || !endNode) return null;
 
+            // リンクがアクティブ（ホバー中のノードに接続されている）か判定
+            const isLinkActive =
+              activeNode !== null &&
+              ((link.source === activeNode &&
+                relatedNodeIds.has(link.target)) ||
+                (link.target === activeNode &&
+                  relatedNodeIds.has(link.source)));
+
+            // リンクがハイライト（関連ノード間のもの）か判定
+            const isLinkHighlighted =
+              activeNode !== null &&
+              relatedNodeIds.has(link.source) &&
+              relatedNodeIds.has(link.target);
+
             return (
               <Link
                 key={`${link.source}-${link.target}-${index}`}
                 start={startNode.position}
                 end={endNode.position}
-                isActive={
-                  activeNode !== null &&
-                  (activeNode === link.source || activeNode === link.target)
-                }
+                isActive={isLinkActive}
+                isHighlighted={isLinkHighlighted && !isLinkActive}
                 theme={theme}
               />
             );
