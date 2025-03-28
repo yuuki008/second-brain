@@ -12,14 +12,14 @@ export default function NotFound() {
           objectFit="contain"
         />
       </div>
-      <div className="text-center font-medium text-base">
-        <p>404 error, page not found</p>
-        <p>
-          click{" "}
+      <div className="text-center font-medium font-mono leading-[1.5]">
+        <div className="text-3xl tracking-wider mb-4">404 ERROR</div>
+        <p className="text-base">
+          page not found, click{" "}
           <Link href="/" className="text-blue-500 hover:underline">
             here
           </Link>{" "}
-          to go back to the home page
+          to go back.
         </p>
       </div>
     </div>
