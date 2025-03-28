@@ -4,24 +4,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-import { getOpenGraphData } from "@/app/actions/open-graph";
-
-interface OpenGraphData {
-  title: string;
-  description: string;
-  image: string;
-}
+import scrapeMetaInfo, { MetaInfo } from "@/app/actions/open-graph";
 
 function OpenGraphNodeComponent(props: NodeViewProps) {
   const url = props.node.attrs.url;
-  const [ogData, setOgData] = useState<OpenGraphData | null>(null);
+  const [ogData, setOgData] = useState<MetaInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchOGData() {
       try {
         setIsLoading(true);
-        const data = await getOpenGraphData(url);
+        const data = await scrapeMetaInfo(url);
         setOgData(data);
       } catch (error) {
         console.log(error);
@@ -40,7 +34,7 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
   if (isLoading) {
     return (
       <NodeViewWrapper>
-        <Card className="w-full max-w-2xl overflow-hidden my-4">
+        <Card className="w-full overflow-hidden my-4">
           <CardContent className="p-4">
             <div className="flex gap-4">
               <Skeleton className="h-24 w-24 rounded-md" />
@@ -82,10 +76,10 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
         >
           <CardContent className="p-4">
             <div className="flex gap-4">
-              {ogData.image && (
+              {ogData.ogImage && (
                 <div className="relative h-24 w-24 flex-shrink-0">
                   <Image
-                    src={ogData.image}
+                    src={ogData.ogImage}
                     alt={ogData.title}
                     fill
                     className="rounded-md object-cover"
