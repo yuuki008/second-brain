@@ -4,6 +4,7 @@ import "./globals.css";
 import Search from "./components/Search";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import Header from "./components/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Search />
           <ThemeToggle />
+          <Header />
           {children}
         </ThemeProvider>
       </body>
