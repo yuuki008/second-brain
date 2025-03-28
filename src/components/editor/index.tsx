@@ -1,7 +1,7 @@
 import { useEditor, EditorContent, AnyExtension } from "@tiptap/react";
 import { extensions } from "./extensions";
 import { cn } from "@/lib/utils";
-import { TextMenu } from "./components/TextMenu";
+import { TextMenu } from "./components/text-menu";
 import "./styles/markdown.css";
 
 type Props = {

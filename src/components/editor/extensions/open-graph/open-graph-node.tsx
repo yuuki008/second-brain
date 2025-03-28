@@ -65,6 +65,8 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
     );
   }
 
+  console.log(ogData.faviconUrl);
+
   return (
     <NodeViewWrapper>
       <Card className="w-full rounded-lg overflow-hidden my-4 hover:bg-accent/50 transition-colors">
@@ -87,7 +89,17 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
                 </div>
               )}
               <div className="flex-1 space-y-1 flex flex-col justify-center">
-                <div className="font-semibold line-clamp-1 text-accent text-lg">
+                <div className="font-semibold line-clamp-1 text-accent text-lg flex items-center">
+                  {ogData.faviconUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={ogData.faviconUrl}
+                      alt=""
+                      width={16}
+                      height={16}
+                      className="rounded-full mr-2"
+                    />
+                  )}
                   {ogData.title}
                 </div>
                 {ogData.description && (

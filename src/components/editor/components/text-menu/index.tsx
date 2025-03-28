@@ -3,12 +3,12 @@ import { useTextmenuCommands } from "./hooks/useTextmenuCommands";
 import { useTextmenuStates } from "./hooks/useTextmenuStates";
 import { useTextmenuContentTypes } from "./hooks/useTextmenuContentTypes";
 import { ContentTypePicker } from "./components/content-type-picker";
-import { EditLinkPopover } from "./components/EditLinkPopover";
+import { EditLinkPopover } from "./components/edit-link-popover";
 import { Icon } from "@/components/ui/icon";
 import { Editor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react";
 import { memo } from "react";
-import { FontFamilyPicker } from "./components/FontFamilyPicker";
+import { FontFamilyPicker } from "./components/font-family-picker";
 import { Separator } from "@/components/ui/separator";
 
 const MemoButton = memo(Button);
