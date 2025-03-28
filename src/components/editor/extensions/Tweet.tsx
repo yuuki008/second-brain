@@ -18,6 +18,8 @@ export const TweetComponent = ({ node }: NodeViewProps) => {
 export const TweetExtension = Node.create({
   name: "twitter",
 
+  priority: 1000,
+
   group: "block",
 
   atom: true,

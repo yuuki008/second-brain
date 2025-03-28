@@ -4,6 +4,7 @@ import { ReactNodeViewRenderer, nodePasteRule } from "@tiptap/react";
 
 export const OGPLink = Node.create({
   name: "ogp",
+  priority: 900,
   group: "block",
   selectable: true,
   draggable: true,
