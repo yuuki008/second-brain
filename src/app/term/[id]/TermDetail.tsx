@@ -134,7 +134,7 @@ const TermDetail: React.FC<TermDetailProps> = ({
             )}
           </div>
 
-          <div className="flex-1">
+          <div className="flex-1 mt-4">
             <TermEditor id={id} initialContent={term.content} />
           </div>
         </div>
