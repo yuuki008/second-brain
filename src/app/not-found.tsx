@@ -13,7 +13,7 @@ export default function NotFound() {
         />
       </div>
       <div className="text-center font-medium font-mono leading-[1.5]">
-        <div className="text-3xl tracking-wider mb-4">404 ERROR</div>
+        <div className="text-3xl tracking-wider mb-4">404 error</div>
         <p className="text-base">
           page not found, click{" "}
           <Link href="/" className="text-blue-500 hover:underline">
