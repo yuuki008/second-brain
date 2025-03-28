@@ -91,6 +91,7 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
               <div className="flex-1 space-y-1 flex flex-col justify-center">
                 <div className="font-semibold line-clamp-1 text-accent text-lg flex items-center">
                   {ogData.faviconUrl && (
+                    // Note: next/image を使うとサーバー側リクエストが発生して、URL のサイト側でブラウザ以外からのアクセスを拒んでいることがあるため、img を使う
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={ogData.faviconUrl}
