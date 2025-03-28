@@ -6,8 +6,8 @@ export default function NotFound() {
     <div className="h-screen w-full flex flex-col items-center justify-center">
       <div className="w-[300px] h-[300px] relative">
         <Image
-          src="/sob-brain.png"
-          alt="sob-brain"
+          src="/crying-brain.png"
+          alt="crying-brain"
           layout="fill"
           objectFit="contain"
         />
@@ -16,7 +16,7 @@ export default function NotFound() {
         <p>404 error, page not found</p>
         <p>
           click{" "}
-          <Link href="/" className="text-blue-500">
+          <Link href="/" className="text-blue-500 hover:underline">
             here
           </Link>{" "}
           to go back to the home page

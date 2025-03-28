@@ -2,22 +2,16 @@
 
 import React from "react";
 import Image from "next/image";
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes";
 
 export default function Loading() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
+  // const { theme } = useTheme();
+  // const isDark = theme === "dark";
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-background">
       <div className="flex flex-col items-center">
-        <Image
-          className="animate-pulse"
-          src={isDark ? "/brain-dark.png" : "/brain-light.png"}
-          alt="logo"
-          width={250}
-          height={250}
-        />
+        <Image src="/thinking-brain.png" alt="logo" width={300} height={300} />
         <div className="text-3xl tracking-wider font-bold text-primary flex font-mono mt-10">
           {["S", "E", "C", "O", "N", "D"].map((letter, index) => (
             <span
