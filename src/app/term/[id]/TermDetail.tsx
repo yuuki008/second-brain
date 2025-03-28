@@ -109,7 +109,7 @@ const TermDetail: React.FC<TermDetailProps> = ({
   const onNodeSelect = (node: TermNodeData) => router.push(`/term/${node.id}`);
 
   return (
-    <div className="w-full pb-[80vh]">
+    <div className="w-[90%] mx-auto pb-[80vh]">
       <div className="relative max-w-3xl mx-auto">
         <div className="min-h-full flex flex-col py-10">
           <div className="flex justify-between items-end">

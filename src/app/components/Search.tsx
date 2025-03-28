@@ -120,7 +120,7 @@ const Search: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="max-w-xl w-full mt-[15vh]"
+              className="max-w-xl w-[90%] mt-[15vh]"
             >
               <Command
                 className="rounded-lg border shadow-lg w-full h-auto"
