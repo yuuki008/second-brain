@@ -1,5 +1,5 @@
-import { HierarchicalTag } from "@/app/components/TagFilter";
-import TopPageClient from "@/app/components/TopPageClient";
+import { HierarchicalTag } from "@/app/components/tag-filter";
+import TopPageClient from "@/app/components/top-page-client";
 import prisma from "@/lib/prisma";
 
 // タグデータを取得する関数

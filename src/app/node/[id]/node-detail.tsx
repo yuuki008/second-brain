@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import NetworkGraph from "@/app/components/NetworkGraph";
+import NetworkGraph from "@/app/components/network-graph";
 import Editor from "@/components/editor";
 import { updateNodeDefinition, updateNodeName } from "./actions";
-import TagManager from "./TagManager";
+import TagManager from "./tag-manager";
 import { Node, Tag } from "@prisma/client";
 
 interface NodeNodeData {

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Search from "./components/Search";
-import { ThemeToggle } from "./components/ThemeToggle";
+import Search from "./components/search";
+import { ThemeToggle } from "./components/theme-toggle";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import Header from "./components/header";
 

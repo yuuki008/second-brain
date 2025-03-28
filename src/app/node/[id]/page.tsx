@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import NodeDetail from "./NodeDetail";
+import NodeDetail from "./node-detail";
 import { prisma } from "@/lib/prisma";
 import { getAllTags } from "./actions";
 
