@@ -2,7 +2,6 @@ import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { memo, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import Image from "next/image";
 import Link from "next/link";
 import scrapeMetaInfo, { MetaInfo } from "@/app/actions/open-graph";
 
@@ -65,7 +64,7 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
     );
   }
 
-  console.log(ogData.faviconUrl);
+  const domain = new URL(url).hostname;
 
   return (
     <NodeViewWrapper>
@@ -80,35 +79,36 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
             <div className="flex gap-4">
               {ogData.ogImage && (
                 <div className="relative h-24 w-24 flex-shrink-0">
-                  <Image
-                    src={ogData.ogImage}
+                  {/* Note: next/image を使うとサーバー側リクエストが発生して、URL のサイト側でブラウザ以外からのアクセスを拒んでいることがあるため、img を使う */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={ogData.ogImage || ogData.faviconUrl}
                     alt={ogData.title}
-                    fill
-                    className="rounded-md object-cover"
+                    className="rounded-md w-full h-full object-cover"
                   />
                 </div>
               )}
               <div className="flex-1 space-y-1 flex flex-col justify-center">
-                <div className="font-semibold line-clamp-1 text-accent text-lg flex items-center">
+                <div className="font-semibold line-clamp-1 text-accent text-base">
+                  {ogData.title}
+                </div>
+                {ogData.description && (
+                  <p className="text-sm !text-muted-foreground line-clamp-2">
+                    {ogData.description}
+                  </p>
+                )}
+                <div className="!text-xs !text-muted-foreground !truncate flex items-center">
                   {ogData.faviconUrl && (
                     // Note: next/image を使うとサーバー側リクエストが発生して、URL のサイト側でブラウザ以外からのアクセスを拒んでいることがあるため、img を使う
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={ogData.faviconUrl}
                       alt=""
-                      width={16}
-                      height={16}
-                      className="rounded-full mr-2"
+                      className="rounded-full mr-1 w-4 h-4"
                     />
                   )}
-                  {ogData.title}
+                  {domain}
                 </div>
-                {ogData.description && (
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {ogData.description}
-                  </p>
-                )}
-                <p className="text-xs text-muted-foreground truncate">{url}</p>
               </div>
             </div>
           </CardContent>

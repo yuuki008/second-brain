@@ -52,12 +52,12 @@ export default async function scrapeMetaInfo(url: string): Promise<MetaInfo> {
       title: getTitle(doc),
       description: getDescription(doc),
       thumbnail: getThumbnail(doc),
-      ogTitle: getOgProperty(doc, "og:title"),
-      ogDescription: getOgProperty(doc, "og:description"),
-      ogImage: getOgProperty(doc, "og:image"),
-      ogUrl: getOgProperty(doc, "og:url"),
-      ogType: getOgProperty(doc, "og:type"),
-      ogSiteName: getOgProperty(doc, "og:site_name"),
+      ogTitle: getOgProperty(doc, "og:title", url),
+      ogDescription: getOgProperty(doc, "og:description", url),
+      ogImage: getOgProperty(doc, "og:image", url),
+      ogUrl: getOgProperty(doc, "og:url", url),
+      ogType: getOgProperty(doc, "og:type", url),
+      ogSiteName: getOgProperty(doc, "og:site_name", url),
       twitterCard: getTwitterProperty(doc, "twitter:card"),
       twitterTitle: getTwitterProperty(doc, "twitter:title"),
       twitterDescription: getTwitterProperty(doc, "twitter:description"),
@@ -103,7 +103,7 @@ function getDescription(doc: Document): string {
  * サムネイル画像を取得（OGイメージがない場合は最初の画像を使用）
  */
 function getThumbnail(doc: Document): string {
-  const ogImage = getOgProperty(doc, "og:image");
+  const ogImage = getOgProperty(doc, "og:image", "");
   if (ogImage) return ogImage;
 
   const twitterImage = getTwitterProperty(doc, "twitter:image");
@@ -116,9 +116,27 @@ function getThumbnail(doc: Document): string {
 /**
  * Open Graphプロパティを取得
  */
-function getOgProperty(doc: Document, property: string): string {
+function getOgProperty(
+  doc: Document,
+  property: string,
+  baseUrl: string
+): string {
   const meta = doc.querySelector(`meta[property="${property}"]`);
-  return meta ? meta.getAttribute("content") || "" : "";
+  if (!meta) return "";
+
+  const content = meta.getAttribute("content") || "";
+  if (!content) return "";
+
+  // すでに絶対パスの場合はそのまま返す
+  if (content.startsWith("http")) return content;
+
+  // 相対パスの場合は絶対パスに変換
+  try {
+    const base = new URL(baseUrl);
+    return new URL(content, base).toString();
+  } catch {
+    return content;
+  }
 }
 
 /**
