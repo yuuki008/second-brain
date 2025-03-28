@@ -23,7 +23,7 @@ export const getTagById = (
 // グラフデータを生成する関数
 export const generateGraphData = (tags: HierarchicalTag[]) => {
   // 技術用語の配列
-  const techTerms = [
+  const techNodes = [
     "React",
     "Angular",
     "Vue.js",
@@ -146,7 +146,7 @@ export const generateGraphData = (tags: HierarchicalTag[]) => {
   ];
 
   // ノードの生成
-  const nodes = techTerms.map((term, index) => {
+  const nodes = techNodes.map((node, index) => {
     // タグの組み合わせをランダムに選択
     const randomTagCombo =
       tagCombinations[Math.floor(Math.random() * tagCombinations.length)];
@@ -159,7 +159,7 @@ export const generateGraphData = (tags: HierarchicalTag[]) => {
 
     return {
       id: String(index + 1),
-      name: term,
+      name: node,
       tags: nodeTags,
     };
   });

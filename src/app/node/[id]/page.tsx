@@ -1,20 +1,20 @@
 import { notFound } from "next/navigation";
-import TermDetail from "./TermDetail";
+import NodeDetail from "./NodeDetail";
 import { prisma } from "@/lib/prisma";
 import { getAllTags } from "./actions";
 
-// 用語とその関連ノードを取得する関数
-async function getTermWithRelatedNodes(id: string) {
+// ノードとその関連ノードを取得する関数
+async function getNodeWithRelatedNodes(id: string) {
   try {
     // 指定されたIDのノードを取得
-    const term = await prisma.node.findUnique({
+    const node = await prisma.node.findUnique({
       where: { id },
       include: {
         tags: true,
       },
     });
 
-    if (!term) {
+    if (!node) {
       return null;
     }
 
@@ -45,9 +45,9 @@ async function getTermWithRelatedNodes(id: string) {
     // グラフノードの作成
     const nodes = [
       {
-        id: term.id,
-        name: term.name,
-        tags: term.tags.map((tag) => ({
+        id: node.id,
+        name: node.name,
+        tags: node.tags.map((tag) => ({
           id: tag.id,
           name: tag.name,
           color: tag.color,
@@ -91,36 +91,36 @@ async function getTermWithRelatedNodes(id: string) {
     ];
 
     return {
-      term: term,
+      node: node,
       graphData: {
         nodes: uniqueNodes,
         links,
       },
     };
   } catch (error) {
-    console.error("用語データの取得エラー:", error);
+    console.error("ノードデータの取得エラー:", error);
     return null;
   }
 }
 
-interface TermPageProps {
+interface NodePageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function TermPage({ params }: TermPageProps) {
+export default async function NodePage({ params }: NodePageProps) {
   const { id } = await params;
-  const termData = await getTermWithRelatedNodes(id);
+  const nodeData = await getNodeWithRelatedNodes(id);
   const allTags = await getAllTags();
 
-  if (!termData) {
+  if (!nodeData) {
     notFound();
   }
 
   return (
-    <TermDetail
+    <NodeDetail
       id={id}
-      term={termData.term}
-      graphData={termData.graphData}
+      node={nodeData.node}
+      graphData={nodeData.graphData}
       allTags={allTags}
     />
   );

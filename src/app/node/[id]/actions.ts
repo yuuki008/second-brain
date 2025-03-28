@@ -4,28 +4,28 @@ import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { Node } from "@prisma/client";
 
-export async function createTerm(name: string, content: string): Promise<Node> {
+export async function createNode(name: string, content: string): Promise<Node> {
   return await prisma.node.create({
     data: { name, content },
   });
 }
 
-export async function updateTermName(termId: string, name: string) {
+export async function updateNodeName(nodeId: string, name: string) {
   return await prisma.node.update({
-    where: { id: termId },
+    where: { id: nodeId },
     data: { name },
   });
 }
 /**
- * 用語の定義を更新するサーバーアクション
- * @param termId - 更新する用語のID
+ * ノードの定義を更新するサーバーアクション
+ * @param nodeId - 更新するノードのID
  * @param definition - 新しい定義内容
  */
-export async function updateTermDefinition(termId: string, definition: string) {
+export async function updateNodeDefinition(nodeId: string, definition: string) {
   try {
     // Prismaを使用してデータベースを直接更新
     await prisma.node.update({
-      where: { id: termId },
+      where: { id: nodeId },
       data: {
         content: definition,
         updatedAt: new Date(),
@@ -34,7 +34,7 @@ export async function updateTermDefinition(termId: string, definition: string) {
 
     return { success: true };
   } catch (error) {
-    console.error("Error updating term definition:", error);
+    console.error("Error updating node definition:", error);
     return { success: false, error: (error as Error).message };
   }
 }
@@ -68,7 +68,7 @@ export async function removeTagFromNode(nodeId: string, tagId: string) {
     });
 
     // キャッシュを再検証して最新データを表示
-    revalidatePath(`/term/${nodeId}`);
+    revalidatePath(`/node/${nodeId}`);
 
     return { success: true };
   } catch (error) {
@@ -96,7 +96,7 @@ export async function addTagToNode(nodeId: string, tagId: string) {
     });
 
     // キャッシュを再検証して最新データを表示
-    revalidatePath(`/term/${nodeId}`);
+    revalidatePath(`/node/${nodeId}`);
 
     return { success: true };
   } catch (error) {
@@ -175,7 +175,7 @@ export async function updateTagHierarchy(
       )
     );
 
-    revalidatePath("/term/[id]");
+    revalidatePath("/node/[id]");
     return { success: true };
   } catch (error) {
     console.error("タグの階層更新エラー:", error);

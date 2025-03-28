@@ -4,11 +4,11 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import NetworkGraph from "@/app/components/NetworkGraph";
 import Editor from "@/components/editor";
-import { updateTermDefinition, updateTermName } from "./actions";
+import { updateNodeDefinition, updateNodeName } from "./actions";
 import TagManager from "./TagManager";
 import { Node, Tag } from "@prisma/client";
 
-interface TermNodeData {
+interface NodeNodeData {
   id: string;
   name: string;
   tags: {
@@ -18,12 +18,12 @@ interface TermNodeData {
   }[];
 }
 
-interface TermDetailProps {
+interface NodeDetailProps {
   id: string;
-  term: Node & { tags: Tag[] };
+  node: Node & { tags: Tag[] };
   allTags: Tag[];
   graphData: {
-    nodes: TermNodeData[];
+    nodes: NodeNodeData[];
     links: {
       source: string;
       target: string;
@@ -32,7 +32,7 @@ interface TermDetailProps {
 }
 
 // エディタ部分のみを扱う別コンポーネント
-const TermEditor = React.memo(
+const NodeEditor = React.memo(
   ({ id, initialContent }: { id: string; initialContent: string }) => {
     const [content, setContent] = useState(initialContent);
 
@@ -44,7 +44,7 @@ const TermEditor = React.memo(
       // デバウンス処理のための変数
       const timer = setTimeout(async () => {
         try {
-          await updateTermDefinition(id, content);
+          await updateNodeDefinition(id, content);
         } catch (error) {
           console.error("保存エラー:", error);
         }
@@ -57,30 +57,30 @@ const TermEditor = React.memo(
     return <Editor content={content} onChange={setContent} />;
   }
 );
-TermEditor.displayName = "TermEditor";
+NodeEditor.displayName = "NodeEditor";
 
-// 用語名を編集するコンポーネント
-const TermNameEditor = React.memo(
+// ノード名を編集するコンポーネント
+const NodeNameEditor = React.memo(
   ({ id, initialName }: { id: string; initialName: string }) => {
-    const [termName, setTermName] = useState(initialName);
+    const [nodeName, setNodeName] = useState(initialName);
 
     useEffect(() => {
       const timer = setTimeout(() => {
-        updateTermName(id, termName);
+        updateNodeName(id, nodeName);
       }, 1000);
       return () => clearTimeout(timer);
-    }, [termName, id]);
+    }, [nodeName, id]);
 
     return (
       <input
         className="w-full border-none text-4xl font-bold mb-4 bg-transparent focus:outline-none focus:ring-0"
-        value={termName}
-        onChange={(e) => setTermName(e.target.value)}
+        value={nodeName}
+        onChange={(e) => setNodeName(e.target.value)}
       />
     );
   }
 );
-TermNameEditor.displayName = "TermNameEditor";
+NodeNameEditor.displayName = "NodeNameEditor";
 
 // ウィンドウ幅を監視するカスタムフック
 function useWindowWidth() {
@@ -97,16 +97,17 @@ function useWindowWidth() {
   return width;
 }
 
-const TermDetail: React.FC<TermDetailProps> = ({
+const NodeDetail: React.FC<NodeDetailProps> = ({
   id,
-  term,
+  node,
   graphData,
   allTags,
 }) => {
   const router = useRouter();
   const windowWidth = useWindowWidth();
 
-  const onNodeSelect = (node: TermNodeData) => router.push(`/term/${node.id}`);
+  const onNodeSelect = (nodeData: NodeNodeData) =>
+    router.push(`/node/${nodeData.id}`);
 
   return (
     <div className="w-[90%] mx-auto pb-[80vh]">
@@ -114,11 +115,11 @@ const TermDetail: React.FC<TermDetailProps> = ({
         <div className="min-h-full flex flex-col py-10">
           <div className="flex justify-between items-end">
             <div>
-              <TermNameEditor id={id} initialName={term.name} />
+              <NodeNameEditor id={id} initialName={node.name} />
 
               <TagManager
                 nodeId={id}
-                currentTags={term.tags}
+                currentTags={node.tags}
                 allTags={allTags}
               />
             </div>
@@ -135,7 +136,7 @@ const TermDetail: React.FC<TermDetailProps> = ({
           </div>
 
           <div className="flex-1 mt-4">
-            <TermEditor id={id} initialContent={term.content} />
+            <NodeEditor id={id} initialContent={node.content} />
           </div>
         </div>
       </div>
@@ -143,4 +144,4 @@ const TermDetail: React.FC<TermDetailProps> = ({
   );
 };
 
-export default TermDetail;
+export default NodeDetail;

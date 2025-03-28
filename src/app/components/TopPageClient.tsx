@@ -93,9 +93,9 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
     };
   }, [graphData, activeTagAndChildrenIds]);
 
-  // 用語選択時の処理
-  const handleTermSelect = (term: NodeData) => {
-    router.push(`/term/${term.id}`);
+  // ノード選択時の処理
+  const handleNodeSelect = (node: NodeData) => {
+    router.push(`/node/${node.id}`);
   };
 
   // タグ選択時の処理
@@ -123,7 +123,7 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
         {/* ネットワークグラフコンポーネント */}
         <NetworkGraph
           graphData={filteredGraphData}
-          onNodeSelect={handleTermSelect}
+          onNodeSelect={handleNodeSelect}
         />
       </div>
     </div>

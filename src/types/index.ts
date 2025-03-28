@@ -1,4 +1,4 @@
-export interface Term {
+export interface Node {
   id: string;
   name: string;
   definition: string;

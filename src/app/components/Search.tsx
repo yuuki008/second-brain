@@ -82,7 +82,7 @@ const Search: React.FC = () => {
 
   // 検索結果をクリックしたときの処理
   const handleSelectItem = (node: Node & { tags: Tag[] }) => {
-    router.push(`/term/${node.id}`);
+    router.push(`/node/${node.id}`);
     setSearchQuery("");
     setOpen(false);
   };
@@ -95,7 +95,7 @@ const Search: React.FC = () => {
       console.log(newNode);
       // 新規作成した用語をallNodesに追加
       setAllNodes((prev) => [...prev, newNode]);
-      router.push(`/term/${newNode.id}`);
+      router.push(`/node/${newNode.id}`);
       setSearchQuery("");
       setOpen(false);
     } catch (error) {
