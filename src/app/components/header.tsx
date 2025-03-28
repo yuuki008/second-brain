@@ -7,7 +7,7 @@ export default function Header() {
       <div className="flex items-center h-full py-4">
         <Link className="cursor-pointer" href="/">
           <Image
-            src="/grinning-brain.png"
+            src="/panic-brain.png"
             alt="logo"
             width={60}
             height={60}
