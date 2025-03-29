@@ -9,11 +9,11 @@
     --foreground: 210 10% 23%; /* #333333 に近い、純粋な黒よりも柔らかいダークグレー */
     --card: 210 20% 98%;
     --card-foreground: 210 10% 23%;
-    --popover: 210 20% 98%;
-    --popover-foreground: 210 10% 23%;
-    --primary: 0 0% 9%; /* モノクロに戻す */
-    --primary-foreground: 210 20% 98%;
-    --secondary: 210 15% 94%;
+    --popover: 0 0% 14%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 0 0% 95%; /* 背景色に合わせて明るいグレーに変更 */
+    --primary-foreground: 0 0% 14%; /* 背景色と同じ暗いグレー */
+    --secondary: 215 10% 17%;
     --secondary-foreground: 210 10% 23%;
     --muted: 210 15% 94%;
     --muted-foreground: 210 10% 45%;
@@ -44,12 +44,12 @@
 
   .dark {
     /* ダークモードでの目に優しい色設定 */
-    --background: 220 10% 10%; /* #121212 に近い、純粋な黒よりも柔らかいダークグレー */
-    --foreground: 210 10% 90%; /* #E0E0E0 に近い、純粋な白よりも柔らかいライトグレー */
-    --card: 220 10% 10%;
-    --card-foreground: 210 10% 90%;
-    --popover: 220 10% 10%;
-    --popover-foreground: 210 10% 90%;
+    --background: 0 0% 14%; /* rgb(35 35 35) */
+    --foreground: 0 0% 95%; /* より明るいグレーでコントラストを確保 */
+    --card: 0 0% 14%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 14%;
+    --popover-foreground: 0 0% 95%;
     --primary: 0 0% 98%; /* ダークモードでもモノクロに戻す */
     --primary-foreground: 210 10% 10%;
     --secondary: 215 10% 17%;
