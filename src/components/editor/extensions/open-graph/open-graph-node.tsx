@@ -76,7 +76,7 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
           className="block !no-underline"
         >
           <CardContent className="p-4">
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               {ogData.ogImage && (
                 <div className="relative h-24 w-24 flex-shrink-0">
                   {/* Note: next/image を使うとサーバー側リクエストが発生して、URL のサイト側でブラウザ以外からのアクセスを拒んでいることがあるため、img を使う */}
@@ -93,7 +93,7 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
                   {ogData.title}
                 </div>
                 {ogData.description && (
-                  <p className="text-sm !text-muted-foreground line-clamp-2">
+                  <p className="text-sm !text-muted-foreground line-clamp-1">
                     {ogData.description}
                   </p>
                 )}
