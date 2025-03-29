@@ -4,6 +4,12 @@ import Search from "./components/search";
 import { ThemeToggle } from "./components/theme-toggle";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import Header from "./components/header";
+import { Shippori_Mincho_B1 } from "next/font/google";
+
+const shipporiMincho = Shippori_Mincho_B1({
+  weight: ["400", "500", "600", "700", "800"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Second Brain",
@@ -21,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className={shipporiMincho.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Search />
           <ThemeToggle />
