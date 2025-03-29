@@ -84,16 +84,16 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
                   <img
                     src={ogData.ogImage || ogData.faviconUrl}
                     alt={ogData.title}
-                    className="rounded-md w-full h-full object-cover !my-4"
+                    className="rounded-md w-full h-full object-cover !my-0"
                   />
                 </div>
               )}
-              <div className="flex-1 space-y-1 flex flex-col justify-center">
+              <div className="flex-1 flex flex-col justify-center">
                 <div className="font-semibold line-clamp-1 text-accent text-base">
                   {ogData.title}
                 </div>
                 {ogData.description && (
-                  <p className="text-sm !text-muted-foreground line-clamp-1">
+                  <p className="text-sm !text-muted-foreground line-clamp-1 !mt-0">
                     {ogData.description}
                   </p>
                 )}
@@ -104,7 +104,7 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
                     <img
                       src={ogData.faviconUrl}
                       alt=""
-                      className="rounded-full mr-1 w-4 h-4"
+                      className="rounded-full mr-1 w-4 h-4 !my-0"
                     />
                   )}
                   {domain}
