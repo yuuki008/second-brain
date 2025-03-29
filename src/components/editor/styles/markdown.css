@@ -3,15 +3,15 @@
 }
 
 .markdown-editor h1 {
-  @apply text-2xl mb-3 mt-10 font-bold text-accent;
+  @apply text-2xl mb-3 mt-10 font-bold;
 }
 
 .markdown-editor h2 {
-  @apply text-xl mb-2 mt-8 font-bold text-accent;
+  @apply text-xl mb-2 mt-8 font-bold;
 }
 
 .markdown-editor h3 {
-  @apply text-lg mb-1 mt-6 font-bold text-accent;
+  @apply text-lg mb-1 mt-6 font-bold;
 }
 
 .markdown-editor p {
