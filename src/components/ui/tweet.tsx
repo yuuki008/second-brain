@@ -110,7 +110,7 @@ export const TweetHeader = ({ tweet }: { tweet: EnrichedTweet }) => (
           height={48}
           width={48}
           src={tweet.user.profile_image_url_https}
-          className="overflow-hidden rounded-full border border-transparent"
+          className="overflow-hidden rounded-full border border-transparent !my-0"
         />
       </a>
       <div>
