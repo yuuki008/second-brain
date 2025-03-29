@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Search from "./components/search";
 import { ThemeToggle } from "./components/theme-toggle";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import Header from "./components/header";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Second Brain",
@@ -24,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body suppressHydrationWarning className={inter.className}>
+      <body suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Search />
           <ThemeToggle />

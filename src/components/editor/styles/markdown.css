@@ -1,5 +1,5 @@
 .markdown-editor {
-  @apply w-full min-h-full border-none bg-transparent text-sm;
+  @apply w-full min-h-full border-none bg-transparent text-[1.06rem] tracking-[0.02em];
 }
 
 .markdown-editor h1 {
@@ -15,7 +15,7 @@
 }
 
 .markdown-editor p {
-  @apply text-foreground leading-[1.6] mb-0 mt-2;
+  @apply text-foreground leading-[2.05] mb-0 mt-2;
 }
 
 .markdown-editor blockquote {
@@ -99,7 +99,7 @@
 }
 
 .markdown-editor pre {
-  @apply font-mono text-sm;
+  @apply text-sm;
 }
 
 .markdown-editor [data-youtube-video] > iframe {

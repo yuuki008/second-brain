@@ -10,6 +10,17 @@ export default {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    fontFamily: {
+      sans: [
+        "Inter",
+        "GenJyuuGothicL",
+        "Hiragino Kaku Gothic ProN",
+        "Hiragino Sans",
+        "BIZ UDPGothic",
+        "Meiryo",
+        "sans-serif",
+      ],
+    },
     extend: {
       colors: {
         background: "hsl(var(--background))",
