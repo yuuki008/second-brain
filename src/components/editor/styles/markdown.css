@@ -15,7 +15,7 @@
 }
 
 .markdown-editor p {
-  @apply text-foreground leading-[2.05] my-0;
+  @apply text-foreground leading-[1.9] my-0 text-sm mt-2;
 }
 
 .markdown-editor blockquote {
