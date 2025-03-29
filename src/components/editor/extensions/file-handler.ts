@@ -16,6 +16,23 @@ function insertImage(editor: Editor, url: string, alt: string, pos: number) {
     .run();
 }
 
+function insertVideo(editor: Editor, url: string, pos: number) {
+  editor
+    .chain()
+    .insertContentAt(pos, {
+      type: "video",
+      attrs: {
+        src: url,
+        controls: true,
+      },
+    })
+    .focus()
+    .run();
+}
+
+const isImage = (file: File) => file.type.startsWith("image/");
+const isVideo = (file: File) => file.type.startsWith("video/");
+
 const FileHandlerExtension = FileHandler.configure({
   allowedMimeTypes: [
     "image/png",
@@ -23,12 +40,22 @@ const FileHandlerExtension = FileHandler.configure({
     "image/jpg",
     "image/gif",
     "image/webp",
+    "video/mp4",
+    "video/webm",
+    "video/ogg",
+    "video/mov",
+    "video/avi",
+    "video/wmv",
+    "video/flv",
+    "video/mpeg",
   ],
 
   onDrop: async (editor: Editor, files: File[], pos: number) => {
     files.forEach(async (file) => {
       const { url } = await uploadFile(file);
-      insertImage(editor, url, file.name, pos);
+
+      if (isVideo(file)) return insertVideo(editor, url, pos);
+      if (isImage(file)) return insertImage(editor, url, file.name, pos);
     });
   },
 
@@ -39,7 +66,16 @@ const FileHandlerExtension = FileHandler.configure({
       }
 
       const { url } = await uploadFile(file);
-      insertImage(editor, url, file.name, editor.state.selection.anchor);
+
+      if (isVideo(file))
+        return insertVideo(editor, url, editor.state.selection.anchor);
+      if (isImage(file))
+        return insertImage(
+          editor,
+          url,
+          file.name,
+          editor.state.selection.anchor
+        );
     });
   },
 });
