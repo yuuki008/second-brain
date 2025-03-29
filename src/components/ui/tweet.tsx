@@ -204,7 +204,7 @@ export const TweetMedia = ({ tweet }: { tweet: ExtendedEnrichedTweet }) => {
           loop
           muted
           playsInline
-          className="rounded-xl border shadow-sm"
+          className="rounded-xl border shadow-sm !my-0"
         >
           <source src={tweet.video.variants[0].src} type="video/mp4" />
           Your browser does not support the video tag.
@@ -219,7 +219,7 @@ export const TweetMedia = ({ tweet }: { tweet: ExtendedEnrichedTweet }) => {
               src={photo.url}
               title={"Photo by " + tweet.user.name}
               alt={tweet.text}
-              className="h-64 w-5/6 shrink-0 snap-center snap-always rounded-xl border object-cover shadow-sm"
+              className="h-64 w-5/6 shrink-0 snap-center snap-always rounded-xl border object-cover shadow-sm !my-0"
             />
           ))}
           <div className="shrink-0 snap-center sm:w-2" />

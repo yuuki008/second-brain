@@ -84,7 +84,7 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
                   <img
                     src={ogData.ogImage || ogData.faviconUrl}
                     alt={ogData.title}
-                    className="rounded-md w-full h-full object-cover"
+                    className="rounded-md w-full h-full object-cover !my-4"
                   />
                 </div>
               )}
