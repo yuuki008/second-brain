@@ -55,7 +55,7 @@
 }
 
 .markdown-editor a {
-  @apply text-primary underline hover:text-primary/80;
+  @apply text-primary underline hover:text-primary/80 cursor-pointer;
 }
 
 .markdown-editor hr {

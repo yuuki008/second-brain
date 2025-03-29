@@ -9,11 +9,11 @@
     --foreground: 210 10% 23%; /* #333333 に近い、純粋な黒よりも柔らかいダークグレー */
     --card: 210 20% 98%;
     --card-foreground: 210 10% 23%;
-    --popover: 0 0% 14%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 0 0% 95%; /* 背景色に合わせて明るいグレーに変更 */
-    --primary-foreground: 0 0% 14%; /* 背景色と同じ暗いグレー */
-    --secondary: 215 10% 17%;
+    --popover: 210 20% 98%;
+    --popover-foreground: 210 10% 23%;
+    --primary: 0 0% 9%; /* モノクロに戻す */
+    --primary-foreground: 210 20% 98%;
+    --secondary: 210 15% 94%;
     --secondary-foreground: 210 10% 23%;
     --muted: 210 15% 94%;
     --muted-foreground: 210 10% 45%;
