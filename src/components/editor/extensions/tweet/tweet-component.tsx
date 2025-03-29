@@ -36,7 +36,7 @@ export default function TweetComponent({ node }: NodeViewProps) {
   const id = tweetIdRegex.exec(url)?.[1];
 
   return (
-    <NodeViewWrapper className="max-w-[500px] w-full mx-auto my-4">
+    <NodeViewWrapper className="my-4">
       <ClientTweetCard id={id || ""} />
     </NodeViewWrapper>
   );
