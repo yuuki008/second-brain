@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import NetworkGraph from "@/app/components/network-graph";
 import Editor from "@/components/editor";
 import { updateNodeDefinition, updateNodeName } from "./actions";
 import TagManager from "./tag-manager";
@@ -73,7 +71,7 @@ const NodeNameEditor = React.memo(
 
     return (
       <input
-        className="w-full border-none text-4xl font-bold mb-4 bg-transparent focus:outline-none focus:ring-0"
+        className="border-none text-4xl font-bold mb-4 bg-transparent focus:outline-none focus:ring-0"
         value={nodeName}
         onChange={(e) => setNodeName(e.target.value)}
       />
@@ -82,57 +80,15 @@ const NodeNameEditor = React.memo(
 );
 NodeNameEditor.displayName = "NodeNameEditor";
 
-// ウィンドウ幅を監視するカスタムフック
-function useWindowWidth() {
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    setWidth(window.innerWidth);
-
-    const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return width;
-}
-
-const NodeDetail: React.FC<NodeDetailProps> = ({
-  id,
-  node,
-  graphData,
-  allTags,
-}) => {
-  const router = useRouter();
-  const windowWidth = useWindowWidth();
-
-  const onNodeSelect = (nodeData: NodeNodeData) =>
-    router.push(`/node/${nodeData.id}`);
-
+const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, allTags }) => {
   return (
-    <div className="w-[90%] mx-auto pb-[80vh]">
+    <div className="w-[90%] mx-auto pt-24 pb-[80vh]">
       <div className="relative max-w-3xl mx-auto">
-        <div className="min-h-full flex flex-col py-10">
-          <div className="flex justify-between items-end">
-            <div>
-              <NodeNameEditor id={id} initialName={node.name} />
+        <div className="min-h-full flex flex-col">
+          <div>
+            <NodeNameEditor id={id} initialName={node.name} />
 
-              <TagManager
-                nodeId={id}
-                currentTags={node.tags}
-                allTags={allTags}
-              />
-            </div>
-            {windowWidth > 768 && (
-              <div className="w-[230px] h-[180px] border rounded-xl">
-                <NetworkGraph
-                  key={id}
-                  graphData={graphData}
-                  onNodeSelect={onNodeSelect}
-                  centerNodeId={id}
-                />
-              </div>
-            )}
+            <TagManager nodeId={id} currentTags={node.tags} allTags={allTags} />
           </div>
 
           <div className="flex-1 mt-4">

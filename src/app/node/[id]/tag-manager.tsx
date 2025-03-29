@@ -63,13 +63,12 @@ const TagManager: React.FC<TagManagerProps> = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="w-full">
       <div className="flex flex-wrap gap-2">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button variant="secondary" size="sm">
-              <Plus className="w-4 h-4 mr-1" />
-              タグの追加
+              <Plus className="w-4 h-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[200px] p-0" align="start">
