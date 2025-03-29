@@ -22,6 +22,8 @@ import { TaskItem } from "@tiptap/extension-task-item";
 import { TweetExtension } from "./tweet";
 import { EmojiExtension } from "./emoji";
 import { OGPLink } from "./open-graph";
+import FileHandlerExtension from "./file-handler";
+import Image from "@tiptap/extension-image";
 
 export const extensions = [
   StarterKit,
@@ -49,4 +51,6 @@ export const extensions = [
   TweetExtension,
   EmojiExtension,
   OGPLink,
+  Image,
+  FileHandlerExtension,
 ];
