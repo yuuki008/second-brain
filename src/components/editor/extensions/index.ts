@@ -7,7 +7,6 @@ import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Paragraph from "@tiptap/extension-paragraph";
-import Youtube from "@tiptap/extension-youtube";
 import { Link } from "./link";
 import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
@@ -25,6 +24,7 @@ import { OGPLink } from "./open-graph";
 import FileHandlerExtension from "./file-handler";
 import { Image } from "./image";
 import { Video } from "./video";
+import { YouTubeExtension } from "./youtube";
 
 export const extensions = [
   StarterKit,
@@ -37,7 +37,6 @@ export const extensions = [
   Code,
   CodeBlock,
   Link,
-  Youtube,
   TextAlign,
   Underline,
   Subscript,
@@ -48,11 +47,11 @@ export const extensions = [
   FontSize,
   TaskItem,
   TaskList,
-  Youtube,
   TweetExtension,
   EmojiExtension,
   OGPLink,
   Image,
   FileHandlerExtension,
   Video,
+  YouTubeExtension,
 ];
