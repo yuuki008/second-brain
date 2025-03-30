@@ -71,7 +71,7 @@ const NodeNameEditor = React.memo(
 
     return (
       <input
-        className="border-none tracking-wide text-4xl font-bold mb-4 bg-transparent focus:outline-none focus:ring-0 w-full"
+        className="leading-[1.5] border-none tracking-wide text-4xl font-bold mb-4 bg-transparent focus:outline-none focus:ring-0 w-full"
         value={nodeName}
         onChange={(e) => setNodeName(e.target.value)}
       />

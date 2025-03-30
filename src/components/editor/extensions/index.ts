@@ -23,7 +23,7 @@ import { TweetExtension } from "./tweet";
 import { EmojiExtension } from "./emoji";
 import { OGPLink } from "./open-graph";
 import FileHandlerExtension from "./file-handler";
-import Image from "@tiptap/extension-image";
+import { Image } from "./image";
 import { Video } from "./video";
 
 export const extensions = [

@@ -51,7 +51,7 @@
 }
 
 .markdown-editor img {
-  @apply max-w-full rounded-md my-4;
+  @apply max-w-full rounded-md;
 }
 
 .markdown-editor a {

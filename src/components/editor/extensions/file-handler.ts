@@ -2,7 +2,13 @@ import { uploadFile } from "@/app/actions/supabase";
 import { FileHandler } from "@tiptap-pro/extension-file-handler";
 import { Editor } from "@tiptap/react";
 
-function insertImage(editor: Editor, url: string, alt: string, pos: number) {
+function insertImage(
+  editor: Editor,
+  url: string,
+  alt: string,
+  pos: number,
+  loading: boolean = false
+) {
   editor
     .chain()
     .insertContentAt(pos, {
@@ -10,6 +16,7 @@ function insertImage(editor: Editor, url: string, alt: string, pos: number) {
       attrs: {
         src: url,
         alt: alt,
+        loading: loading,
       },
     })
     .focus()
@@ -52,10 +59,29 @@ const FileHandlerExtension = FileHandler.configure({
 
   onDrop: async (editor: Editor, files: File[], pos: number) => {
     files.forEach(async (file) => {
-      const { url } = await uploadFile(file);
+      if (isVideo(file)) {
+        const { url } = await uploadFile(file);
+        return insertVideo(editor, url, pos);
+      }
+      if (isImage(file)) {
+        // まずloading状態で画像を挿入
+        insertImage(editor, "", file.name, pos, true);
+        // アップロード完了後に実際のURLで更新
+        const { url } = await uploadFile(file);
 
-      if (isVideo(file)) return insertVideo(editor, url, pos);
-      if (isImage(file)) return insertImage(editor, url, file.name, pos);
+        editor
+          .chain()
+          .command(({ tr }) => {
+            const pos = tr.selection.anchor;
+            tr.setNodeMarkup(pos, undefined, {
+              src: url,
+              alt: file.name,
+              loading: false,
+            });
+            return true;
+          })
+          .run();
+      }
     });
   },
 
@@ -65,17 +91,31 @@ const FileHandlerExtension = FileHandler.configure({
         return false;
       }
 
-      const { url } = await uploadFile(file);
-
-      if (isVideo(file))
+      if (isVideo(file)) {
+        const { url } = await uploadFile(file);
         return insertVideo(editor, url, editor.state.selection.anchor);
-      if (isImage(file))
-        return insertImage(
-          editor,
-          url,
-          file.name,
-          editor.state.selection.anchor
-        );
+      }
+      if (isImage(file)) {
+        // まずloading状態で画像を挿入
+        insertImage(editor, "", file.name, editor.state.selection.anchor, true);
+        // アップロード完了後に実際のURLで更新
+        const { url } = await uploadFile(file);
+
+        editor
+          .chain()
+          .command(({ tr }) => {
+            if (!tr.selection.anchor) return false;
+
+            const pos = tr.selection.anchor;
+            tr.setNodeMarkup(pos, undefined, {
+              src: url,
+              alt: file.name,
+              loading: false,
+            });
+            return true;
+          })
+          .run();
+      }
     });
   },
 });
