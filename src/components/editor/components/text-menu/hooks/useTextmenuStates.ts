@@ -41,7 +41,8 @@ export const useTextmenuStates = (editor: Editor) => {
         editor.isActive("image") ||
         editor.isActive("video") ||
         editor.isActive("twitter") ||
-        editor.isActive("ogp");
+        editor.isActive("ogp") ||
+        editor.isActive("youtube");
 
       if (isSpecialNode) {
         return false;
