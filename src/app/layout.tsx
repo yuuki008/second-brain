@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   title: "Second Brain",
   description: "Your personal knowledge management system",
   icons: {
-    icon: [{ url: "/brain-dark.png", type: "image/png" }],
-    apple: "/brain-dark.png",
+    icon: [{ url: "/grinning-brain.png", type: "image/png" }],
+    apple: "/grinning-brain.png",
   },
 };
 
