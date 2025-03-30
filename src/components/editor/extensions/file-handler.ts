@@ -23,14 +23,19 @@ function insertImage(
     .run();
 }
 
-function insertVideo(editor: Editor, url: string, pos: number) {
+function insertVideo(
+  editor: Editor,
+  url: string,
+  pos: number,
+  loading: boolean = false
+) {
   editor
     .chain()
     .insertContentAt(pos, {
       type: "video",
       attrs: {
         src: url,
-        controls: true,
+        loading: loading,
       },
     })
     .focus()
@@ -60,8 +65,22 @@ const FileHandlerExtension = FileHandler.configure({
   onDrop: async (editor: Editor, files: File[], pos: number) => {
     files.forEach(async (file) => {
       if (isVideo(file)) {
+        // まずloading状態でビデオを挿入
+        insertVideo(editor, "", pos, true);
+        // アップロード完了後に実際のURLで更新
         const { url } = await uploadFile(file);
-        return insertVideo(editor, url, pos);
+
+        editor
+          .chain()
+          .command(({ tr }) => {
+            const pos = tr.selection.anchor;
+            tr.setNodeMarkup(pos, undefined, {
+              src: url,
+              loading: false,
+            });
+            return true;
+          })
+          .run();
       }
       if (isImage(file)) {
         // まずloading状態で画像を挿入
@@ -92,8 +111,24 @@ const FileHandlerExtension = FileHandler.configure({
       }
 
       if (isVideo(file)) {
+        // まずloading状態でビデオを挿入
+        insertVideo(editor, "", editor.state.selection.anchor, true);
+        // アップロード完了後に実際のURLで更新
         const { url } = await uploadFile(file);
-        return insertVideo(editor, url, editor.state.selection.anchor);
+
+        editor
+          .chain()
+          .command(({ tr }) => {
+            if (!tr.selection.anchor) return false;
+
+            const pos = tr.selection.anchor;
+            tr.setNodeMarkup(pos, undefined, {
+              src: url,
+              loading: false,
+            });
+            return true;
+          })
+          .run();
       }
       if (isImage(file)) {
         // まずloading状態で画像を挿入

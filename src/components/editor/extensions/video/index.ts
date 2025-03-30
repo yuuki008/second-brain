@@ -1,4 +1,6 @@
 import { Node, nodeInputRule } from "@tiptap/react";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+import { VideoComponent } from "./video";
 
 export interface VideoOptions {
   HTMLAttributes: Record<string, string>;
@@ -10,7 +12,7 @@ declare module "@tiptap/core" {
       /**
        * Set a video node
        */
-      setVideo: (src: string) => ReturnType;
+      setVideo: (options: { src: string; loading?: boolean }) => ReturnType;
       /**
        * Toggle a video
        */
@@ -32,6 +34,12 @@ export const Video = Node.create({
         default: null,
         parseHTML: (el) => (el as HTMLSpanElement).getAttribute("src"),
         renderHTML: (attrs) => ({ src: attrs.src }),
+      },
+      loading: {
+        default: false,
+        parseHTML: (el) =>
+          (el as HTMLSpanElement).getAttribute("loading") === "true",
+        renderHTML: (attrs) => ({ loading: attrs.loading }),
       },
     };
   },
@@ -55,14 +63,19 @@ export const Video = Node.create({
     ];
   },
 
+  addNodeView() {
+    return ReactNodeViewRenderer(VideoComponent);
+  },
+
   addCommands() {
     return {
       setVideo:
-        (src: string) =>
+        (options: { src: string; loading?: boolean }) =>
         ({ commands }) =>
-          commands.insertContent(
-            `<video controls="true" style="width: 100%" src="${src}" />`
-          ),
+          commands.insertContent({
+            type: this.name,
+            attrs: options,
+          }),
 
       toggleVideo:
         () =>

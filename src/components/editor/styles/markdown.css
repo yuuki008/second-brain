@@ -107,5 +107,5 @@
 }
 
 .markdown-editor video {
-  @apply w-full my-4;
+  @apply w-full;
 }
