@@ -1,4 +1,4 @@
-import { HierarchicalTag } from "@/app/components/TagFilter";
+import { HierarchicalTag } from "@/app/components/tag-filter";
 
 // タグIDから対応するタグオブジェクトを取得する関数
 export const getTagById = (
