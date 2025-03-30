@@ -36,6 +36,17 @@ export const useTextmenuStates = (editor: Editor) => {
         return false;
       }
 
+      // 特定のノードタイプの場合は TextMenu を表示しない
+      const isSpecialNode =
+        editor.isActive("image") ||
+        editor.isActive("video") ||
+        editor.isActive("twitter") ||
+        editor.isActive("ogp");
+
+      if (isSpecialNode) {
+        return false;
+      }
+
       return isTextSelected({ editor });
     },
     [editor]
