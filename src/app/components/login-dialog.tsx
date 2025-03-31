@@ -53,7 +53,7 @@ export function LoginDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[425px] w-[90%]">
+      <DialogContent className="sm:max-w-[425px] w-[90%] gap-0">
         <DialogHeader>
           <DialogTitle>
             <Image
