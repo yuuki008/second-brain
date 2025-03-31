@@ -49,13 +49,9 @@ export function LoginDialog({
 
     try {
       const success = await login(password);
-      if (success) {
-        setPassword("");
-        setError("");
-        onClose();
-      } else {
-        setError("パスワードが正しくありません");
-      }
+      if (success) return window.location.reload();
+
+      setError("パスワードが正しくありません");
     } catch (error) {
       console.error("ログインエラー:", error);
       setError("ログイン処理中にエラーが発生しました");
