@@ -6,7 +6,6 @@ import { updateNodeDefinition, updateNodeName } from "./actions";
 import TagManager from "./tag-manager";
 import { Node, Tag } from "@prisma/client";
 import { useAuth } from "@/components/providers/auth-provider";
-import { AlertCircle } from "lucide-react";
 
 interface NodeNodeData {
   id: string;
@@ -118,15 +117,6 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, allTags }) => {
   return (
     <div className="w-[90%] mx-auto pt-24 pb-[80vh]">
       <div className="relative max-w-3xl mx-auto">
-        {isReadOnly && (
-          <div className="mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-md flex items-center gap-2">
-            <AlertCircle className="h-5 w-5" />
-            <span>
-              閲覧モード：編集するには管理者としてログインしてください
-            </span>
-          </div>
-        )}
-
         <div className="min-h-full flex flex-col">
           <div>
             <NodeNameEditor
@@ -135,23 +125,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, allTags }) => {
               isReadOnly={isReadOnly}
             />
 
-            {!isReadOnly && (
-              <TagManager
-                nodeId={id}
-                currentTags={node.tags}
-                allTags={allTags}
-              />
-            )}
-
-            {isReadOnly && node.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {node.tags.map((tag) => (
-                  <div key={tag.id} className="px-2 py-1 rounded-md text-sm">
-                    {tag.name}
-                  </div>
-                ))}
-              </div>
-            )}
+            <TagManager nodeId={id} currentTags={node.tags} allTags={allTags} />
           </div>
 
           <div className="flex-1 mt-4">

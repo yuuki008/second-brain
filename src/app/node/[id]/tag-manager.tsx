@@ -20,6 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/providers/auth-provider";
 
 interface TagManagerProps {
   nodeId: string;
@@ -34,8 +35,11 @@ const TagManager: React.FC<TagManagerProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const { isAuthenticated } = useAuth();
 
   const handleTagToggle = async (tagId: string, isSelected: boolean) => {
+    if (!isAuthenticated) return;
+
     try {
       if (isSelected) {
         await addTagToNode(nodeId, tagId);
@@ -53,6 +57,8 @@ const TagManager: React.FC<TagManagerProps> = ({
   );
 
   const handleCreateTag = async (tagName: string) => {
+    if (!isAuthenticated) return;
+
     try {
       const tag = await createTag(tagName);
       await addTagToNode(nodeId, tag.id);
@@ -61,6 +67,25 @@ const TagManager: React.FC<TagManagerProps> = ({
       console.error("タグの作成に失敗しました:", error);
     }
   };
+
+  // 認証されていない場合は読み取り専用の表示
+  if (!isAuthenticated) {
+    return (
+      <div className="w-full mb-4">
+        <div className="flex flex-wrap gap-2">
+          {currentTags.map((tag) => (
+            <Badge
+              key={tag.id}
+              variant="outline"
+              className="text-sm relative border"
+            >
+              {tag.name}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
