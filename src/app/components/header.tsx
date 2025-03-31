@@ -14,7 +14,7 @@ export default function Header() {
   const { isAuthenticated, logout } = useAuth();
 
   return (
-    <div className="fixed top-0 left-0 pl-5 z-[100] bg-transparent w-full">
+    <div className="fixed top-0 left-0 pl-5 z-[30] bg-transparent w-full">
       <div className="flex items-center justify-between h-full py-4 pr-5">
         <Link className="cursor-pointer" href="/">
           <Image
