@@ -3,7 +3,7 @@ import "./globals.css";
 import Search from "./components/search";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
-import Header from "./components/header";
+import Header from "./components/header/header";
 import { Shippori_Mincho_B1 } from "next/font/google";
 
 const shipporiMincho = Shippori_Mincho_B1({
