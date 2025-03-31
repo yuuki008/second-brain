@@ -83,6 +83,8 @@ const suggestion = {
   },
 };
 
-export const EmojiExtension = Emoji.configure({
+const EmojiExtension = Emoji.configure({
   suggestion,
 });
+
+export default EmojiExtension;
