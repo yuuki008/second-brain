@@ -16,9 +16,12 @@ export async function generateMetadata({ params }: NodePageProps) {
     };
   }
 
+  // description が HTML の場合は、テキストを抽出
+  const description = node.content.replace(/<[^>]*>?/g, "");
+
   return {
     title: node.name,
-    description: node.content,
+    description,
     openGraph: {
       title: node.name,
       description: node.content,
