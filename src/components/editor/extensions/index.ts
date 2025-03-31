@@ -23,7 +23,7 @@ import { OGPLink } from "./open-graph";
 import { Image } from "./image";
 import { Video } from "./video";
 import { YouTubeExtension } from "./youtube";
-import EmojiExtension from "./emoji";
+import EmojiExtension from "./emoji/index";
 import FileHandlerExtension from "./file-handler";
 
 export const extensions = [
