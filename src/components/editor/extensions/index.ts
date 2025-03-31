@@ -19,12 +19,12 @@ import FontSize from "@tiptap/extension-font-size";
 import { TaskList } from "@tiptap/extension-task-list";
 import { TaskItem } from "@tiptap/extension-task-item";
 import { TweetExtension } from "./tweet";
-import EmojiExtension from "./emoji";
 import { OGPLink } from "./open-graph";
-import FileHandlerExtension from "./file-handler";
 import { Image } from "./image";
 import { Video } from "./video";
 import { YouTubeExtension } from "./youtube";
+import EmojiExtension from "./emoji";
+import FileHandlerExtension from "./file-handler";
 
 export const extensions = [
   StarterKit,
