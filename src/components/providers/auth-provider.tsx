@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 // ハードコーディングされたパスワード
-const ADMIN_PASSWORD = "admin123";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 type AuthContextType = {
   isAuthenticated: boolean;
