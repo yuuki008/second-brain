@@ -5,6 +5,8 @@ import Editor from "@/components/editor";
 import { updateNodeDefinition, updateNodeName } from "./actions";
 import TagManager from "./tag-manager";
 import { Node, Tag } from "@prisma/client";
+import { useAuth } from "@/components/providers/auth-provider";
+import { AlertCircle } from "lucide-react";
 
 interface NodeNodeData {
   id: string;
@@ -31,13 +33,21 @@ interface NodeDetailProps {
 
 // エディタ部分のみを扱う別コンポーネント
 const NodeEditor = React.memo(
-  ({ id, initialContent }: { id: string; initialContent: string }) => {
+  ({
+    id,
+    initialContent,
+    isReadOnly,
+  }: {
+    id: string;
+    initialContent: string;
+    isReadOnly: boolean;
+  }) => {
     const [content, setContent] = useState(initialContent);
 
     // コンテンツが変更されたらデータベースに保存する
     useEffect(() => {
-      // 初期表示時は保存しない
-      if (content === initialContent) return;
+      // 読み取り専用モードまたは初期表示時は保存しない
+      if (isReadOnly || content === initialContent) return;
 
       // デバウンス処理のための変数
       const timer = setTimeout(async () => {
@@ -50,24 +60,45 @@ const NodeEditor = React.memo(
 
       // クリーンアップ関数
       return () => clearTimeout(timer);
-    }, [content, id, initialContent]);
+    }, [content, id, initialContent, isReadOnly]);
 
-    return <Editor content={content} onChange={setContent} />;
+    return (
+      <Editor content={content} onChange={setContent} readOnly={isReadOnly} />
+    );
   }
 );
 NodeEditor.displayName = "NodeEditor";
 
 // ノード名を編集するコンポーネント
 const NodeNameEditor = React.memo(
-  ({ id, initialName }: { id: string; initialName: string }) => {
+  ({
+    id,
+    initialName,
+    isReadOnly,
+  }: {
+    id: string;
+    initialName: string;
+    isReadOnly: boolean;
+  }) => {
     const [nodeName, setNodeName] = useState(initialName);
 
     useEffect(() => {
+      // 読み取り専用モードまたは初期値と同じ場合は更新しない
+      if (isReadOnly || nodeName === initialName) return;
+
       const timer = setTimeout(() => {
         updateNodeName(id, nodeName);
       }, 1000);
       return () => clearTimeout(timer);
-    }, [nodeName, id]);
+    }, [nodeName, id, initialName, isReadOnly]);
+
+    if (isReadOnly) {
+      return (
+        <h1 className="leading-[1.5] tracking-wide text-4xl font-bold mb-4">
+          {nodeName}
+        </h1>
+      );
+    }
 
     return (
       <input
@@ -81,18 +112,54 @@ const NodeNameEditor = React.memo(
 NodeNameEditor.displayName = "NodeNameEditor";
 
 const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, allTags }) => {
+  const { isAuthenticated } = useAuth();
+  const isReadOnly = !isAuthenticated;
+
   return (
     <div className="w-[90%] mx-auto pt-24 pb-[80vh]">
       <div className="relative max-w-3xl mx-auto">
+        {isReadOnly && (
+          <div className="mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-md flex items-center gap-2">
+            <AlertCircle className="h-5 w-5" />
+            <span>
+              閲覧モード：編集するには管理者としてログインしてください
+            </span>
+          </div>
+        )}
+
         <div className="min-h-full flex flex-col">
           <div>
-            <NodeNameEditor id={id} initialName={node.name} />
+            <NodeNameEditor
+              id={id}
+              initialName={node.name}
+              isReadOnly={isReadOnly}
+            />
 
-            <TagManager nodeId={id} currentTags={node.tags} allTags={allTags} />
+            {!isReadOnly && (
+              <TagManager
+                nodeId={id}
+                currentTags={node.tags}
+                allTags={allTags}
+              />
+            )}
+
+            {isReadOnly && node.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {node.tags.map((tag) => (
+                  <div key={tag.id} className="px-2 py-1 rounded-md text-sm">
+                    {tag.name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex-1 mt-4">
-            <NodeEditor id={id} initialContent={node.content} />
+            <NodeEditor
+              id={id}
+              initialContent={node.content}
+              isReadOnly={isReadOnly}
+            />
           </div>
         </div>
       </div>

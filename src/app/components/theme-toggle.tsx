@@ -8,22 +8,20 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="fixed z-20 top-4 right-4">
-      <Button
-        size="icon"
-        variant="outline"
-        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="rounded-full h-10 w-10 relative"
-        aria-label={
-          theme === "dark" ? "ライトモードに切り替え" : "ダークモードに切り替え"
-        }
-      >
-        {theme === "dark" ? (
-          <Sun className="h-5 w-5" />
-        ) : (
-          <Moon className="h-5 w-5" />
-        )}
-      </Button>
-    </div>
+    <Button
+      size="icon"
+      variant="outline"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="rounded-full h-10 w-10 relative"
+      aria-label={
+        theme === "dark" ? "ライトモードに切り替え" : "ダークモードに切り替え"
+      }
+    >
+      {theme === "dark" ? (
+        <Sun className="h-5 w-5" />
+      ) : (
+        <Moon className="h-5 w-5" />
+      )}
+    </Button>
   );
 }

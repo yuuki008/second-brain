@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Search from "./components/search";
-import { ThemeToggle } from "./components/theme-toggle";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { AuthProvider } from "@/components/providers/auth-provider";
 import Header from "./components/header";
 import { Shippori_Mincho_B1 } from "next/font/google";
 
@@ -29,10 +29,11 @@ export default function RootLayout({
     <html lang="ja" suppressHydrationWarning>
       <body suppressHydrationWarning className={shipporiMincho.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <Search />
-          <ThemeToggle />
-          <Header />
-          {children}
+          <AuthProvider>
+            <Search />
+            <Header />
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

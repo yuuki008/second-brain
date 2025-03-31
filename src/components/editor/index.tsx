@@ -8,13 +8,14 @@ type Props = {
   content: string;
   onChange: (content: string) => void;
   className?: string;
+  readOnly?: boolean;
 };
 
-const Editor = ({ content, onChange, className }: Props) => {
+const Editor = ({ content, onChange, className, readOnly = false }: Props) => {
   const editor = useEditor({
     immediatelyRender: false,
     shouldRerenderOnTransaction: false,
-    autofocus: true,
+    autofocus: !readOnly,
     extensions: extensions as AnyExtension[],
     content: content,
     onUpdate: ({ editor }) => {
@@ -26,6 +27,7 @@ const Editor = ({ content, onChange, className }: Props) => {
           "markdown-editor focus:outline-none dark:prose-invert h-full px-1",
       },
     },
+    editable: !readOnly,
   });
 
   if (!editor) return <></>;
@@ -33,7 +35,7 @@ const Editor = ({ content, onChange, className }: Props) => {
   return (
     <div className={cn("markdown-editor", className)}>
       <EditorContent className="h-full" editor={editor} />
-      <TextMenu editor={editor} />
+      {!readOnly && <TextMenu editor={editor} />}
     </div>
   );
 };
