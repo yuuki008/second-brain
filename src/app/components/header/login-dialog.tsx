@@ -5,7 +5,6 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
 
 export function LoginDialog({
   isOpen,
