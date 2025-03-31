@@ -14,9 +14,11 @@ import { getAllNodes, createNewNode } from "../actions/search";
 import { Node, Tag } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, PlusCircle } from "lucide-react";
+import { useAuth } from "@/components/providers/auth-provider";
 
 const Search: React.FC = () => {
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [allNodes, setAllNodes] = useState<(Node & { tags: Tag[] })[]>([]);
@@ -89,7 +91,6 @@ const Search: React.FC = () => {
 
   // 何も見つからなかった場合に新規作成
   const handleCreateNew = async () => {
-    console.log(searchQuery);
     try {
       const newNode = await createNewNode(searchQuery);
       console.log(newNode);
@@ -175,7 +176,7 @@ const Search: React.FC = () => {
                               )}
                             </CommandItem>
                           ))}
-                          {searchQuery.length > 0 && (
+                          {searchQuery.length > 0 && isAuthenticated && (
                             <CommandItem
                               onSelect={handleCreateNew}
                               className="cursor-pointer py-2"

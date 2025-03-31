@@ -4,10 +4,6 @@ import React, { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import TagFilter, { HierarchicalTag } from "@/app/components/tag-filter";
 import NetworkGraph from "@/app/components/network-graph";
-import { PlusCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/components/providers/auth-provider";
-import { createNode } from "@/app/actions/node";
 
 // D3.js用の型定義
 interface NodeData {
@@ -30,7 +26,6 @@ interface TopPageClientProps {
 export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
   const router = useRouter();
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
-  const { isAuthenticated } = useAuth();
 
   // 選択されたタグとその子タグすべてのIDを収集する関数
   const collectTagAndChildrenIds = useCallback(
@@ -112,32 +107,10 @@ export default function TopPageClient({ tags, graphData }: TopPageClientProps) {
     );
   };
 
-  // 新規ノード作成処理
-  const handleCreateNode = async () => {
-    try {
-      const newNode = await createNode("新しいノード");
-      router.push(`/node/${newNode.id}`);
-    } catch (error) {
-      console.error("ノード作成エラー:", error);
-    }
-  };
-
   return (
     <div className="h-screen w-screen relative overflow-hidden flex flex-col">
       {/* ヘッダー */}
       <div className="fixed top-0 left-0 right-0 flex justify-between px-20 pt-20 z-20">
-        <div>
-          {isAuthenticated && (
-            <Button
-              onClick={handleCreateNode}
-              className="flex items-center gap-2"
-              variant="outline"
-            >
-              <PlusCircle className="h-4 w-4" />
-              <span>新しいノード</span>
-            </Button>
-          )}
-        </div>
         <TagFilter
           tags={tags}
           selectedTagIds={selectedTagIds}

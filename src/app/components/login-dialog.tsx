@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 import { useAuth } from "@/components/providers/auth-provider";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 export function LoginDialog({
   isOpen,
@@ -47,26 +53,33 @@ export function LoginDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[425px]">
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <form onSubmit={handleLogin}>
-              <div className="flex flex-col gap-4">
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="パスワードを入力"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  disabled={isLoading}
-                  autoFocus
-                />
-                {error && <p className="text-sm text-red-500">{error}</p>}
-              </div>
-            </form>
+      <DialogContent className="sm:max-w-[425px] w-[90%]">
+        <DialogHeader>
+          <DialogTitle>
+            <Image
+              src="/password-checking-brain.png"
+              alt="password-checking-brain"
+              width={300}
+              height={300}
+              className="mx-auto"
+            />
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleLogin}>
+          <div className="flex flex-col gap-4">
+            <Input
+              id="password"
+              type="password"
+              placeholder="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={isLoading}
+              autoFocus
+            />
+            {error && <p className="text-sm text-red-500">{error}</p>}
           </div>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
