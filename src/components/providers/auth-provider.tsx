@@ -1,20 +1,20 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-
-// ハードコーディングされたパスワード
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+import { verifyPassword } from "@/app/actions/auth";
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  login: (password: string) => boolean;
+  login: (password: string) => Promise<boolean>;
   logout: () => void;
+  isLoading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // ローカルストレージから認証状態を復元
   useEffect(() => {
@@ -24,13 +24,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const login = (password: string): boolean => {
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      localStorage.setItem("isAuthenticated", "true");
-      return true;
+  const login = async (password: string): Promise<boolean> => {
+    setIsLoading(true);
+    try {
+      // サーバーサイドでパスワードを検証
+      const isValid = await verifyPassword(password);
+
+      if (isValid) {
+        setIsAuthenticated(true);
+        localStorage.setItem("isAuthenticated", "true");
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("認証エラー:", error);
+      return false;
+    } finally {
+      setIsLoading(false);
     }
-    return false;
   };
 
   const logout = () => {
@@ -39,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
