@@ -71,7 +71,7 @@ export function LoginDialog({
     >
       <div
         className={cn(
-          "rounded-lg shadow-lg w-[90%] max-w-xs bg-background backdrop-blur-lg transform transition-all duration-300 overflow-hidden p-6"
+          "rounded-lg shadow-lg w-[90%] max-w-xs bg-background backdrop-blur-lg transform transition-all duration-300 overflow-hidden px-10 py-6"
         )}
         onClick={(e) => e.stopPropagation()}
       >
