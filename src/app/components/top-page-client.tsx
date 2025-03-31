@@ -4,7 +4,6 @@ import React, { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import TagFilter, { HierarchicalTag } from "@/app/components/tag-filter";
 import NetworkGraph from "@/app/components/network-graph";
-
 // D3.js用の型定義
 interface NodeData {
   id: string;
