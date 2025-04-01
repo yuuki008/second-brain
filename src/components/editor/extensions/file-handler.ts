@@ -57,6 +57,7 @@ const FileHandlerExtension = FileHandler.configure({
     "video/ogg",
     "video/mov",
     "video/avi",
+    "video/quicktime",
     "video/wmv",
     "video/flv",
     "video/mpeg",
