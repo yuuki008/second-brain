@@ -2,10 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import Editor from "@/components/editor";
-import { updateNodeDefinition, updateNodeName } from "./actions";
+import {
+  updateNodeDefinition,
+  updateNodeName,
+  updateNodeImageUrl,
+} from "./actions";
 import TagManager from "./tag-manager";
 import { Node, Tag } from "@prisma/client";
 import { useAuth } from "@/components/providers/auth-provider";
+import { uploadFile } from "@/app/actions/supabase";
+import Image from "next/image";
 
 interface NodeNodeData {
   id: string;
@@ -29,6 +35,71 @@ interface NodeDetailProps {
     }[];
   };
 }
+
+// サムネイル画像アップロードコンポーネント
+const ThumbnailUploader = React.memo(
+  ({
+    id,
+    initialImgUrl,
+    isReadOnly,
+  }: {
+    id: string;
+    initialImgUrl?: string | null;
+    isReadOnly: boolean;
+  }) => {
+    const [imgUrl, setImgUrl] = useState(initialImgUrl || null);
+
+    const handleImageUpload = async (
+      e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      if (!e.target.files || e.target.files.length === 0) return;
+
+      try {
+        const file = e.target.files[0];
+        const { url } = await uploadFile(file);
+        setImgUrl(url);
+
+        // ノードのimageUrlを更新
+        await updateNodeImageUrl(id, url);
+      } catch (error) {
+        console.error("画像アップロードエラー:", error);
+      } finally {
+      }
+    };
+
+    console.log(imgUrl);
+    if (!imgUrl && isReadOnly) return <></>;
+
+    return (
+      <div className="mb-6">
+        <div className="relative w-full h-48 mb-2 overflow-hidden">
+          <label
+            htmlFor="thumbnailUpload"
+            className="absolute inset-0 cursor-pointer z-10 hover:bg-black/30 transition-colors duration-300"
+          />
+          {imgUrl ? (
+            <Image
+              src={imgUrl}
+              alt="ノードサムネイル"
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="w-full h-32 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center mb-2"></div>
+          )}
+        </div>
+        <input
+          id="thumbnailUpload"
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+      </div>
+    );
+  }
+);
+ThumbnailUploader.displayName = "ThumbnailUploader";
 
 // エディタ部分のみを扱う別コンポーネント
 const NodeEditor = React.memo(
@@ -119,6 +190,12 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, allTags }) => {
       <div className="relative max-w-2xl mx-auto">
         <div className="min-h-full flex flex-col">
           <div>
+            <ThumbnailUploader
+              id={id}
+              initialImgUrl={node.imageUrl}
+              isReadOnly={isReadOnly}
+            />
+
             <NodeNameEditor
               id={id}
               initialName={node.name}
