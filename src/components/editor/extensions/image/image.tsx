@@ -7,14 +7,14 @@ export function ImageComponent({ node }: NodeViewProps) {
 
   if (loading) {
     return (
-      <NodeViewWrapper>
+      <NodeViewWrapper className="mx-auto w-full max-w-[500px] my-4">
         <Skeleton className="w-[500px] h-[500px]" />
       </NodeViewWrapper>
     );
   }
 
   return (
-    <NodeViewWrapper>
+    <NodeViewWrapper className="mx-auto w-full max-w-[500px] my-4">
       <Image src={src} width={500} height={500} alt={alt || ""} />
     </NodeViewWrapper>
   );
