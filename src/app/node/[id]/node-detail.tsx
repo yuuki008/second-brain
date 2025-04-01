@@ -14,6 +14,7 @@ import { uploadFile } from "@/app/actions/supabase";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { Image as ImageIcon } from "lucide-react";
 
 interface NodeNodeData {
   id: string;
@@ -96,6 +97,29 @@ const ThumbnailUploader = React.memo(
         </div>
       );
 
+    if (!imgUrl) {
+      return (
+        <div className="w-full flex justify-end">
+          <Button className="relative" variant="outline">
+            <label
+              htmlFor="thumbnailUpload"
+              className="absolute inset-0 cursor-pointer"
+            />
+            <ImageIcon className="h-4 w-4" />
+            Add thumbnail
+          </Button>
+
+          <input
+            id="thumbnailUpload"
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+          />
+        </div>
+      );
+    }
+
     return (
       <div className="mb-6">
         <div className="relative w-full overflow-hidden">
@@ -103,31 +127,25 @@ const ThumbnailUploader = React.memo(
             htmlFor="thumbnailUpload"
             className="absolute inset-0 cursor-pointer z-10 hover:bg-black/30 transition-colors duration-300"
           />
-          {imgUrl ? (
-            <>
-              <div className="relative w-full">
-                <Image
-                  src={imgUrl}
-                  alt="ノードサムネイル"
-                  width={1000}
-                  height={0}
-                  style={{ width: "100%", height: "auto" }}
-                  className="object-cover max-h-[640px]"
-                />
-              </div>
-              <Button
-                onClick={handleImageDelete}
-                variant="outline"
-                size="icon"
-                className="absolute top-2 right-2 z-20 rounded-full"
-                aria-label="画像を削除"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </>
-          ) : (
-            <div className="w-full h-[360px] bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center" />
-          )}
+          <div className="relative w-full">
+            <Image
+              src={imgUrl}
+              alt="ノードサムネイル"
+              width={1000}
+              height={0}
+              style={{ width: "100%", height: "auto" }}
+              className="object-cover max-h-[640px]"
+            />
+          </div>
+          <Button
+            onClick={handleImageDelete}
+            variant="outline"
+            size="icon"
+            className="absolute top-2 right-2 z-20 rounded-full"
+            aria-label="画像を削除"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
         <input
           id="thumbnailUpload"
@@ -227,7 +245,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, allTags }) => {
   const isReadOnly = !isAuthenticated;
 
   return (
-    <div className="w-[90%] mx-auto pt-24 pb-[80vh]">
+    <div className="w-[90%] mx-auto pt-20 pb-[80vh]">
       <div className="relative max-w-2xl mx-auto">
         <div className="min-h-full flex flex-col">
           <div>
