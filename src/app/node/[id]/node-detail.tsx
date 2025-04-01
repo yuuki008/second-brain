@@ -12,6 +12,8 @@ import { Node, Tag } from "@prisma/client";
 import { useAuth } from "@/components/providers/auth-provider";
 import { uploadFile } from "@/app/actions/supabase";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 interface NodeNodeData {
   id: string;
@@ -67,8 +69,28 @@ const ThumbnailUploader = React.memo(
       }
     };
 
-    console.log(imgUrl);
+    const handleImageDelete = async () => {
+      try {
+        // 画像URLをnullに設定してデータベースを更新
+        await updateNodeImageUrl(id, null);
+        setImgUrl(null);
+      } catch (error) {
+        console.error("画像削除エラー:", error);
+      }
+    };
+
     if (!imgUrl && isReadOnly) return <></>;
+    if (imgUrl && isReadOnly)
+      return (
+        <div className="w-full h-48 mb-2">
+          <Image
+            src={imgUrl || ""}
+            alt="ノードサムネイル"
+            fill
+            className="object-cover"
+          />
+        </div>
+      );
 
     return (
       <div className="mb-6">
@@ -78,14 +100,25 @@ const ThumbnailUploader = React.memo(
             className="absolute inset-0 cursor-pointer z-10 hover:bg-black/30 transition-colors duration-300"
           />
           {imgUrl ? (
-            <Image
-              src={imgUrl}
-              alt="ノードサムネイル"
-              fill
-              className="object-cover"
-            />
+            <>
+              <Image
+                src={imgUrl}
+                alt="ノードサムネイル"
+                fill
+                className="object-cover"
+              />
+              <Button
+                onClick={handleImageDelete}
+                variant="outline"
+                size="icon"
+                className="absolute top-2 right-2 z-20 rounded-full"
+                aria-label="画像を削除"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </>
           ) : (
-            <div className="w-full h-32 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center mb-2"></div>
+            <div className="w-full h-48 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center mb-2"></div>
           )}
         </div>
         <input

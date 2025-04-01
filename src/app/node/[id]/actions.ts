@@ -42,9 +42,12 @@ export async function updateNodeDefinition(nodeId: string, definition: string) {
 /**
  * ノードの画像URLを更新するサーバーアクション
  * @param nodeId - 更新するノードのID
- * @param imageUrl - 新しい画像URL
+ * @param imageUrl - 新しい画像URL（nullの場合は画像を削除）
  */
-export async function updateNodeImageUrl(nodeId: string, imageUrl: string) {
+export async function updateNodeImageUrl(
+  nodeId: string,
+  imageUrl: string | null
+) {
   try {
     await prisma.node.update({
       where: { id: nodeId },
