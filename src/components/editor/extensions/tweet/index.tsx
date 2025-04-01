@@ -1,6 +1,6 @@
 import { nodePasteRule, ReactNodeViewRenderer } from "@tiptap/react";
 import { mergeAttributes, Node } from "@tiptap/core";
-import TweetComponent from "./tweet-component";
+import TweetComponent from "./tweet";
 
 export const TweetExtension = Node.create({
   name: "twitter",
