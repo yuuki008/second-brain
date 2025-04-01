@@ -1,0 +1,157 @@
+/* コードブロックラッパー */
+.code-block-wrapper {
+  position: relative;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+}
+
+/* コードブロック */
+.code-block-wrapper pre {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding: 1rem;
+  overflow-x: auto;
+  background-color: hsl(var(--card));
+  margin: 0;
+}
+
+/* 言語ラベル */
+.code-block-wrapper pre::before {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* シンタックスハイライト用クラス */
+.code-block-wrapper .language-javascript,
+.code-block-wrapper .language-typescript,
+.code-block-wrapper .language-jsx,
+.code-block-wrapper .language-tsx {
+  color: hsl(var(--foreground));
+}
+
+.code-block-wrapper code {
+  font-family: var(--font-mono);
+  background: transparent;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+/* カーソルとフォーカス */
+.code-block-wrapper pre:focus {
+  outline: none;
+}
+
+/* コピーボタン */
+.code-block-wrapper button[aria-label="コードをコピー"] {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.code-block-wrapper:hover button[aria-label="コードをコピー"] {
+  opacity: 1;
+}
+
+/* ダークモード */
+.dark .code-block-wrapper {
+  background-color: hsl(var(--card));
+}
+
+.dark .code-block-wrapper pre {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}
+
+.dark .code-block-wrapper button[aria-label="コードをコピー"] {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}
+
+/* カスタムレンダリング用スタイル */
+.code-block-wrapper .token.comment,
+.code-block-wrapper .token.prolog,
+.code-block-wrapper .token.doctype,
+.code-block-wrapper .token.cdata {
+  color: hsl(var(--muted-foreground));
+}
+
+.code-block-wrapper .token.punctuation {
+  color: hsl(var(--foreground));
+}
+
+.code-block-wrapper .token.property,
+.code-block-wrapper .token.tag,
+.code-block-wrapper .token.boolean,
+.code-block-wrapper .token.number,
+.code-block-wrapper .token.constant,
+.code-block-wrapper .token.symbol,
+.code-block-wrapper .token.deleted {
+  color: hsl(var(--destructive));
+}
+
+.code-block-wrapper .token.selector,
+.code-block-wrapper .token.attr-name,
+.code-block-wrapper .token.string,
+.code-block-wrapper .token.char,
+.code-block-wrapper .token.builtin,
+.code-block-wrapper .token.inserted {
+  color: hsl(var(--success));
+}
+
+.code-block-wrapper .token.operator,
+.code-block-wrapper .token.entity,
+.code-block-wrapper .token.url,
+.code-block-wrapper .language-css .token.string,
+.code-block-wrapper .style .token.string {
+  color: hsl(var(--accent));
+}
+
+.code-block-wrapper .token.atrule,
+.code-block-wrapper .token.attr-value,
+.code-block-wrapper .token.keyword {
+  color: hsl(var(--primary));
+}
+
+.code-block-wrapper .token.function,
+.code-block-wrapper .token.class-name {
+  color: hsl(var(--warning));
+}
+
+.code-block-wrapper .token.regex,
+.code-block-wrapper .token.important,
+.code-block-wrapper .token.variable {
+  color: hsl(var(--accent));
+}
+
+.code-block-wrapper .token.important,
+.code-block-wrapper .token.bold {
+  font-weight: bold;
+}
+
+.code-block-wrapper .token.italic {
+  font-style: italic;
+}
+
+.code-block-wrapper .token.entity {
+  cursor: help;
+}

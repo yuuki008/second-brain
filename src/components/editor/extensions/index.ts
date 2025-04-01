@@ -1,4 +1,3 @@
-import CodeBlock from "@tiptap/extension-code-block";
 import Heading from "@tiptap/extension-heading";
 import StarterKit from "@tiptap/starter-kit";
 import { Code } from "lucide-react";
@@ -25,9 +24,13 @@ import { Video } from "./video";
 import { YouTubeExtension } from "./youtube";
 import EmojiExtension from "./emoji";
 import FileHandlerExtension from "./file-handler";
+import { CodeBlock } from "./code-block";
 
 export const extensions = [
-  StarterKit,
+  StarterKit.configure({
+    // デフォルトのコードブロックを無効化
+    codeBlock: false,
+  }),
   Heading,
   Paragraph,
   ListItem,
@@ -35,7 +38,7 @@ export const extensions = [
   BulletList,
   Blockquote,
   Code,
-  CodeBlock,
+  CodeBlock, // カスタムコードブロック（ファイル名と言語選択機能付き）
   Link,
   TextAlign,
   Underline,

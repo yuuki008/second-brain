@@ -108,6 +108,14 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
         >
           <Icon name="FileCode" />
         </MemoButton>
+        <MemoButton
+          variant="ghost"
+          onClick={commands.onCodeHighlight}
+          aria-label="シンタックスハイライト付きコードブロック"
+          className="p-2"
+        >
+          <Icon name="FileCode2" />
+        </MemoButton>
 
         <EditLinkPopover editor={editor} />
       </div>

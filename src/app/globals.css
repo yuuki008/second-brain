@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    --font-mono: "SF Mono", "Monaco", "Inconsolata", "Fira Mono",
+      "Droid Sans Mono", "Source Code Pro", monospace;
     /* ライトモードでの目に優しい色設定 */
     --background: 210 20% 98%; /* #F8F9FA に近い、わずかに青みがかった柔らかい背景 */
     --foreground: 210 10% 23%; /* #333333 に近い、純粋な黒よりも柔らかいダークグレー */
