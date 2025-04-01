@@ -128,7 +128,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, allTags }) => {
             <TagManager nodeId={id} currentTags={node.tags} allTags={allTags} />
           </div>
 
-          <div className="flex-1 mt-4">
+          <div className="flex-1 mt-8">
             <NodeEditor
               id={id}
               initialContent={node.content}
