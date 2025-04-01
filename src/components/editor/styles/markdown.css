@@ -118,7 +118,10 @@
   pre {
     border-radius: 0.5rem;
     color: var(--white);
-    font-family: "JetBrainsMono", monospace;
+    font-family: "Geist Mono", ui-monospace, SFMono-Regular, Roboto Mono, Menlo,
+      Monaco, Liberation Mono, DejaVu Sans Mono, Courier New, monospace,
+      Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+
     padding: 0.75rem 1rem;
 
     code {
