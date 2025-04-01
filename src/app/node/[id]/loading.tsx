@@ -7,6 +7,9 @@ const NodeDetailSkeleton = () => {
       <div className="relative max-w-2xl mx-auto">
         <div className="min-h-full flex flex-col">
           <div>
+            {/* ノードサムネイルのスケルトン */}
+            <Skeleton className="h-[360px] w-full mb-6" />
+
             {/* ノード名エディタのスケルトン */}
             <Skeleton className="h-14 w-full mb-4" />
 

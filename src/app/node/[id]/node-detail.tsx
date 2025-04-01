@@ -82,31 +82,39 @@ const ThumbnailUploader = React.memo(
     if (!imgUrl && isReadOnly) return <></>;
     if (imgUrl && isReadOnly)
       return (
-        <div className="w-full h-48 mb-2">
-          <Image
-            src={imgUrl || ""}
-            alt="ノードサムネイル"
-            fill
-            className="object-cover"
-          />
+        <div className="w-full mb-6">
+          <div className="relative w-full">
+            <Image
+              src={imgUrl || ""}
+              alt="ノードサムネイル"
+              width={1000}
+              height={0}
+              style={{ width: "100%", height: "auto" }}
+              className="object-cover"
+            />
+          </div>
         </div>
       );
 
     return (
       <div className="mb-6">
-        <div className="relative w-full h-48 mb-2 overflow-hidden">
+        <div className="relative w-full overflow-hidden">
           <label
             htmlFor="thumbnailUpload"
             className="absolute inset-0 cursor-pointer z-10 hover:bg-black/30 transition-colors duration-300"
           />
           {imgUrl ? (
             <>
-              <Image
-                src={imgUrl}
-                alt="ノードサムネイル"
-                fill
-                className="object-cover"
-              />
+              <div className="relative w-full">
+                <Image
+                  src={imgUrl}
+                  alt="ノードサムネイル"
+                  width={1000}
+                  height={0}
+                  style={{ width: "100%", height: "auto" }}
+                  className="object-cover max-h-[640px]"
+                />
+              </div>
               <Button
                 onClick={handleImageDelete}
                 variant="outline"
@@ -118,7 +126,7 @@ const ThumbnailUploader = React.memo(
               </Button>
             </>
           ) : (
-            <div className="w-full h-48 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center mb-2"></div>
+            <div className="w-full h-[360px] bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center" />
           )}
         </div>
         <input
