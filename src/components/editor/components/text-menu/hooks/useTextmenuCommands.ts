@@ -39,7 +39,7 @@ export function useTextmenuCommands(editor: Editor) {
   }, [editor]);
 
   const onCodeHighlight = useCallback(() => {
-    editor.chain().focus().toggleCodeHighlight().run();
+    editor.chain().focus().toggleHighlight().run();
   }, [editor]);
 
   const onSubscript = useCallback(() => {
