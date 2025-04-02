@@ -1,8 +1,10 @@
 import { useEditor, EditorContent, AnyExtension } from "@tiptap/react";
-import { extensions } from "./extensions";
+import { generateExtensions } from "./extensions";
 import { cn } from "@/lib/utils";
 import { TextMenu } from "./components/text-menu";
 import "./styles/markdown.css";
+import { TableOfContentData } from "@tiptap-pro/extension-table-of-contents";
+import { useState } from "react";
 
 type Props = {
   content: string;
@@ -12,11 +14,14 @@ type Props = {
 };
 
 const Editor = ({ content, onChange, className, readOnly = false }: Props) => {
+  const [tableOfContentData, setTableOfContentData] =
+    useState<TableOfContentData>([]);
+
   const editor = useEditor({
     immediatelyRender: false,
     shouldRerenderOnTransaction: false,
     autofocus: !readOnly,
-    extensions: extensions as AnyExtension[],
+    extensions: generateExtensions({ setTableOfContentData }),
     content: content,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
@@ -31,6 +36,8 @@ const Editor = ({ content, onChange, className, readOnly = false }: Props) => {
   });
 
   if (!editor) return <></>;
+
+  console.log(tableOfContentData);
 
   return (
     <div className={cn("markdown-editor", className)}>

@@ -24,32 +24,41 @@ import { YouTubeExtension } from "./youtube";
 import EmojiExtension from "./emoji";
 import FileHandlerExtension from "./file-handler";
 import CodeBlockLowlightExtension from "./code-block-low-light";
+import generateTableOfContents from "./table-of-contents";
+import { TableOfContentsExtensionArgs } from "./table-of-contents";
 
-export const extensions = [
-  StarterKit,
-  CodeBlockLowlightExtension,
-  Heading,
-  Paragraph,
-  ListItem,
-  OrderedList,
-  BulletList,
-  Blockquote,
-  Link,
-  TextAlign,
-  Underline,
-  Subscript,
-  Superscript,
-  Color,
-  FontFamily,
-  Highlight,
-  FontSize,
-  TaskItem,
-  TaskList,
-  TweetExtension,
-  EmojiExtension,
-  OGPLink,
-  Image,
-  FileHandlerExtension,
-  Video,
-  YouTubeExtension,
-];
+export type GenerateExtensionsArgs = TableOfContentsExtensionArgs;
+
+export const generateExtensions = ({
+  setTableOfContentData,
+}: GenerateExtensionsArgs) => {
+  return [
+    StarterKit,
+    generateTableOfContents({ setTableOfContentData }),
+    CodeBlockLowlightExtension,
+    Heading,
+    Paragraph,
+    ListItem,
+    OrderedList,
+    BulletList,
+    Blockquote,
+    Link,
+    TextAlign,
+    Underline,
+    Subscript,
+    Superscript,
+    Color,
+    FontFamily,
+    Highlight,
+    FontSize,
+    TaskItem,
+    TaskList,
+    TweetExtension,
+    EmojiExtension,
+    OGPLink,
+    Image,
+    FileHandlerExtension,
+    Video,
+    YouTubeExtension,
+  ];
+};
