@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
   TableOfContentData,
@@ -17,14 +18,14 @@ export const ToCItem = ({ item, onItemClick }: ToCItemProps) => {
   return (
     <div
       className={cn(
-        "text-sm transition-colors duration-300",
+        "text-sm transition-colors duration-300 font-light",
         item.isActive && !item.isScrolledOver
           ? "text-muted-foreground"
           : "text-primary",
         item.isScrolledOver && "text-muted-foreground"
       )}
       style={{
-        paddingLeft: `${item.level * 10}px`,
+        paddingLeft: `${(item.level - 1 || 0) * 10}px`,
       }}
     >
       <a
@@ -89,27 +90,35 @@ export default function ToC({ items, editor }: Props) {
   return (
     <div className="fixed bottom-4 right-4 z-50">
       <div
-        className="flex items-center gap-2 bg-background/80 backdrop-blur-sm p-2 rounded-lg shadow-lg cursor-pointer"
+        className={cn(
+          "flex flex-col bg-secondary text-secondary-foreground p-3 rounded-xl shadow-lg cursor-pointer transition-all duration-300 min-w-[200px] max-w-[95%]"
+        )}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex items-center">
-          <span className="text-sm font-medium">Index</span>
-          <ChevronsUpDown className="w-4 h-4 mx-1" />
-          <span className="bg-gray-200 dark:bg-gray-700 text-xs rounded-full px-2 py-1">
-            {progress}%
-          </span>
-        </div>
-      </div>
-
-      {isOpen && (
-        <div className="mt-2 bg-background/80 backdrop-blur-sm p-4 rounded-lg shadow-lg max-h-[70vh] overflow-auto">
-          <ul className="space-y-1">
+        <div
+          className={cn(
+            "h-0 w-0 max-h-[300px] overflow-auto transition-all duration-300",
+            isOpen && "h-auto w-auto mb-4"
+          )}
+        >
+          <ul className="space-y-1 p-2">
             {items.map((item) => (
               <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
             ))}
           </ul>
         </div>
-      )}
+
+        <div className="flex items-center w-full justify-between">
+          <div className="flex items-center">
+            <div className="text-sm font-medium">目次</div>
+            <ChevronsUpDown className="w-4 h-4 mx-1" />
+          </div>
+
+          <Badge variant="outline" className="text-xs">
+            {progress}%
+          </Badge>
+        </div>
+      </div>
     </div>
   );
 }
