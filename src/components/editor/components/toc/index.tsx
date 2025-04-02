@@ -90,36 +90,34 @@ export default function ToC({ items, editor }: Props) {
   const progress = calculateProgress();
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div
+      className={cn(
+        "fixed bottom-4 right-4 z-50 flex flex-col bg-secondary text-secondary-foreground p-3 rounded-xl shadow-lg cursor-pointer transition-all duration-300 min-w-[200px] max-w-[330px]"
+      )}
+      onClick={() => setIsOpen(!isOpen)}
+    >
       <div
         className={cn(
-          "flex flex-col bg-secondary text-secondary-foreground p-3 rounded-xl shadow-lg cursor-pointer transition-all duration-300 min-w-[200px] max-w-[95%]"
+          "h-0 w-0 max-h-[300px] overflow-auto",
+          isOpen && "h-auto w-auto mb-4"
         )}
-        onClick={() => setIsOpen(!isOpen)}
       >
-        <div
-          className={cn(
-            "h-0 w-0 max-h-[300px] overflow-auto",
-            isOpen && "h-auto w-auto mb-4"
-          )}
-        >
-          <div className="space-y-2">
-            {items.map((item) => (
-              <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
-            ))}
-          </div>
+        <div className="space-y-2">
+          {items.map((item) => (
+            <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
+          ))}
+        </div>
+      </div>
+
+      <div className="flex items-center w-full justify-between">
+        <div className="flex items-center">
+          <div className="text-sm font-medium">目次</div>
+          <ChevronsUpDown className="w-4 h-4 mx-1" />
         </div>
 
-        <div className="flex items-center w-full justify-between">
-          <div className="flex items-center">
-            <div className="text-sm font-medium">目次</div>
-            <ChevronsUpDown className="w-4 h-4 mx-1" />
-          </div>
-
-          <Badge variant="outline" className="text-xs">
-            {progress}%
-          </Badge>
-        </div>
+        <Badge variant="outline" className="text-xs">
+          {progress}%
+        </Badge>
       </div>
     </div>
   );
