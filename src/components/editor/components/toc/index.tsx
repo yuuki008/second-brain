@@ -7,7 +7,7 @@ import {
 import { TextSelection } from "@tiptap/pm/state";
 import { Editor } from "@tiptap/react";
 import { ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 type ToCItemProps = {
   item: TableOfContentDataItem;
@@ -48,6 +48,18 @@ type Props = {
 
 export default function ToC({ items, editor }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  // コンテンツの高さを計測して保存
+  useEffect(() => {
+    if (contentRef.current && isOpen) {
+      const height = contentRef.current.scrollHeight;
+      setContentHeight(height);
+    } else {
+      setContentHeight(0);
+    }
+  }, [isOpen, items]);
 
   if (!items || items.length === 0) return <></>;
   if (!editor.isInitialized) return <></>;
@@ -97,10 +109,16 @@ export default function ToC({ items, editor }: Props) {
       onClick={() => setIsOpen(!isOpen)}
     >
       <div
+        ref={contentRef}
         className={cn(
-          "h-0 w-0 max-h-[300px] overflow-auto",
-          isOpen && "h-auto w-auto mb-4"
+          "overflow-hidden transition-all duration-300 ease-in-out",
+          isOpen ? "mb-4" : "mb-0"
         )}
+        style={{
+          maxHeight: isOpen ? `${contentHeight}px` : "0px",
+          opacity: isOpen ? 1 : 0,
+          width: isOpen ? "100%" : "0%",
+        }}
       >
         <div className="space-y-2">
           {items.map((item) => (
@@ -112,7 +130,12 @@ export default function ToC({ items, editor }: Props) {
       <div className="flex items-center w-full justify-between">
         <div className="flex items-center">
           <div className="text-sm font-medium">目次</div>
-          <ChevronsUpDown className="w-4 h-4 mx-1" />
+          <ChevronsUpDown
+            className={cn(
+              "w-4 h-4 mx-1 transition-transform duration-300",
+              isOpen ? "rotate-180" : "rotate-0"
+            )}
+          />
         </div>
 
         <Badge variant="outline" className="text-xs">
