@@ -198,13 +198,15 @@ export const TweetMedia = ({ tweet }: { tweet: ExtendedEnrichedTweet }) => {
       {tweet.video && (
         <video
           poster={tweet.video.poster}
+          src={tweet.video.variants[1].src}
           autoPlay
           loop
           muted
           playsInline
+          controls
+          preload="auto"
           className="rounded-xl border shadow-sm !my-0"
         >
-          <source src={tweet.video.variants[0].src} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       )}
