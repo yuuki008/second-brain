@@ -5,6 +5,8 @@ import {
 } from "@tiptap-pro/extension-table-of-contents";
 import { TextSelection } from "@tiptap/pm/state";
 import { Editor } from "@tiptap/react";
+import { ChevronsUpDown } from "lucide-react";
+import { useState } from "react";
 
 type ToCItemProps = {
   item: TableOfContentDataItem;
@@ -42,6 +44,8 @@ type Props = {
 };
 
 export default function ToC({ items, editor }: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+
   if (!items || items.length === 0) return <></>;
   if (!editor.isInitialized) return <></>;
 
@@ -66,15 +70,46 @@ export default function ToC({ items, editor }: Props) {
       top: element.getBoundingClientRect().top + window.scrollY,
       behavior: "smooth",
     });
+
+    // 目次を閉じる
+    setIsOpen(false);
   };
 
+  // 現在のスクロール位置に基づいて進捗率を計算
+  const calculateProgress = () => {
+    const scrollPosition = window.scrollY;
+    const documentHeight =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    return Math.round((scrollPosition / documentHeight) * 100);
+  };
+
+  const progress = calculateProgress();
+
   return (
-    <div className="fixed bottom-4 right-4 z-50 bg-background/80 backdrop-blur-sm p-4 rounded-lg shadow-lg">
-      <ul className="space-y-1">
-        {items.map((item) => (
-          <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
-        ))}
-      </ul>
+    <div className="fixed bottom-4 right-4 z-50">
+      <div
+        className="flex items-center gap-2 bg-background/80 backdrop-blur-sm p-2 rounded-lg shadow-lg cursor-pointer"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div className="flex items-center">
+          <span className="text-sm font-medium">Index</span>
+          <ChevronsUpDown className="w-4 h-4 mx-1" />
+          <span className="bg-gray-200 dark:bg-gray-700 text-xs rounded-full px-2 py-1">
+            {progress}%
+          </span>
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="mt-2 bg-background/80 backdrop-blur-sm p-4 rounded-lg shadow-lg max-h-[70vh] overflow-auto">
+          <ul className="space-y-1">
+            {items.map((item) => (
+              <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
