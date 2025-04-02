@@ -1,5 +1,5 @@
-.markdown-editor:first-child {
-  margin-top: 0;
+.markdown-editor > :first-child {
+  @apply mt-0;
 }
 
 .markdown-editor {
