@@ -99,11 +99,11 @@ export default function ToC({ items, editor }: Props) {
       >
         <div
           className={cn(
-            "h-0 w-0 max-h-[300px] overflow-auto transition-all duration-300",
+            "h-0 w-0 max-h-[300px] overflow-auto",
             isOpen && "h-auto w-auto mb-4"
           )}
         >
-          <div className="space-y-1 p-2">
+          <div className="space-y-2">
             {items.map((item) => (
               <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
             ))}
