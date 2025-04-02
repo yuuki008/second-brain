@@ -159,21 +159,25 @@ const Search: React.FC = () => {
                               onSelect={() => handleSelectItem(node)}
                               className="cursor-pointer py-2"
                             >
-                              <FileText className="w-4 h-4 mr-3" />
-                              <div className="mr-4">{node.name}</div>
-                              {node.tags && node.tags.length > 0 && (
-                                <div className="flex flex-wrap gap-1">
-                                  {node.tags.map((tag) => (
-                                    <Badge
-                                      key={tag.id}
-                                      variant="secondary"
-                                      className="text-xs"
-                                    >
-                                      {tag.name}
-                                    </Badge>
-                                  ))}
+                              <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
+                              <div className="flex">
+                                <div className="line-clamp-1 mr-4">
+                                  {node.name}
                                 </div>
-                              )}
+                                {node.tags && node.tags.length > 0 && (
+                                  <div className="flex flex-wrap gap-1">
+                                    {node.tags.map((tag) => (
+                                      <Badge
+                                        key={tag.id}
+                                        variant="secondary"
+                                        className="text-xs"
+                                      >
+                                        {tag.name}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
                             </CommandItem>
                           ))}
                           {searchQuery.length > 0 && isAuthenticated && (
