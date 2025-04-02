@@ -107,7 +107,7 @@ export default function ToC({ items, editor }: Props) {
   const progress = calculateProgress();
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 right-4 z-[30]">
       <div className="bg-secondary text-secondary-foreground rounded-xl shadow-xl min-w-[200px] max-w-[330px] overflow-hidden">
         {/* コンテンツ部分 */}
         <div
