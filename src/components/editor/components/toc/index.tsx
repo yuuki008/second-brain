@@ -14,7 +14,13 @@ type ToCItemProps = {
 export const ToCItem = ({ item, onItemClick }: ToCItemProps) => {
   return (
     <div
-      className={cn(item.isActive ? "text-primary" : "text-muted-foreground")}
+      className={cn(
+        "text-sm transition-colors duration-300",
+        item.isActive && !item.isScrolledOver
+          ? "text-muted-foreground"
+          : "text-primary",
+        item.isScrolledOver && "text-muted-foreground"
+      )}
       style={{
         paddingLeft: `${item.level * 10}px`,
       }}
