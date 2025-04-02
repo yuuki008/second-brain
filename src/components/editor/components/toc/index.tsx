@@ -90,39 +90,41 @@ export default function ToC({ items, editor }: Props) {
   const progress = calculateProgress();
 
   return (
-    <div
-      className={cn(
-        "fixed bottom-4 right-4 z-50 flex flex-col bg-secondary text-secondary-foreground p-3 rounded-xl shadow-xl cursor-pointer transition-all duration-300 min-w-[200px] max-w-[330px]"
-      )}
-      onClick={() => setIsOpen(!isOpen)}
-    >
-      <div
-        className={cn(
-          "h-0 w-0 max-h-[80vh] overflow-auto",
-          isOpen && "h-auto w-auto mb-4"
-        )}
-      >
-        <div className="space-y-2">
-          {items.map((item) => (
-            <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
-          ))}
-        </div>
-      </div>
-
-      <div className="flex items-center w-full justify-between">
-        <div className="flex items-center">
-          <div className="text-sm font-medium">目次</div>
-          <ChevronUp
-            className={cn(
-              "w-4 h-4 mx-1 transition-transform duration-300",
-              isOpen ? "rotate-180" : "rotate-0"
-            )}
-          />
+    <div className="fixed bottom-4 right-4 z-50">
+      <div className="bg-secondary text-secondary-foreground rounded-xl shadow-xl min-w-[200px] max-w-[330px] overflow-hidden">
+        {/* コンテンツ部分 */}
+        <div
+          className={cn(
+            "max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0",
+            isOpen && "max-h-[70vh] opacity-100"
+          )}
+        >
+          <div className="p-3 space-y-2 overflow-auto max-h-[70vh]">
+            {items.map((item) => (
+              <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
+            ))}
+          </div>
         </div>
 
-        <Badge variant="outline" className="text-xs">
-          {progress}%
-        </Badge>
+        {/* ヘッダー部分 - クリック可能エリア */}
+        <div
+          className="flex items-center justify-between p-3 w-full cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <div className="flex items-center">
+            <div className="text-sm font-medium">目次</div>
+            <ChevronUp
+              className={cn(
+                "w-4 h-4 mx-1 transition-transform duration-300",
+                isOpen ? "rotate-180" : "rotate-0"
+              )}
+            />
+          </div>
+
+          <Badge variant="outline" className="text-xs">
+            {progress}%
+          </Badge>
+        </div>
       </div>
     </div>
   );
