@@ -19,7 +19,7 @@
 }
 
 .markdown-editor p {
-  @apply text-foreground leading-[1.9] my-0 text-base mt-2 font-extralight;
+  @apply text-foreground leading-[1.9] my-0 text-sm mt-2 font-extralight;
 }
 
 .markdown-editor blockquote {
