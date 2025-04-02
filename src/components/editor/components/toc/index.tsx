@@ -91,8 +91,8 @@ export default function ToC({ items, editor }: Props) {
       behavior: "smooth",
     });
 
-    // 目次を閉じる
-    setIsOpen(false);
+    // モバイルであれば目次を閉じる
+    if (window.innerWidth < BREAKPOINT_MD) setIsOpen(false);
   };
 
   // 現在のスクロール位置に基づいて進捗率を計算
