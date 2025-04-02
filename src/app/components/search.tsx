@@ -161,7 +161,7 @@ const Search: React.FC = () => {
                             >
                               <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
                               <div className="flex">
-                                <div className="line-clamp-1 mr-4">
+                                <div className="line-clamp-1 flex-1 mr-4">
                                   {node.name}
                                 </div>
                                 {node.tags && node.tags.length > 0 && (
