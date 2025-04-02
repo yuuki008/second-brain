@@ -4,11 +4,12 @@ import Search from "./components/search";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import Header from "./components/header";
-import { Shippori_Mincho_B1 } from "next/font/google";
+import { Noto_Sans_JP } from "next/font/google";
+import { cn } from "@/lib/utils";
 
-const shipporiMincho = Shippori_Mincho_B1({
-  weight: ["400", "500", "600", "700", "800"],
+const noto_sans_jp = Noto_Sans_JP({
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body suppressHydrationWarning className={shipporiMincho.className}>
+      <body suppressHydrationWarning className={cn(noto_sans_jp.className)}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <AuthProvider>
             <Search />
