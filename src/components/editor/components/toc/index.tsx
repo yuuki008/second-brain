@@ -92,13 +92,13 @@ export default function ToC({ items, editor }: Props) {
   return (
     <div
       className={cn(
-        "fixed bottom-4 right-4 z-50 flex flex-col bg-secondary text-secondary-foreground p-3 rounded-xl shadow-lg cursor-pointer transition-all duration-300 min-w-[200px] max-w-[330px]"
+        "fixed bottom-4 right-4 z-50 flex flex-col bg-secondary text-secondary-foreground p-3 rounded-xl shadow-xl cursor-pointer transition-all duration-300 min-w-[200px] max-w-[330px]"
       )}
       onClick={() => setIsOpen(!isOpen)}
     >
       <div
         className={cn(
-          "h-0 w-0 max-h-[300px] overflow-auto",
+          "h-0 w-0 max-h-[80vh] overflow-auto",
           isOpen && "h-auto w-auto mb-4"
         )}
       >
