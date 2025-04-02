@@ -46,7 +46,7 @@ type Props = {
   editor: Editor;
 };
 
-const BREAKPOINT_MD = 1150;
+const BREAKPOINT_MD = 1250;
 
 export default function ToC({ items, editor }: Props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -107,16 +107,16 @@ export default function ToC({ items, editor }: Props) {
   const progress = calculateProgress();
 
   return (
-    <div className="fixed z-[30] bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1150px] h-0">
+    <div className="fixed z-[30] bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1250px] h-0">
       <div className="absolute bottom-4 right-4 bg-secondary text-secondary-foreground rounded-xl shadow-xl min-w-[200px] max-w-[330px] overflow-hidden">
         {/* コンテンツ部分 */}
         <div
           className={cn(
-            "max-h-0 overflow-hidden transition-all duration-300 ease-in-out",
-            isOpen && "max-h-[70vh]"
+            "max-h-0 overflow-auto transition-all duration-300 ease-in-out",
+            isOpen && "max-h-[50vh]"
           )}
         >
-          <div className="p-3 space-y-2 overflow-auto max-h-[70vh]">
+          <div className="p-3 space-y-2">
             {items.map((item) => (
               <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
             ))}
