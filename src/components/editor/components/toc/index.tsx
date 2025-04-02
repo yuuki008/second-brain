@@ -14,7 +14,7 @@ type ToCItemProps = {
 export const ToCItem = ({ item, onItemClick }: ToCItemProps) => {
   return (
     <div
-      className={cn(item.isActive ? "text-primary" : "text-secondary")}
+      className={cn(item.isActive ? "text-primary" : "text-muted-foreground")}
       style={{
         paddingLeft: `${item.level * 10}px`,
       }}
@@ -36,7 +36,8 @@ type Props = {
 };
 
 export default function ToC({ items, editor }: Props) {
-  if (!items || items.length === 0) return null;
+  if (!items || items.length === 0) return <></>;
+  if (!editor.isInitialized) return <></>;
 
   const onItemClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();

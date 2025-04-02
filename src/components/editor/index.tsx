@@ -23,7 +23,7 @@ const Editor = ({ content, onChange, className, readOnly = false }: Props) => {
     shouldRerenderOnTransaction: false,
     autofocus: !readOnly,
     extensions: generateExtensions({ setTableOfContentData }),
-    content: content,
+    content,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
@@ -38,14 +38,10 @@ const Editor = ({ content, onChange, className, readOnly = false }: Props) => {
 
   if (!editor) return <></>;
 
-  // NOTE: tiptap の初期化が完了せずに ToC コンポーネントを呼び出すとエラーが出るので、
-  // 初期化が完了してから ToC コンポーネントを呼び出すようにする
-  if (!editor.isInitialized) return <></>;
-
   return (
-    <div className={cn("markdown-editor relative", className)}>
-      <EditorContent className="h-full" editor={editor} />
+    <div className={cn("relative", className)}>
       <ToC items={tableOfContentData} editor={editor} />
+      <EditorContent className="h-full" editor={editor} />
       {!readOnly && <TextMenu editor={editor} />}
     </div>
   );
