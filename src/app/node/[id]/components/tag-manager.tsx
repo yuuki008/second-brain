@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { addTagToNode, createTag, removeTagFromNode } from "./actions";
+import { addTagToNode, createTag, removeTagFromNode } from "../actions";
 import { Tag } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Check, PlusCircle } from "lucide-react";

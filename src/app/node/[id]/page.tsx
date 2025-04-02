@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import NodeDetail from "./node-detail";
+import NodeDetail from "./components/node-detail";
 import { getAllTags, getNode, getNodeWithRelatedNodes } from "./actions";
 
 interface NodePageProps {

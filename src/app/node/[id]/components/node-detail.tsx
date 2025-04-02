@@ -6,7 +6,7 @@ import {
   updateNodeDefinition,
   updateNodeName,
   updateNodeImageUrl,
-} from "./actions";
+} from "../actions";
 import TagManager from "./tag-manager";
 import { Node, Tag } from "@prisma/client";
 import { useAuth } from "@/components/providers/auth-provider";
