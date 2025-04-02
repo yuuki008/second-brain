@@ -18,7 +18,7 @@ export const ToCItem = ({ item, onItemClick }: ToCItemProps) => {
   return (
     <div
       className={cn(
-        "text-sm transition-colors duration-300 font-light",
+        "text-sm transition-colors duration-300 font-light relative overflow-hidden",
         item.isActive && !item.isScrolledOver
           ? "text-muted-foreground"
           : "text-primary",
@@ -26,12 +26,14 @@ export const ToCItem = ({ item, onItemClick }: ToCItemProps) => {
       )}
       style={{
         paddingLeft: `${(item.level - 1 || 0) * 10}px`,
+        maxWidth: "100%",
       }}
     >
       <a
         href={`#${item.id}`}
         onClick={(e) => onItemClick(e, item.id)}
         data-item-index={item.itemIndex}
+        className="block whitespace-nowrap text-ellipsis overflow-hidden"
       >
         {item.textContent}
       </a>
@@ -101,11 +103,11 @@ export default function ToC({ items, editor }: Props) {
             isOpen && "h-auto w-auto mb-4"
           )}
         >
-          <ul className="space-y-1 p-2">
+          <div className="space-y-1 p-2">
             {items.map((item) => (
               <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
             ))}
-          </ul>
+          </div>
         </div>
 
         <div className="flex items-center w-full justify-between">
