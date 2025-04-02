@@ -7,7 +7,7 @@ import {
 import { TextSelection } from "@tiptap/pm/state";
 import { Editor } from "@tiptap/react";
 import { ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ToCItemProps = {
   item: TableOfContentDataItem;
@@ -46,8 +46,25 @@ type Props = {
   editor: Editor;
 };
 
+const BREAKPOINT_MD = 768;
+
 export default function ToC({ items, editor }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+
+  // 画面サイズに基づいて初期状態を設定
+  useEffect(() => {
+    const handleResize = () => {
+      // md以上の画面サイズではデフォルトで開く
+      setIsOpen(window.innerWidth >= BREAKPOINT_MD);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   if (!items || items.length === 0) return <></>;
   if (!editor.isInitialized) return <></>;
@@ -95,8 +112,8 @@ export default function ToC({ items, editor }: Props) {
         {/* コンテンツ部分 */}
         <div
           className={cn(
-            "max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0",
-            isOpen && "max-h-[70vh] opacity-100"
+            "max-h-0 overflow-hidden transition-all duration-300 ease-in-out",
+            isOpen && "max-h-[70vh]"
           )}
         >
           <div className="p-3 space-y-2 overflow-auto max-h-[70vh]">
