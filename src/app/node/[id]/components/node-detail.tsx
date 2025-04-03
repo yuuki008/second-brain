@@ -222,15 +222,15 @@ const NodeNameEditor = React.memo(
 
     if (isReadOnly) {
       return (
-        <h1 className="leading-[1.5] tracking-wide text-4xl font-bold mb-4">
+        <h1 className="leading-[1.5] tracking-wide text-2xl font-bold mb-4">
           {nodeName}
         </h1>
       );
     }
 
     return (
-      <input
-        className="leading-[1.5] border-none tracking-wide text-4xl font-bold mb-4 bg-transparent focus:outline-none focus:ring-0 w-full"
+      <textarea
+        className="min-w-full max-w-full field-sizing-content resize-none leading-[1.5] border-none tracking-wide text-2xl font-bold mb-4 bg-transparent focus:outline-none focus:ring-0"
         value={nodeName}
         onChange={(e) => setNodeName(e.target.value)}
       />
