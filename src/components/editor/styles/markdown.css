@@ -28,10 +28,18 @@
 
 .markdown-editor ul {
   @apply list-disc pl-6 my-1;
+
+  ::marker {
+    @apply font-extralight;
+  }
 }
 
 .markdown-editor ol {
   @apply list-decimal pl-6 my-1;
+
+  ::marker {
+    @apply font-extralight;
+  }
 }
 
 .markdown-editor li {

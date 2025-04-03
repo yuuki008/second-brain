@@ -78,7 +78,7 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
           <CardContent className="p-4">
             <div className="flex gap-4 items-center">
               {ogData.ogImage && (
-                <div className="relative h-24 w-24 flex-shrink-0">
+                <div className="relative h-24 max-w-[230px] flex-shrink-0">
                   {/* Note: next/image を使うとサーバー側リクエストが発生して、URL のサイト側でブラウザ以外からのアクセスを拒んでいることがあるため、img を使う */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
