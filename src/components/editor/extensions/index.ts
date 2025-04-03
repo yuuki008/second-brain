@@ -26,7 +26,10 @@ import FileHandlerExtension from "./file-handler";
 import CodeBlockLowlightExtension from "./code-block-low-light";
 import generateTableOfContents from "./table-of-contents";
 import { TableOfContentsExtensionArgs } from "./table-of-contents";
-
+import Table from "@tiptap/extension-table";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
+import TableRow from "@tiptap/extension-table-row";
 export type GenerateExtensionsArgs = TableOfContentsExtensionArgs;
 
 export const generateExtensions = ({
@@ -60,5 +63,9 @@ export const generateExtensions = ({
     FileHandlerExtension,
     Video,
     YouTubeExtension,
+    Table,
+    TableCell,
+    TableHeader,
+    TableRow,
   ];
 };
