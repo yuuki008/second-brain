@@ -17,8 +17,15 @@ export async function generateMetadata({ params }: NodePageProps) {
   }
 
   // description が HTML の場合は、テキストを抽出
-  const description =
-    node.content.replace(/<[^>]*>?/g, "").slice(0, 150) + "...";
+  const extractText = (html: string) => {
+    // タグを削除
+    const withoutTags = html.replace(/<[^>]*>/g, " ");
+    // 連続する空白を1つに置換
+    const cleanText = withoutTags.replace(/\s+/g, " ").trim();
+    return cleanText.slice(0, 150) + "...";
+  };
+
+  const description = extractText(node.content);
 
   return {
     title: node.name,
