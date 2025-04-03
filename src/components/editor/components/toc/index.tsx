@@ -66,7 +66,6 @@ export default function ToC({ items, editor }: Props) {
     };
   }, []);
 
-  if (!items || items.length === 0) return <></>;
   if (!editor.isInitialized) return <></>;
 
   const onItemClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -117,9 +116,15 @@ export default function ToC({ items, editor }: Props) {
           )}
         >
           <div className="p-3 space-y-2">
-            {items.map((item) => (
-              <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
-            ))}
+            {items.length ? (
+              items.map((item) => (
+                <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
+              ))
+            ) : (
+              <div className="text-sm text-muted-foreground">
+                目次がありません
+              </div>
+            )}
           </div>
         </div>
 
