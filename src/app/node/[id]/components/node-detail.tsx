@@ -346,10 +346,12 @@ const NodeNameEditor = React.memo(
     id,
     initialName,
     isReadOnly,
+    viewCount,
   }: {
     id: string;
     initialName: string;
     isReadOnly: boolean;
+    viewCount: number;
   }) => {
     const [nodeName, setNodeName] = useState(initialName);
 
@@ -363,23 +365,30 @@ const NodeNameEditor = React.memo(
       return () => clearTimeout(timer);
     }, [nodeName, id, initialName, isReadOnly]);
 
-    if (isReadOnly) {
-      return (
-        <h1 className="leading-[1.5] tracking-wide text-2xl font-bold mb-4">
-          {nodeName}
-        </h1>
-      );
-    }
-
     return (
-      <textarea
-        className="min-w-full max-w-full field-sizing-content resize-none leading-[1.5] border-none tracking-wide text-2xl font-bold mb-4 bg-transparent focus:outline-none focus:ring-0"
-        value={nodeName}
-        onChange={(e) => setNodeName(e.target.value)}
-      />
+      <div className="relative flex items-center mb-4">
+        <div className="flex-1">
+          {isReadOnly ? (
+            <h1 className="leading-[1.5] tracking-wide text-2xl font-bold">
+              {nodeName}
+            </h1>
+          ) : (
+            <textarea
+              className="min-w-full max-w-full field-sizing-content resize-none leading-[1.5] border-none tracking-wide text-2xl font-bold bg-transparent focus:outline-none focus:ring-0"
+              value={nodeName}
+              onChange={(e) => setNodeName(e.target.value)}
+            />
+          )}
+        </div>
+
+        <div className="text-muted-foreground">
+          <span className="text-sm">{viewCount} views</span>
+        </div>
+      </div>
     );
   }
 );
+
 NodeNameEditor.displayName = "NodeNameEditor";
 
 const NodeDetail: React.FC<NodeDetailProps> = ({
@@ -404,6 +413,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
           id={id}
           initialName={node.name}
           isReadOnly={isReadOnly}
+          viewCount={node.viewCount}
         />
 
         {!isReadOnly && (
@@ -419,10 +429,6 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
             isReadOnly={isReadOnly}
           />
         </div>
-      </div>
-
-      <div className="flex items-center justify-center my-8 px-8 text-muted-foreground">
-        <span className="text-sm">{node.viewCount} views</span>
       </div>
     </div>
   );

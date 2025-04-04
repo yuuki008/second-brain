@@ -113,7 +113,7 @@ export default function ToC({ items, editor }: Props) {
       style={{
         maxWidth: `${BREAKPOINT_MD}px`,
       }}
-      className="fixed z-[30] bottom-0 left-1/2 -translate-x-1/2 w-full h-0"
+      className="fixed z-[20] bottom-0 left-1/2 -translate-x-1/2 w-full h-0"
     >
       <div className="absolute bottom-4 right-4 bg-secondary text-secondary-foreground rounded-xl shadow-xl w-[300px] overflow-hidden">
         {/* コンテンツ部分 */}
