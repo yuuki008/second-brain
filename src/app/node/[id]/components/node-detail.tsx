@@ -366,8 +366,12 @@ const NodeNameEditor = React.memo(
     }, [nodeName, id, initialName, isReadOnly]);
 
     return (
-      <div className="relative flex mb-4">
-        <div className="flex-1">
+      <div className="relative flex flex-col mb-4">
+        <div className="text-muted-foreground text-right mb-2">
+          <span className="text-sm">{viewCount} views</span>
+        </div>
+
+        <div>
           {isReadOnly ? (
             <h1 className="leading-[1.5] tracking-wide text-2xl font-bold">
               {nodeName}
@@ -379,10 +383,6 @@ const NodeNameEditor = React.memo(
               onChange={(e) => setNodeName(e.target.value)}
             />
           )}
-        </div>
-
-        <div className="text-muted-foreground h-10 flex items-center pl-3">
-          <span className="text-sm">{viewCount} views</span>
         </div>
       </div>
     );
