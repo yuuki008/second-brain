@@ -15,9 +15,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { uploadFile } from "@/app/actions/supabase";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
-import { Image as ImageIcon } from "lucide-react";
-import { Plus } from "lucide-react";
+import { SmilePlus, Trash2, Image as ImageIcon } from "lucide-react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { getOrCreateVisitorId } from "@/lib/visitor-id";
@@ -27,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 interface NodeNodeData {
   id: string;
@@ -67,6 +66,7 @@ const ReactionBar = React.memo(
     nodeId: string;
     initialReactions: EmojiCount[];
   }) => {
+    const { theme } = useTheme();
     const [reactions, setReactions] = useState<EmojiCount[]>(initialReactions);
     const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
     const [open, setOpen] = useState(false);
@@ -92,7 +92,7 @@ const ReactionBar = React.memo(
       if (!visitorId) return;
 
       try {
-        toggleReaction(nodeId, emoji, visitorId);
+        await toggleReaction(nodeId, emoji, visitorId);
 
         // 選択状態をトグル
         const newSelectedEmojis = selectedEmojis.includes(emoji)
@@ -160,7 +160,7 @@ const ReactionBar = React.memo(
               className="h-8 w-8 rounded-full"
               aria-label="絵文字を追加"
             >
-              <Plus className="h-4 w-4" />
+              <SmilePlus className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -169,11 +169,11 @@ const ReactionBar = React.memo(
             align="start"
           >
             <Picker
+              theme={theme}
               data={data}
               onEmojiSelect={(emoji: { native: string }) => {
                 handleReaction(emoji.native);
               }}
-              previewPosition="none"
             />
           </DropdownMenuContent>
         </DropdownMenu>
@@ -210,7 +210,6 @@ const ThumbnailUploader = React.memo(
         await updateNodeImageUrl(id, url);
       } catch (error) {
         console.error("画像アップロードエラー:", error);
-      } finally {
       }
     };
 
@@ -358,8 +357,8 @@ const NodeNameEditor = React.memo(
       // 読み取り専用モードまたは初期値と同じ場合は更新しない
       if (isReadOnly || nodeName === initialName) return;
 
-      const timer = setTimeout(() => {
-        updateNodeName(id, nodeName);
+      const timer = setTimeout(async () => {
+        await updateNodeName(id, nodeName);
       }, 1000);
       return () => clearTimeout(timer);
     }, [nodeName, id, initialName, isReadOnly]);
