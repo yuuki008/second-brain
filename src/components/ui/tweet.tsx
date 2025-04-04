@@ -67,7 +67,7 @@ export const TweetSkeleton = ({
 }) => (
   <div
     className={cn(
-      "flex size-full max-h-max min-w-72 flex-col gap-2 rounded-lg border p-4",
+      "flex size-full max-h-max max-w-lg min-w-72 flex-col gap-2 rounded-lg border p-4",
       className
     )}
     {...props}
