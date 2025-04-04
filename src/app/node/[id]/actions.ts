@@ -246,32 +246,93 @@ export async function incrementNodeViewCount(
 }
 
 /**
- * ノードのリアクションを追加または更新するサーバーアクション
+ * ノードのリアクションを取得するサーバーアクション
+ * @param nodeId - リアクションを取得するノードのID
+ */
+export async function getNodeReactions(nodeId: string) {
+  try {
+    const reactions = await prisma.reaction.findMany({
+      where: { nodeId },
+    });
+
+    // 絵文字ごとにグループ化してカウント
+    const emojiCounts: Record<string, number> = {};
+    reactions.forEach((reaction) => {
+      if (emojiCounts[reaction.emoji]) {
+        emojiCounts[reaction.emoji]++;
+      } else {
+        emojiCounts[reaction.emoji] = 1;
+      }
+    });
+
+    // 絵文字と数を含むオブジェクトの配列に変換
+    const groupedReactions = Object.entries(emojiCounts).map(
+      ([emoji, count]) => ({
+        emoji,
+        count,
+      })
+    );
+
+    // カウントの降順でソート
+    return groupedReactions.sort((a, b) => b.count - a.count);
+  } catch (error) {
+    console.error("リアクション取得エラー:", error);
+    return [];
+  }
+}
+
+/**
+ * 特定の訪問者のリアクションを取得するサーバーアクション
+ * @param nodeId - リアクションを取得するノードのID
+ * @param visitorId - 訪問者ID
+ */
+export async function getVisitorReactions(nodeId: string, visitorId: string) {
+  try {
+    const reactions = await prisma.reaction.findMany({
+      where: {
+        nodeId,
+        visitorId,
+      },
+      select: {
+        emoji: true,
+      },
+    });
+
+    return reactions.map((r) => r.emoji);
+  } catch (error) {
+    console.error("訪問者リアクション取得エラー:", error);
+    return [];
+  }
+}
+
+/**
+ * ノードのリアクションをトグルするサーバーアクション
  * @param nodeId - リアクションを追加するノードのID
  * @param emoji - 絵文字
+ * @param visitorId - 訪問者ID
  */
-export async function addReaction(nodeId: string, emoji: string) {
+export async function toggleReaction(
+  nodeId: string,
+  emoji: string,
+  visitorId: string
+) {
   try {
     // 既存のリアクションを確認
     const existingReaction = await prisma.reaction.findUnique({
       where: {
-        nodeId_emoji: {
+        nodeId_emoji_visitorId: {
           nodeId,
           emoji,
+          visitorId,
         },
       },
     });
 
     if (existingReaction) {
-      // 既存のリアクションがある場合はカウントを増やす
-      await prisma.reaction.update({
+      // 既存のリアクションがある場合は削除
+      await prisma.reaction.delete({
         where: {
           id: existingReaction.id,
-        },
-        data: {
-          count: {
-            increment: 1,
-          },
         },
       });
     } else {
@@ -280,6 +341,7 @@ export async function addReaction(nodeId: string, emoji: string) {
         data: {
           emoji,
           nodeId,
+          visitorId,
         },
       });
     }
@@ -287,25 +349,8 @@ export async function addReaction(nodeId: string, emoji: string) {
     revalidatePath(`/node/${nodeId}`);
     return { success: true };
   } catch (error) {
-    console.error("リアクション追加エラー:", error);
+    console.error("リアクショントグルエラー:", error);
     return { success: false, error: (error as Error).message };
-  }
-}
-
-/**
- * ノードのリアクションを取得するサーバーアクション
- * @param nodeId - リアクションを取得するノードのID
- */
-export async function getNodeReactions(nodeId: string) {
-  try {
-    const reactions = await prisma.reaction.findMany({
-      where: { nodeId },
-      orderBy: { count: "desc" },
-    });
-    return reactions;
-  } catch (error) {
-    console.error("リアクション取得エラー:", error);
-    return [];
   }
 }
 

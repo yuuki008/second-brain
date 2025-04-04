@@ -6,22 +6,27 @@ import {
   updateNodeDefinition,
   updateNodeName,
   updateNodeImageUrl,
-  addReaction,
+  toggleReaction,
+  getVisitorReactions,
 } from "../actions";
 import TagManager from "./tag-manager";
-import { Node, Tag, Reaction } from "@prisma/client";
+import { Node, Tag } from "@prisma/client";
 import { useAuth } from "@/components/providers/auth-provider";
 import { uploadFile } from "@/app/actions/supabase";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { SmilePlus, Trash2, Image as ImageIcon } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import { Image as ImageIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { getOrCreateVisitorId } from "@/app/utils/visitor-id";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 interface NodeNodeData {
   id: string;
@@ -31,6 +36,12 @@ interface NodeNodeData {
     name: string;
     color: string;
   }[];
+}
+
+// 絵文字とカウントの型
+interface EmojiCount {
+  emoji: string;
+  count: number;
 }
 
 interface NodeDetailProps {
@@ -44,7 +55,7 @@ interface NodeDetailProps {
       target: string;
     }[];
   };
-  reactions: Reaction[];
+  reactions: EmojiCount[];
 }
 
 // リアクションコンポーネント
@@ -54,34 +65,67 @@ const ReactionBar = React.memo(
     initialReactions,
   }: {
     nodeId: string;
-    initialReactions: Reaction[];
+    initialReactions: EmojiCount[];
   }) => {
-    const [reactions, setReactions] = useState<Reaction[]>(initialReactions);
+    const [reactions, setReactions] = useState<EmojiCount[]>(initialReactions);
+    const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
     const [open, setOpen] = useState(false);
+    const [visitorId, setVisitorId] = useState<string>("");
+
+    // 訪問者IDの取得とリアクション状態の初期化
+    useEffect(() => {
+      const initVisitor = async () => {
+        const id = getOrCreateVisitorId();
+        setVisitorId(id);
+
+        if (id) {
+          // この訪問者のリアクションを取得
+          const userReactions = await getVisitorReactions(nodeId, id);
+          setSelectedEmojis(userReactions);
+        }
+      };
+
+      initVisitor();
+    }, [nodeId]);
 
     const handleReaction = async (emoji: string) => {
+      if (!visitorId) return;
+
       try {
-        await addReaction(nodeId, emoji);
+        await toggleReaction(nodeId, emoji, visitorId);
+
+        // 選択状態をトグル
+        const newSelectedEmojis = selectedEmojis.includes(emoji)
+          ? selectedEmojis.filter((e) => e !== emoji)
+          : [...selectedEmojis, emoji];
+
+        setSelectedEmojis(newSelectedEmojis);
 
         // 楽観的UI更新
         const existingIndex = reactions.findIndex((r) => r.emoji === emoji);
+        const delta = selectedEmojis.includes(emoji) ? -1 : 1;
 
         if (existingIndex >= 0) {
-          const updatedReactions = [...reactions];
-          updatedReactions[existingIndex] = {
-            ...updatedReactions[existingIndex],
-            count: updatedReactions[existingIndex].count + 1,
-          };
-          setReactions(updatedReactions);
-        } else {
+          // 既存の絵文字のカウントを更新
+          const newCount = reactions[existingIndex].count + delta;
+          if (newCount <= 0) {
+            // カウントが0以下になったら削除
+            setReactions(reactions.filter((_, i) => i !== existingIndex));
+          } else {
+            const updatedReactions = [...reactions];
+            updatedReactions[existingIndex] = {
+              ...updatedReactions[existingIndex],
+              count: newCount,
+            };
+            setReactions(updatedReactions);
+          }
+        } else if (delta > 0) {
+          // 新しい絵文字を追加
           setReactions([
             ...reactions,
             {
-              id: "temp-id",
               emoji,
               count: 1,
-              nodeId,
-              createdAt: new Date(),
             },
           ]);
         }
@@ -94,14 +138,34 @@ const ReactionBar = React.memo(
 
     return (
       <div className="flex flex-wrap gap-2 my-4 items-center">
+        {reactions.map((reaction) => (
+          <Button
+            key={reaction.emoji}
+            variant={
+              selectedEmojis.includes(reaction.emoji) ? "default" : "outline"
+            }
+            className={cn(
+              "flex items-center gap-1 px-2 py-1 h-8 rounded-full",
+              selectedEmojis.includes(reaction.emoji)
+                ? "bg-primary/20 hover:bg-primary/30"
+                : ""
+            )}
+            onClick={() => handleReaction(reaction.emoji)}
+          >
+            <span>{reaction.emoji}</span>
+            <span className="text-xs">{reaction.count}</span>
+          </Button>
+        ))}
+
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <Button
-              className="h-8 px-2 rounded-full cursor-pointer"
               variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-full"
               aria-label="絵文字を追加"
             >
-              <SmilePlus className="h-4 w-4" />
+              <Plus className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -118,18 +182,6 @@ const ReactionBar = React.memo(
             />
           </DropdownMenuContent>
         </DropdownMenu>
-
-        {reactions.map((reaction) => (
-          <Button
-            key={reaction.id}
-            variant="outline"
-            className="flex items-center gap-1 h-8 px-2 rounded-full"
-            onClick={() => handleReaction(reaction.emoji)}
-          >
-            <span>{reaction.emoji}</span>
-            <span className="text-xs">{reaction.count}</span>
-          </Button>
-        ))}
       </div>
     );
   }

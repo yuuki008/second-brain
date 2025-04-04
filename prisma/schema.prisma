@@ -54,11 +54,11 @@ model Relation {
 model Reaction {
   id        String   @id @default(uuid())
   emoji     String
-  count     Int      @default(1)
+  visitorId String
   node      Node     @relation(fields: [nodeId], references: [id], onDelete: Cascade)
   nodeId    String
   createdAt DateTime @default(now()) @map("created_at")
 
-  @@unique([nodeId, emoji])
+  @@unique([nodeId, emoji, visitorId])
   @@map("reactions")
 }
