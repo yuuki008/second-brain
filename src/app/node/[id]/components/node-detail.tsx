@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import { Separator } from "@/components/ui/separator";
 
 interface NodeNodeData {
   id: string;
@@ -138,26 +139,12 @@ const ReactionBar = React.memo(
 
     return (
       <div className="flex flex-wrap gap-2 my-4 items-center">
-        {reactions.map((reaction) => (
-          <Button
-            key={reaction.emoji}
-            variant={
-              selectedEmojis.includes(reaction.emoji) ? "secondary" : "outline"
-            }
-            className={cn("flex items-center gap-1 px-2 py-1 h-8 rounded-full")}
-            onClick={() => handleReaction(reaction.emoji)}
-          >
-            <span>{reaction.emoji}</span>
-            <span className="text-xs">{reaction.count}</span>
-          </Button>
-        ))}
-
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 rounded-full"
+              className="h-8 w-8 rounded-full font-light"
               aria-label="絵文字を追加"
             >
               <SmilePlus className="h-4 w-4" />
@@ -177,6 +164,20 @@ const ReactionBar = React.memo(
             />
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {reactions.map((reaction) => (
+          <Button
+            key={reaction.emoji}
+            variant={
+              selectedEmojis.includes(reaction.emoji) ? "secondary" : "outline"
+            }
+            className={cn("flex items-center gap-1 px-2 py-1 h-8 rounded-full")}
+            onClick={() => handleReaction(reaction.emoji)}
+          >
+            <span>{reaction.emoji}</span>
+            <span className="text-xs">{reaction.count}</span>
+          </Button>
+        ))}
       </div>
     );
   }
@@ -226,7 +227,7 @@ const ThumbnailUploader = React.memo(
     if (!imgUrl && isReadOnly) return <></>;
     if (imgUrl && isReadOnly)
       return (
-        <div className="w-full mb-6">
+        <div className="w-full mb-1">
           <div className="relative w-full">
             <Image
               src={imgUrl || ""}
@@ -263,7 +264,7 @@ const ThumbnailUploader = React.memo(
     }
 
     return (
-      <div className="mb-6">
+      <div className="mb-1">
         <div className="relative w-full overflow-hidden">
           <label
             htmlFor="thumbnailUpload"
@@ -420,14 +421,16 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
           <TagManager nodeId={id} currentTags={node.tags} allTags={allTags} />
         )}
 
-        <ReactionBar nodeId={id} initialReactions={reactions} />
-
         <div className="flex-1">
           <NodeEditor
             id={id}
             initialContent={node.content}
             isReadOnly={isReadOnly}
           />
+
+          <Separator className="mt-24 mb-5" />
+
+          <ReactionBar nodeId={id} initialReactions={reactions} />
         </div>
       </div>
     </div>
