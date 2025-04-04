@@ -92,7 +92,7 @@ const ReactionBar = React.memo(
       if (!visitorId) return;
 
       try {
-        await toggleReaction(nodeId, emoji, visitorId);
+        toggleReaction(nodeId, emoji, visitorId);
 
         // 選択状態をトグル
         const newSelectedEmojis = selectedEmojis.includes(emoji)
