@@ -20,7 +20,7 @@ import { Image as ImageIcon } from "lucide-react";
 import { Plus } from "lucide-react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { getOrCreateVisitorId } from "@/app/utils/visitor-id";
+import { getOrCreateVisitorId } from "@/lib/visitor-id";
 import {
   DropdownMenu,
   DropdownMenuContent,

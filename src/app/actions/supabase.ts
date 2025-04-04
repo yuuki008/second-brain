@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/lib/client";
 import { v4 as uuidv4 } from "uuid";
 
 export async function uploadFile(file: File): Promise<{ url: string }> {
