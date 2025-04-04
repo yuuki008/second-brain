@@ -109,7 +109,12 @@ export default function ToC({ items, editor }: Props) {
   const progress = calculateProgress();
 
   return (
-    <div className="fixed z-[30] bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1330px] h-0">
+    <div
+      style={{
+        width: `${BREAKPOINT_MD}px`,
+      }}
+      className="fixed z-[30] bottom-0 left-1/2 -translate-x-1/2 w-full h-0"
+    >
       <div className="absolute bottom-4 right-4 bg-secondary text-secondary-foreground rounded-xl shadow-xl w-[300px] overflow-hidden">
         {/* コンテンツ部分 */}
         <div
