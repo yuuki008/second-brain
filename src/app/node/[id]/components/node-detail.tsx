@@ -242,14 +242,14 @@ const ThumbnailUploader = React.memo(
 
     if (!imgUrl) {
       return (
-        <div className="w-full flex">
-          <Button size="icon" className="relative" variant="outline">
+        <div className="w-full flex mb-1">
+          <div className="w-full relative h-[300px] flex items-center justify-center bg-secondary rounded-lg hover:bg-black/30 transition-colors duration-300">
             <label
               htmlFor="thumbnailUpload"
               className="absolute inset-0 cursor-pointer"
             />
-            <ImageIcon className="h-4 w-4" />
-          </Button>
+            <ImageIcon className="h-10 w-10 text-muted-foreground" />
+          </div>
 
           <input
             id="thumbnailUpload"
