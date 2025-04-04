@@ -1,10 +1,4 @@
-import Heading from "@tiptap/extension-heading";
 import StarterKit from "@tiptap/starter-kit";
-import Blockquote from "@tiptap/extension-blockquote";
-import BulletList from "@tiptap/extension-bullet-list";
-import ListItem from "@tiptap/extension-list-item";
-import OrderedList from "@tiptap/extension-ordered-list";
-import Paragraph from "@tiptap/extension-paragraph";
 import { Link } from "./link";
 import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
@@ -39,12 +33,6 @@ export const generateExtensions = ({
     StarterKit,
     generateTableOfContents({ setTableOfContentData }),
     CodeBlockLowlightExtension,
-    Heading,
-    Paragraph,
-    ListItem,
-    OrderedList,
-    BulletList,
-    Blockquote,
     Link,
     TextAlign,
     Underline,

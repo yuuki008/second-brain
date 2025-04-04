@@ -14,7 +14,7 @@ type Props = {
   readOnly?: boolean;
 };
 
-const Editor = ({ content, onChange, className, readOnly = false }: Props) => {
+const Editor = ({ content, onChange, className, readOnly }: Props) => {
   const [tableOfContentData, setTableOfContentData] =
     useState<TableOfContentData>([]);
 
@@ -39,7 +39,7 @@ const Editor = ({ content, onChange, className, readOnly = false }: Props) => {
   if (!editor) return <></>;
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("w-full h-full", className)}>
       <ToC items={tableOfContentData} editor={editor} />
       <EditorContent className="h-full" editor={editor} />
       {!readOnly && <TextMenu editor={editor} />}

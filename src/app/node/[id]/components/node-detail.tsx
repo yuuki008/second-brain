@@ -96,7 +96,11 @@ const ReactionBar = React.memo(
       <div className="flex flex-wrap gap-2 my-4 items-center">
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
-            <Button size="icon" variant="outline" aria-label="絵文字を追加">
+            <Button
+              className="h-8 px-2 rounded-full cursor-pointer"
+              variant="outline"
+              aria-label="絵文字を追加"
+            >
               <SmilePlus className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -119,7 +123,7 @@ const ReactionBar = React.memo(
           <Button
             key={reaction.id}
             variant="outline"
-            className="flex items-center gap-1 px-2 py-1 h-auto"
+            className="flex items-center gap-1 h-8 px-2 rounded-full"
             onClick={() => handleReaction(reaction.emoji)}
           >
             <span>{reaction.emoji}</span>
@@ -362,7 +366,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
 
         <ReactionBar nodeId={id} initialReactions={reactions} />
 
-        <div className="flex-1 mt-8">
+        <div className="flex-1">
           <NodeEditor
             id={id}
             initialContent={node.content}

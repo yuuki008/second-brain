@@ -111,7 +111,7 @@ export default function ToC({ items, editor }: Props) {
   return (
     <div
       style={{
-        width: `${BREAKPOINT_MD}px`,
+        maxWidth: `${BREAKPOINT_MD}px`,
       }}
       className="fixed z-[30] bottom-0 left-1/2 -translate-x-1/2 w-full h-0"
     >
