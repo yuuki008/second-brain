@@ -422,7 +422,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center justify-start my-8 px-8 text-muted-foreground">
+      <div className="flex items-center justify-center my-8 px-8 text-muted-foreground">
         <span className="text-sm">{node.viewCount} views</span>
       </div>
     </div>
