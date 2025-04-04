@@ -401,7 +401,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
   const isReadOnly = !isAuthenticated;
 
   return (
-    <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto">
+    <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto pb-20">
       <div className="flex-1 flex flex-col pt-20">
         <ThumbnailUploader
           id={id}
