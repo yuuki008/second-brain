@@ -216,6 +216,91 @@ export async function getNode(id: string) {
 }
 
 /**
+ * ノードのビュー数を増加させるサーバーアクション
+ * @param nodeId - ビュー数を増やすノードのID
+ */
+export async function incrementNodeViewCount(nodeId: string) {
+  try {
+    await prisma.node.update({
+      where: { id: nodeId },
+      data: {
+        viewCount: {
+          increment: 1,
+        },
+      },
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("ビュー数更新エラー:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+/**
+ * ノードのリアクションを追加または更新するサーバーアクション
+ * @param nodeId - リアクションを追加するノードのID
+ * @param emoji - 絵文字
+ */
+export async function addReaction(nodeId: string, emoji: string) {
+  try {
+    // 既存のリアクションを確認
+    const existingReaction = await prisma.reaction.findUnique({
+      where: {
+        nodeId_emoji: {
+          nodeId,
+          emoji,
+        },
+      },
+    });
+
+    if (existingReaction) {
+      // 既存のリアクションがある場合はカウントを増やす
+      await prisma.reaction.update({
+        where: {
+          id: existingReaction.id,
+        },
+        data: {
+          count: {
+            increment: 1,
+          },
+        },
+      });
+    } else {
+      // 新しいリアクションを作成
+      await prisma.reaction.create({
+        data: {
+          emoji,
+          nodeId,
+        },
+      });
+    }
+
+    revalidatePath(`/node/${nodeId}`);
+    return { success: true };
+  } catch (error) {
+    console.error("リアクション追加エラー:", error);
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+/**
+ * ノードのリアクションを取得するサーバーアクション
+ * @param nodeId - リアクションを取得するノードのID
+ */
+export async function getNodeReactions(nodeId: string) {
+  try {
+    const reactions = await prisma.reaction.findMany({
+      where: { nodeId },
+      orderBy: { count: "desc" },
+    });
+    return reactions;
+  } catch (error) {
+    console.error("リアクション取得エラー:", error);
+    return [];
+  }
+}
+
+/**
  * ノードとその関連ノードを取得するサーバーアクション
  * @param id - 取得するノードのID
  */

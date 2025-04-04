@@ -18,6 +18,8 @@ model Node {
   updatedAt   DateTime  @updatedAt @map("updated_at")
   imageUrl    String?   @map("image_url")
   tags        Tag[]     @relation("NodeToTag")
+  viewCount   Int       @default(0) @map("view_count")
+  reactions   Reaction[]
   relations   Relation[] @relation("NodeFromRelation")
   relatedTo   Relation[] @relation("NodeToRelation")
 
@@ -47,4 +49,16 @@ model Relation {
 
   @@unique([fromNodeId, toNodeId])
   @@map("relations")
+}
+
+model Reaction {
+  id        String   @id @default(uuid())
+  emoji     String
+  count     Int      @default(1)
+  node      Node     @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  nodeId    String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([nodeId, emoji])
+  @@map("reactions")
 }

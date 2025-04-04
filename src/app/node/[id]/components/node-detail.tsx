@@ -6,15 +6,22 @@ import {
   updateNodeDefinition,
   updateNodeName,
   updateNodeImageUrl,
+  addReaction,
 } from "../actions";
 import TagManager from "./tag-manager";
-import { Node, Tag } from "@prisma/client";
+import { Node, Tag, Reaction } from "@prisma/client";
 import { useAuth } from "@/components/providers/auth-provider";
 import { uploadFile } from "@/app/actions/supabase";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
-import { Image as ImageIcon } from "lucide-react";
+import { SmilePlus, Trash2, Image as ImageIcon } from "lucide-react";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface NodeNodeData {
   id: string;
@@ -37,7 +44,93 @@ interface NodeDetailProps {
       target: string;
     }[];
   };
+  reactions: Reaction[];
 }
+
+// リアクションコンポーネント
+const ReactionBar = React.memo(
+  ({
+    nodeId,
+    initialReactions,
+  }: {
+    nodeId: string;
+    initialReactions: Reaction[];
+  }) => {
+    const [reactions, setReactions] = useState<Reaction[]>(initialReactions);
+    const [open, setOpen] = useState(false);
+
+    const handleReaction = async (emoji: string) => {
+      try {
+        await addReaction(nodeId, emoji);
+
+        // 楽観的UI更新
+        const existingIndex = reactions.findIndex((r) => r.emoji === emoji);
+
+        if (existingIndex >= 0) {
+          const updatedReactions = [...reactions];
+          updatedReactions[existingIndex] = {
+            ...updatedReactions[existingIndex],
+            count: updatedReactions[existingIndex].count + 1,
+          };
+          setReactions(updatedReactions);
+        } else {
+          setReactions([
+            ...reactions,
+            {
+              id: "temp-id",
+              emoji,
+              count: 1,
+              nodeId,
+              createdAt: new Date(),
+            },
+          ]);
+        }
+      } catch (error) {
+        console.error("リアクションエラー:", error);
+      } finally {
+        setOpen(false);
+      }
+    };
+
+    return (
+      <div className="flex flex-wrap gap-2 my-4 items-center">
+        <DropdownMenu open={open} onOpenChange={setOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button size="icon" variant="outline" aria-label="絵文字を追加">
+              <SmilePlus className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="p-0 border-none"
+            sideOffset={5}
+            align="start"
+          >
+            <Picker
+              data={data}
+              onEmojiSelect={(emoji: { native: string }) => {
+                handleReaction(emoji.native);
+              }}
+              previewPosition="none"
+            />
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {reactions.map((reaction) => (
+          <Button
+            key={reaction.id}
+            variant="outline"
+            className="flex items-center gap-1 px-2 py-1 h-auto"
+            onClick={() => handleReaction(reaction.emoji)}
+          >
+            <span>{reaction.emoji}</span>
+            <span className="text-xs">{reaction.count}</span>
+          </Button>
+        ))}
+      </div>
+    );
+  }
+);
+ReactionBar.displayName = "ReactionBar";
 
 // サムネイル画像アップロードコンポーネント
 const ThumbnailUploader = React.memo(
@@ -239,38 +332,47 @@ const NodeNameEditor = React.memo(
 );
 NodeNameEditor.displayName = "NodeNameEditor";
 
-const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, allTags }) => {
+const NodeDetail: React.FC<NodeDetailProps> = ({
+  id,
+  node,
+  allTags,
+  reactions,
+}) => {
   const { isAuthenticated } = useAuth();
   const isReadOnly = !isAuthenticated;
 
   return (
-    <div className="w-[90%] mx-auto pt-20 pb-[80vh]">
-      <div className="relative max-w-2xl mx-auto">
-        <div className="min-h-full flex flex-col">
-          <div>
-            <ThumbnailUploader
-              id={id}
-              initialImgUrl={node.imageUrl}
-              isReadOnly={isReadOnly}
-            />
+    <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto">
+      <div className="flex-1 flex flex-col pt-20">
+        <ThumbnailUploader
+          id={id}
+          initialImgUrl={node.imageUrl}
+          isReadOnly={isReadOnly}
+        />
 
-            <NodeNameEditor
-              id={id}
-              initialName={node.name}
-              isReadOnly={isReadOnly}
-            />
+        <NodeNameEditor
+          id={id}
+          initialName={node.name}
+          isReadOnly={isReadOnly}
+        />
 
-            <TagManager nodeId={id} currentTags={node.tags} allTags={allTags} />
-          </div>
+        {!isReadOnly && (
+          <TagManager nodeId={id} currentTags={node.tags} allTags={allTags} />
+        )}
 
-          <div className="flex-1 mt-8">
-            <NodeEditor
-              id={id}
-              initialContent={node.content}
-              isReadOnly={isReadOnly}
-            />
-          </div>
+        <ReactionBar nodeId={id} initialReactions={reactions} />
+
+        <div className="flex-1 mt-8">
+          <NodeEditor
+            id={id}
+            initialContent={node.content}
+            isReadOnly={isReadOnly}
+          />
         </div>
+      </div>
+
+      <div className="flex items-center justify-end mb-8 px-8 text-muted-foreground">
+        <span className="text-sm">{node.viewCount} views</span>
       </div>
     </div>
   );

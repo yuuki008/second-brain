@@ -1,6 +1,12 @@
 import { notFound } from "next/navigation";
 import NodeDetail from "./components/node-detail";
-import { getAllTags, getNode, getNodeWithRelatedNodes } from "./actions";
+import {
+  getAllTags,
+  getNode,
+  getNodeWithRelatedNodes,
+  incrementNodeViewCount,
+  getNodeReactions,
+} from "./actions";
 
 interface NodePageProps {
   params: Promise<{ id: string }>;
@@ -42,6 +48,10 @@ export default async function NodePage({ params }: NodePageProps) {
   const { id } = await params;
   const nodeData = await getNodeWithRelatedNodes(id);
   const allTags = await getAllTags();
+  const reactions = await getNodeReactions(id);
+
+  // ページ表示時にビューカウントをインクリメント
+  await incrementNodeViewCount(id);
 
   if (!nodeData) {
     notFound();
@@ -53,6 +63,7 @@ export default async function NodePage({ params }: NodePageProps) {
       node={nodeData.node}
       graphData={nodeData.graphData}
       allTags={allTags}
+      reactions={reactions}
     />
   );
 }
