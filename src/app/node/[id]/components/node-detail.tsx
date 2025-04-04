@@ -142,14 +142,9 @@ const ReactionBar = React.memo(
           <Button
             key={reaction.emoji}
             variant={
-              selectedEmojis.includes(reaction.emoji) ? "default" : "outline"
+              selectedEmojis.includes(reaction.emoji) ? "secondary" : "outline"
             }
-            className={cn(
-              "flex items-center gap-1 px-2 py-1 h-8 rounded-full",
-              selectedEmojis.includes(reaction.emoji)
-                ? "bg-primary/20 hover:bg-primary/30"
-                : ""
-            )}
+            className={cn("flex items-center gap-1 px-2 py-1 h-8 rounded-full")}
             onClick={() => handleReaction(reaction.emoji)}
           >
             <span>{reaction.emoji}</span>
@@ -427,7 +422,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center justify-end mb-8 px-8 text-muted-foreground">
+      <div className="flex items-center justify-start my-8 px-8 text-muted-foreground">
         <span className="text-sm">{node.viewCount} views</span>
       </div>
     </div>
