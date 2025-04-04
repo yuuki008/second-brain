@@ -7,6 +7,7 @@ import {
   incrementNodeViewCount,
   getNodeReactions,
 } from "./actions";
+import { getAuthStatus } from "@/app/actions/auth";
 
 interface NodePageProps {
   params: Promise<{ id: string }>;
@@ -50,8 +51,11 @@ export default async function NodePage({ params }: NodePageProps) {
   const allTags = await getAllTags();
   const reactions = await getNodeReactions(id);
 
-  // ページ表示時にビューカウントをインクリメント
-  await incrementNodeViewCount(id);
+  // サーバーサイドで認証状態を確認
+  const { isAuthenticated } = await getAuthStatus();
+
+  // ページ表示時にビューカウントをインクリメント（管理者以外の場合のみ）
+  await incrementNodeViewCount(id, isAuthenticated);
 
   if (!nodeData) {
     notFound();

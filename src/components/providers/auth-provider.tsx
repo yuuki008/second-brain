@@ -1,12 +1,16 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { verifyPassword } from "@/app/actions/auth";
+import {
+  verifyPassword,
+  logout as serverLogout,
+  getAuthStatus,
+} from "@/app/actions/auth";
 
 type AuthContextType = {
   isAuthenticated: boolean;
   login: (password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isLoading: boolean;
 };
 
@@ -14,41 +18,53 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // ローカルストレージから認証状態を復元
+  // サーバーから認証状態を取得
   useEffect(() => {
-    const storedAuth = localStorage.getItem("isAuthenticated");
-    if (storedAuth === "true") {
-      setIsAuthenticated(true);
-    }
+    const checkAuthStatus = async () => {
+      try {
+        const { isAuthenticated: authStatus } = await getAuthStatus();
+        setIsAuthenticated(authStatus);
+      } catch (error) {
+        console.error("認証状態の取得に失敗しました", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuthStatus();
   }, []);
 
   const login = async (password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // サーバーサイドでパスワードを検証
-      const isValid = await verifyPassword(password);
+      const result = await verifyPassword(password);
 
-      if (isValid) {
+      if (result.success) {
         setIsAuthenticated(true);
-        localStorage.setItem("isAuthenticated", "true");
         return true;
       }
       return false;
     } catch (error) {
-      console.error("認証エラー:", error);
+      console.error("ログインエラー:", error);
       return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem("isAuthenticated");
-
-    window.location.reload();
+  const logout = async () => {
+    setIsLoading(true);
+    try {
+      await serverLogout();
+      setIsAuthenticated(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("ログアウトエラー:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

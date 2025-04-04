@@ -218,9 +218,18 @@ export async function getNode(id: string) {
 /**
  * ノードのビュー数を増加させるサーバーアクション
  * @param nodeId - ビュー数を増やすノードのID
+ * @param isAuthenticated - 管理者としてログインしているかどうか
  */
-export async function incrementNodeViewCount(nodeId: string) {
+export async function incrementNodeViewCount(
+  nodeId: string,
+  isAuthenticated: boolean = false
+) {
   try {
+    // 管理者としてログインしている場合はカウントを増やさない
+    if (isAuthenticated) {
+      return { success: true };
+    }
+
     await prisma.node.update({
       where: { id: nodeId },
       data: {
