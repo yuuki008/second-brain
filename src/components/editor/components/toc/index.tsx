@@ -115,30 +115,10 @@ export default function ToC({ items, editor }: Props) {
       }}
       className="fixed z-[20] bottom-0 left-1/2 -translate-x-1/2 w-full h-0"
     >
-      <div className="absolute bottom-4 right-4 bg-secondary text-secondary-foreground rounded-xl shadow-xl w-[300px] overflow-hidden">
-        {/* コンテンツ部分 */}
-        <div
-          className={cn(
-            "max-h-0 overflow-auto transition-all duration-300 ease-in-out",
-            isOpen && "max-h-[50vh]"
-          )}
-        >
-          <div className="p-3 space-y-2">
-            {items.length ? (
-              items.map((item) => (
-                <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
-              ))
-            ) : (
-              <div className="text-sm text-muted-foreground">
-                目次がありません
-              </div>
-            )}
-          </div>
-        </div>
-
+      <div className="absolute bottom-4 right-4 p-3 bg-secondary text-secondary-foreground rounded-xl shadow-xl w-[300px] overflow-hidden">
         {/* ヘッダー部分 - クリック可能エリア */}
         <div
-          className="flex items-center justify-between p-3 w-full cursor-pointer"
+          className="flex items-center justify-between w-full cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
           <div className="flex items-center">
@@ -154,6 +134,26 @@ export default function ToC({ items, editor }: Props) {
           <Badge variant="outline" className="text-xs">
             {progress}%
           </Badge>
+        </div>
+
+        {/* コンテンツ部分 */}
+        <div
+          className={cn(
+            "max-h-0 overflow-auto transition-all duration-300 ease-in-out",
+            isOpen && "max-h-[50vh] mt-3"
+          )}
+        >
+          <div className="space-y-2">
+            {items.length ? (
+              items.map((item) => (
+                <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
+              ))
+            ) : (
+              <div className="text-sm text-muted-foreground">
+                目次がありません
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
