@@ -16,6 +16,10 @@ export async function getAllNodes(): Promise<(Node & { tags: Tag[] })[]> {
   return nodes;
 }
 
+export async function getNodeCount(): Promise<number> {
+  return await prisma.node.count();
+}
+
 export async function getPaginatedNodes(
   limit: number = 15,
   cursor?: string
