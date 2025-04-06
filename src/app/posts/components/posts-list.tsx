@@ -133,10 +133,11 @@ export default function PostsList({
         })}
       </ul>
 
-      <div className="mt-8 text-center">
+      {/* ロードモードのための参照ポイント */}
+      <div className="mt-8 text-center" ref={loadMoreRef}>
         {nextCursor && (
           <Button
-            variant="outline"
+            variant="ghost"
             onClick={loadMoreNodes}
             disabled={loading}
             className="px-8"
@@ -144,16 +145,13 @@ export default function PostsList({
             {loading ? (
               <span className="flex items-center">
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Loading...
+                読み込み中...
               </span>
             ) : (
-              "Load More"
+              "もっと読み込む"
             )}
           </Button>
         )}
-
-        {/* ロードモードのための参照ポイント */}
-        <div className="mt-30 w-0 h-0" ref={loadMoreRef} />
       </div>
     </div>
   );
