@@ -4,8 +4,7 @@ import { Node, Tag } from "@prisma/client";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { format } from "date-fns";
-import { CalendarDays, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getPaginatedNodes } from "@/app/actions/search";
 
@@ -98,17 +97,9 @@ export default function PostsList({
               onMouseLeave={() => setHoveredNodeId(null)}
             >
               <Link href={`/node/${node.id}`} className="block">
-                <div className="flex justify-between items-start mb-2">
-                  <h2 className="flex-1 line-clamp-1 mr-4 text-xl font-medium group-hover:text-accent transition-colors">
-                    {node.name}
-                  </h2>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <CalendarDays className="w-4 h-4 mr-1" />
-                    <time dateTime={node.updatedAt.toISOString()}>
-                      {format(node.updatedAt, "yyyy年MM月dd日")}
-                    </time>
-                  </div>
-                </div>
+                <h2 className="flex-1 line-clamp-1 mr-4 text-xl mb-2 font-medium group-hover:text-accent transition-colors">
+                  {node.name}
+                </h2>
 
                 {description && (
                   <p className="text-muted-foreground text-sm mb-3">
