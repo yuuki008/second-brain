@@ -5,7 +5,7 @@ export default function PostsLoading() {
     <div className="max-w-2xl mx-auto py-20 px-4">
       <h1 className="text-3xl font-bold mb-2">Posts</h1>
       <div className="text-sm text-muted-foreground mb-2 flex justify-end">
-        Loading...
+        <Skeleton className="h-5 w-20" />
       </div>
 
       <div className="relative space-y-6">
