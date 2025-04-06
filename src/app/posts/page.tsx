@@ -12,7 +12,7 @@ export default async function PostsPage() {
 
   return (
     <div className="max-w-2xl mx-auto py-20 px-4">
-      <h1 className="text-2xl font-bold mb-8">最近の投稿</h1>
+      <h1 className="text-3xl font-bold mb-8">Posts</h1>
       <PostsList initialNodes={nodes} nextCursor={nextCursor} />
     </div>
   );
