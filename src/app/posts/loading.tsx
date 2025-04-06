@@ -15,11 +15,6 @@ export default function PostsLoading() {
             <Skeleton className="h-4 w-full mb-1" />
             <Skeleton className="h-4 w-full mb-1" />
             <Skeleton className="h-4 w-2/3 mb-3" />
-            <div className="flex gap-1 mt-2">
-              <Skeleton className="h-5 w-16 rounded-full" />
-              <Skeleton className="h-5 w-20 rounded-full" />
-              <Skeleton className="h-5 w-14 rounded-full" />
-            </div>
           </div>
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { getAllNodes } from "@/app/actions/search";
+import { getPaginatedNodes } from "@/app/actions/search";
 import { Metadata } from "next";
 import PostsList from "./components/posts-list";
 
@@ -8,12 +8,12 @@ export const metadata: Metadata = {
 };
 
 export default async function PostsPage() {
-  const nodes = await getAllNodes();
+  const { nodes, nextCursor } = await getPaginatedNodes(15);
 
   return (
-    <div className="max-w-2xl mx-auto pt-20 pb-16 px-4">
+    <div className="max-w-2xl mx-auto py-20 px-4">
       <h1 className="text-2xl font-bold mb-8">最近の投稿</h1>
-      <PostsList nodes={nodes} />
+      <PostsList initialNodes={nodes} nextCursor={nextCursor} />
     </div>
   );
 }
