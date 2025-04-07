@@ -14,8 +14,8 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
     async function fetchOGData() {
       try {
         setIsLoading(true);
-        const data = await scrapeMetaInfo(url);
-        setOgData(data);
+        const { data } = await scrapeMetaInfo(url);
+        if (data) setOgData(data);
       } catch (error) {
         console.log(error);
         console.error("Error fetching OpenGraph data:", error);
