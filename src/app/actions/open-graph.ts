@@ -7,7 +7,7 @@ import { JSDOM } from "jsdom";
  * サイト側で DDOS などの攻撃を防ぐために、ブラウザ以外からのアクセスを拒んでいることがある。
  * ブラウザを偽造することで、サイト側にブラウザからのアクセスと判断させることができる。
  */
-const browserLikeRequestOptions = {
+const BROWSER_LIKE_REQUEST_OPTIONS = {
   headers: {
     "User-Agent":
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -19,36 +19,69 @@ const browserLikeRequestOptions = {
   },
   cache: "no-store",
   next: { revalidate: 0 },
-} as RequestInit;
+} as const;
+
+/**
+ * エラークラスの定義
+ */
+export class MetaInfoError extends Error {
+  constructor(message: string, public readonly code: string) {
+    super(message);
+    this.name = "MetaInfoError";
+  }
+}
 
 /**
  * URLからウェブサイトのメタ情報を取得する
  * @param url 対象となるURL
  * @returns メタ情報を含むオブジェクト
  */
-export default async function scrapeMetaInfo(url: string): Promise<MetaInfo> {
+export interface MetaInfo {
+  title: string;
+  description: string;
+  thumbnail: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  ogUrl: string;
+  ogType: string;
+  ogSiteName: string;
+  twitterCard: string;
+  twitterTitle: string;
+  twitterDescription: string;
+  twitterImage: string;
+  canonicalUrl: string;
+  faviconUrl: string;
+}
+
+export interface ScrapeResult {
+  success: boolean;
+  data?: MetaInfo;
+  error?: MetaInfoError;
+}
+
+export default async function scrapeMetaInfo(
+  url: string
+): Promise<ScrapeResult> {
   try {
-    // URLのバリデーション
     if (!isValidUrl(url)) {
-      throw new Error("無効なURLです");
+      throw new MetaInfoError("無効なURLです", "INVALID_URL");
     }
 
-    const response = await fetch(url, browserLikeRequestOptions);
+    const response = await fetch(url, BROWSER_LIKE_REQUEST_OPTIONS);
 
     if (!response.ok) {
-      console.error(`HTTP error! status: ${response.status}`);
-      console.error(response);
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new MetaInfoError(
+        `HTTP error! status: ${response.status}`,
+        "HTTP_ERROR"
+      );
     }
 
     const html = await response.text();
-
-    // DOMパーサーを使用してHTMLを解析
     const dom = new JSDOM(html);
     const doc = dom.window.document;
 
-    // メタ情報を抽出
-    return {
+    const metaInfo: MetaInfo = {
       title: getTitle(doc),
       description: getDescription(doc),
       thumbnail: getThumbnail(doc),
@@ -65,9 +98,20 @@ export default async function scrapeMetaInfo(url: string): Promise<MetaInfo> {
       canonicalUrl: getCanonicalUrl(doc),
       faviconUrl: getFaviconUrl(doc, url),
     };
+
+    return {
+      success: true,
+      data: metaInfo,
+    };
   } catch (error) {
     console.error("メタ情報の取得に失敗しました:", error);
-    throw error;
+    return {
+      success: false,
+      error:
+        error instanceof MetaInfoError
+          ? error
+          : new MetaInfoError("予期せぬエラーが発生しました", "UNKNOWN_ERROR"),
+    };
   }
 }
 
@@ -189,25 +233,4 @@ function getFaviconUrl(doc: Document, baseUrl: string): string {
   } catch {
     return "/favicon.ico";
   }
-}
-
-/**
- * メタ情報の型定義
- */
-export interface MetaInfo {
-  title: string;
-  description: string;
-  thumbnail: string;
-  ogTitle: string;
-  ogDescription: string;
-  ogImage: string;
-  ogUrl: string;
-  ogType: string;
-  ogSiteName: string;
-  twitterCard: string;
-  twitterTitle: string;
-  twitterDescription: string;
-  twitterImage: string;
-  canonicalUrl: string;
-  faviconUrl: string;
 }
