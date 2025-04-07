@@ -24,7 +24,7 @@ const BROWSER_LIKE_REQUEST_OPTIONS = {
 /**
  * エラークラスの定義
  */
-export class MetaInfoError extends Error {
+class MetaInfoError extends Error {
   constructor(message: string, public readonly code: string) {
     super(message);
     this.name = "MetaInfoError";
