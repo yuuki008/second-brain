@@ -3,8 +3,8 @@ import { Metadata } from "next";
 import PostsList from "./components/posts-list";
 
 export const metadata: Metadata = {
-  title: "最近の投稿 | Second Brain",
-  description: "最近更新されたノード一覧",
+  title: "Recent Posts | Second Brain",
+  description: "List of recently updated nodes",
 };
 
 export default async function PostsPage() {
