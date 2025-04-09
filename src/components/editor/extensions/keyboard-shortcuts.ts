@@ -44,38 +44,6 @@ export const KeyboardShortcuts = Extension.create({
                 case "3": // 見出し3
                   editor.chain().focus().toggleHeading({ level: 3 }).run();
                   return true;
-
-                case "4": // ToDoチェックボックス
-                  if (editor.can().toggleTaskList()) {
-                    editor.chain().focus().toggleTaskList().run();
-                  } else {
-                    editor.chain().focus().toggleTaskList().run();
-                  }
-                  return true;
-
-                case "5": // 箇条書きリスト
-                  editor.chain().focus().toggleBulletList().run();
-                  return true;
-
-                case "6": // 番号付きリスト
-                  editor.chain().focus().toggleOrderedList().run();
-                  return true;
-
-                case "7": // トグルリスト
-                  // TiptapにはデフォルトでトグルリストがないのでTaskListを使用
-                  if (editor.can().toggleTaskList()) {
-                    editor.chain().focus().toggleTaskList().run();
-                  }
-                  return true;
-
-                case "8": // コードブロック
-                  editor.chain().focus().toggleCodeBlock().run();
-                  return true;
-
-                case "9": // 新規ページ
-                  // ここでは新規ページ機能の実装は難しいので、見出し1を代用
-                  editor.chain().focus().toggleHeading({ level: 1 }).run();
-                  return true;
               }
             }
 
