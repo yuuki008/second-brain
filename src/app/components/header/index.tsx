@@ -26,10 +26,10 @@ export default function Header() {
           />
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           {isAuthenticated ? (
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               onClick={logout}
               title="ログアウト"
@@ -39,7 +39,7 @@ export default function Header() {
             </Button>
           ) : (
             <Button
-              variant="outline"
+              variant="ghost"
               className="rounded-full h-10 w-10"
               size="icon"
               onClick={() => setIsLoginDialogOpen(true)}
