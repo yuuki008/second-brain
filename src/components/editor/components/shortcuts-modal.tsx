@@ -34,7 +34,7 @@ export const ShortcutsModal = () => {
             <Icon name="Info" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-w-lg w-[95%] max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl w-[95%] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>コンテンツの作成と書式設定ショートカット</DialogTitle>
             <DialogDescription>
