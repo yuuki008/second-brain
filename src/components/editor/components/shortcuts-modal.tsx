@@ -132,30 +132,6 @@ export const ShortcutsModal = () => {
                 shortcut="cmd/ctrl + option/shift + 3"
                 description="見出し3を作成します"
               />
-              <ShortcutItem
-                shortcut="cmd/ctrl + option/shift + 4"
-                description="ToDoチェックボックスを作成します"
-              />
-              <ShortcutItem
-                shortcut="cmd/ctrl + option/shift + 5"
-                description="箇条書きリストを作成します"
-              />
-              <ShortcutItem
-                shortcut="cmd/ctrl + option/shift + 6"
-                description="番号付きリストを作成します"
-              />
-              <ShortcutItem
-                shortcut="cmd/ctrl + option/shift + 7"
-                description="トグルリストを作成します"
-              />
-              <ShortcutItem
-                shortcut="cmd/ctrl + option/shift + 8"
-                description="コードブロックを作成します"
-              />
-              <ShortcutItem
-                shortcut="cmd/ctrl + option/shift + 9"
-                description="新規ページを作成、または対象の行をページ形式に変更します"
-              />
             </div>
 
             <div className="space-y-1">
