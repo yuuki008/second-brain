@@ -8,20 +8,22 @@ import { LoginDialog } from "./login-dialog";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
+import { useTheme } from "next-themes";
 
 export default function Header() {
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
+  const { theme } = useTheme();
   const { isAuthenticated, logout } = useAuth();
 
   return (
     <div className="fixed top-0 left-0 pl-5 z-[30] bg-transparent w-full">
-      <div className="flex items-center justify-between h-full py-4 pr-5">
+      <div className="flex justify-between items-start h-full pr-5 py-4">
         <Link className="cursor-pointer" href="/">
           <Image
-            src="/panic-brain.png"
+            src={theme === "dark" ? "/dark-sign.png" : "/light-sign.png"}
             alt="logo"
-            width={60}
-            height={60}
+            width={100}
+            height={100}
             className="object-contain"
           />
         </Link>

@@ -244,7 +244,7 @@ const ThumbnailUploader = React.memo(
     if (!imgUrl) {
       return (
         <div className="w-full flex mb-1">
-          <div className="w-full relative h-[300px] flex items-center justify-center bg-secondary rounded-lg hover:bg-black/30 transition-colors duration-300">
+          <div className="w-full relative h-[300px] flex items-center justify-center bg-secondary hover:bg-black/30 transition-colors duration-300">
             <label
               htmlFor="thumbnailUpload"
               className="absolute inset-0 cursor-pointer"
