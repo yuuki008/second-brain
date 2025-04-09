@@ -34,16 +34,14 @@ export const ShortcutsModal = () => {
             <Icon name="Info" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-w-xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-lg w-[95%] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl">
-              コンテンツと書式設定ショートカット
-            </DialogTitle>
+            <DialogTitle>コンテンツの作成と書式設定ショートカット</DialogTitle>
             <DialogDescription>
               エディターでの操作をより効率的にするためのショートカット一覧
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="space-y-1">
               <h3 className="font-medium">基本的な操作</h3>
               <ShortcutItem
@@ -112,7 +110,7 @@ export const ShortcutsModal = () => {
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-2">
               <h3 className="font-medium">コンテンツ作成ショートカット</h3>
               <p className="text-xs text-muted-foreground">
                 Macの場合は cmd + option 、WindowsとLinuxの場合は ctrl + shift
