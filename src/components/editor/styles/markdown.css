@@ -4,126 +4,62 @@
 
 .markdown-editor {
   @apply w-full min-h-full border-none bg-transparent text-[1.06rem] tracking-[0.02em];
-}
 
-.markdown-editor h1 {
-  @apply text-2xl mb-3 mt-10 font-bold;
-}
-
-.markdown-editor h2 {
-  @apply text-xl mb-2 mt-8 font-bold;
-}
-
-.markdown-editor h3 {
-  @apply text-lg mb-1 mt-6 font-bold;
-}
-
-.markdown-editor p {
-  @apply text-foreground leading-[1.9] my-0 text-sm mt-2 font-light;
-}
-
-.markdown-editor blockquote {
-  @apply border-l-4 border-muted pl-4 italic text-muted-foreground;
-}
-
-.markdown-editor ul {
-  @apply list-disc pl-6 my-1;
-
-  ::marker {
-    @apply font-extralight;
+  h1 {
+    @apply text-2xl mb-3 mt-10 font-bold;
   }
-}
 
-.markdown-editor ol {
-  @apply list-decimal pl-6 my-1;
-
-  ::marker {
-    @apply font-extralight;
+  h2 {
+    @apply text-xl mb-2 mt-8 font-bold;
   }
-}
 
-.markdown-editor li {
-  @apply my-0 pl-0;
-}
+  h3 {
+    @apply text-lg mb-1 mt-6 font-bold;
+  }
 
-.markdown-editor li p {
-  @apply my-0;
-}
+  p {
+    @apply text-foreground leading-[1.9] my-0 text-sm mt-2 font-light;
+  }
 
-.markdown-editor code {
-  @apply bg-muted text-foreground px-1 py-0.5 rounded-md text-sm;
-}
+  blockquote {
+    @apply border-l-4 border-muted pl-4 italic text-muted-foreground;
+  }
 
-.markdown-editor pre {
-  @apply bg-muted text-foreground p-4 rounded-md overflow-auto mb-4;
-}
+  ul {
+    @apply list-disc pl-6 my-1;
 
-.markdown-editor pre code {
-  @apply text-foreground bg-transparent;
-}
+    ::marker {
+      @apply font-extralight;
+    }
+  }
 
-.markdown-editor img {
-  @apply max-w-full rounded-md;
-}
+  ol {
+    @apply list-decimal pl-6 my-1;
 
-.markdown-editor a {
-  @apply text-primary underline hover:text-primary/80 cursor-pointer;
-}
+    ::marker {
+      @apply font-extralight;
+    }
+  }
 
-.markdown-editor hr {
-  @apply border-muted my-4;
-}
+  li {
+    @apply my-0 pl-0;
 
-.markdown-editor table {
-  @apply w-full border-collapse;
-}
+    p {
+      @apply my-0;
+    }
+  }
 
-.markdown-editor th {
-  @apply border border-muted bg-muted/50 p-2 text-left;
-}
+  code {
+    @apply bg-muted text-foreground px-1 py-0.5 rounded-md text-sm;
+  }
 
-.markdown-editor td {
-  @apply border border-muted p-2;
-}
-
-.markdown-editor thead {
-  @apply bg-muted/30;
-}
-
-.markdown-editor ul.task-list {
-  @apply pl-0 list-none;
-}
-
-.markdown-editor ul.task-list li {
-  @apply flex items-start gap-2;
-}
-
-.markdown-editor ul.task-list li input {
-  @apply h-4 w-4 mt-1;
-}
-
-.markdown-editor .ProseMirror-selectednode {
-  @apply outline-none ring-1 ring-accent rounded-md;
-}
-
-.markdown-editor iframe.youtube-video {
-  @apply w-full rounded-lg shadow-md;
-}
-
-.markdown-editor pre {
-  @apply text-sm;
-}
-
-.markdown-editor [data-youtube-video] > iframe {
-  @apply w-full my-4;
-}
-
-.markdown-editor video {
-  @apply w-full;
-}
-
-.markdown-editor {
   pre {
+    @apply bg-muted text-foreground p-4 rounded-md overflow-auto mb-4 text-sm;
+
+    code {
+      @apply text-foreground bg-transparent;
+    }
+
     border-radius: 0.5rem;
     color: var(--white);
     font-family: "Geist Mono", ui-monospace, SFMono-Regular, Roboto Mono, Menlo,
@@ -191,5 +127,86 @@
     .hljs-strong {
       font-weight: 700;
     }
+  }
+
+  img {
+    @apply max-w-full rounded-md;
+  }
+
+  a {
+    @apply text-primary underline hover:text-primary/80 cursor-pointer;
+  }
+
+  hr {
+    @apply border-muted my-4;
+  }
+
+  table {
+    @apply w-full border-collapse;
+  }
+
+  th {
+    @apply border border-muted bg-muted/50 p-2 text-left;
+  }
+
+  td {
+    @apply border border-muted p-2;
+  }
+
+  thead {
+    @apply bg-muted/30;
+  }
+
+  ul[data-type="taskList"] {
+    @apply pl-0 list-none;
+
+    li {
+      @apply flex items-center my-1;
+      position: relative;
+
+      &::before,
+      &::marker {
+        display: none;
+      }
+
+      label {
+        @apply flex items-center cursor-pointer;
+        min-width: 1.5rem;
+
+        span {
+          display: none;
+        }
+      }
+
+      input[type="checkbox"] {
+        @apply h-4 w-4 mt-0;
+        margin-left: 0;
+        cursor: pointer;
+      }
+
+      div {
+        @apply flex-1;
+
+        p {
+          @apply my-0;
+        }
+      }
+    }
+  }
+
+  .ProseMirror-selectednode {
+    @apply outline-none ring-1 ring-accent rounded-md;
+  }
+
+  iframe.youtube-video {
+    @apply w-full rounded-lg shadow-md;
+  }
+
+  [data-youtube-video] > iframe {
+    @apply w-full my-4;
+  }
+
+  video {
+    @apply w-full;
   }
 }
