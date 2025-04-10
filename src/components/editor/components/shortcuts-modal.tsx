@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { GripVertical } from "lucide-react";
 import { memo, useState, useEffect, useRef } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
@@ -72,11 +73,15 @@ export const ShortcutsModal = () => {
         >
           <div
             ref={nodeRef}
-            className="fixed top-20 left-4 z-50 bg-background border rounded-lg shadow-lg w-[400px] max-h-[570px] overflow-y-auto"
+            className="fixed top-20 left-4 z-50 bg-background border rounded-lg shadow-lg overflow-hidden w-[400px] max-h-[621px]"
             style={{ resize: "both" }}
           >
-            <div className="cursor-move draggable-handle">
-              <div className="p-4 space-y-4">
+            <div className="flex flex-col h-full max-h-[621px]">
+              <div className="cursor-move draggable-handle flex items-center bg-muted p-2 border-b">
+                <GripVertical className="w-4 h-4" />
+                <span className="ml-1.5 font-bold">執筆のヒント</span>
+              </div>
+              <div className="p-4 space-y-5 flex-1 overflow-y-auto">
                 <div>
                   <h3 className="font-medium mb-2">基本的な操作</h3>
                   <ShortcutKeyItem
