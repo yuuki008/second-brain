@@ -101,14 +101,6 @@ export const ShortcutsModal = () => {
                     shortcut="shift + tab"
                     description="ネストを解除"
                   />
-                  <ShortcutItem
-                    shortcut="/turn"
-                    description="ブロックタイプを変更"
-                  />
-                  <ShortcutItem
-                    shortcut="/color"
-                    description="ブロックの文字色や背景色を変更"
-                  />
                 </div>
 
                 <div>
