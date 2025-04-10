@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/command";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { getAllNodes, createNewNode } from "../actions/search";
+import { getAllNodes, createNewNode } from "../../actions/search";
 import { Node, Tag } from "@prisma/client";
 import { FileText, PlusCircle } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
