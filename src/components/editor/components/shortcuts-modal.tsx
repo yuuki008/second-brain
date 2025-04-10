@@ -37,7 +37,7 @@ export const ShortcutsModal = () => {
   // キーボードショートカットの設定
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "h" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "/" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setVisible(!visible);
       }
@@ -56,7 +56,7 @@ export const ShortcutsModal = () => {
           onClick={() => setVisible(!visible)}
         >
           <kbd className="flex items-center gap-1">
-            <div className="text-xs">⌘</div>H
+            <div className="text-xs">⌘</div>/
           </kbd>
         </Button>
       </div>
