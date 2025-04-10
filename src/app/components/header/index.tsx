@@ -9,6 +9,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import { useTheme } from "next-themes";
+import Search from "../search";
 
 export default function Header() {
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
@@ -29,6 +30,7 @@ export default function Header() {
         </Link>
 
         <div className="flex items-center">
+          <Search />
           {isAuthenticated ? (
             <Button
               variant="ghost"

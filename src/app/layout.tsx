@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Search from "./components/search";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import Header from "./components/header";
@@ -31,7 +30,6 @@ export default function RootLayout({
       <body suppressHydrationWarning className={cn(noto_sans_jp.className)}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <AuthProvider>
-            <Search />
             <Header />
             {children}
           </AuthProvider>
