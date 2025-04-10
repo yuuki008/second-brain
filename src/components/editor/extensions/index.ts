@@ -31,6 +31,7 @@ import DetailsSummary from "@tiptap-pro/extension-details-summary";
 export { Details } from "@tiptap-pro/extension-details";
 export { DetailsContent } from "@tiptap-pro/extension-details-content";
 export { DetailsSummary } from "@tiptap-pro/extension-details-summary";
+import { Blockquote } from "./blockquote";
 
 export type GenerateExtensionsArgs = TableOfContentsExtensionArgs;
 
@@ -38,7 +39,10 @@ export const generateExtensions = ({
   setTableOfContentData,
 }: GenerateExtensionsArgs) => {
   return [
-    StarterKit,
+    StarterKit.configure({
+      blockquote: false,
+    }),
+    Blockquote,
     generateTableOfContents({ setTableOfContentData }),
     CodeBlockLowlightExtension,
     Link,
