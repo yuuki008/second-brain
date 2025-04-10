@@ -63,7 +63,7 @@ export const ShortcutsModal = () => {
         >
           <div
             ref={nodeRef}
-            className="fixed top-20 right-4 z-50 bg-background border rounded-lg shadow-lg w-[400px] max-h-[80vh] overflow-y-auto"
+            className="fixed top-20 left-4 z-50 bg-background border rounded-lg shadow-lg w-[400px] max-h-[80vh] overflow-y-auto"
             style={{ resize: "both" }}
           >
             <div className="cursor-move draggable-handle">
