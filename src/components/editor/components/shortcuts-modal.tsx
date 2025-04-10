@@ -80,7 +80,7 @@ export const ShortcutsModal = () => {
               <div className="cursor-move draggable-handle flex justify-between items-center bg-muted p-2 border-b">
                 <div className="flex items-center">
                   <GripVertical className="w-4 h-4" />
-                  <span className="ml-1.5 font-bold">執筆のヒント</span>
+                  <span className="ml-2 font-bold">執筆のヒント</span>
                 </div>
 
                 <Button
