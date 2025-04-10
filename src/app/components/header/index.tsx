@@ -31,7 +31,7 @@ export default function Header() {
 
         <div className="flex items-center">
           <Search />
-          <div className="ml-2" />
+          <div className="ml-4" />
           {isAuthenticated ? (
             <Button
               variant="ghost"
