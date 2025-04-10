@@ -25,6 +25,13 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import { KeyboardShortcuts } from "./keyboard-shortcuts";
+import { Details } from "@tiptap-pro/extension-details";
+import DetailsContent from "@tiptap-pro/extension-details-content";
+import DetailsSummary from "@tiptap-pro/extension-details-summary";
+export { Details } from "@tiptap-pro/extension-details";
+export { DetailsContent } from "@tiptap-pro/extension-details-content";
+export { DetailsSummary } from "@tiptap-pro/extension-details-summary";
+
 export type GenerateExtensionsArgs = TableOfContentsExtensionArgs;
 
 export const generateExtensions = ({
@@ -57,5 +64,8 @@ export const generateExtensions = ({
     TableHeader,
     TableRow,
     KeyboardShortcuts,
+    Details,
+    DetailsContent,
+    DetailsSummary,
   ];
 };
