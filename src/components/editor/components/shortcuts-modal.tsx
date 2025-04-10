@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icon";
-import { cn } from "@/lib/utils";
 import { memo, useState, useEffect, useRef } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
