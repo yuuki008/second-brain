@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { GripVertical } from "lucide-react";
+import { GripVertical, X } from "lucide-react";
 import { memo, useState, useEffect, useRef } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
@@ -73,13 +73,23 @@ export const ShortcutsModal = () => {
         >
           <div
             ref={nodeRef}
-            className="fixed top-20 left-4 z-50 bg-background border rounded-lg shadow-lg overflow-hidden w-[400px] max-h-[621px]"
+            className="fixed top-20 left-4 z-50 bg-background border rounded-lg shadow-lg overflow-hidden w-[400px] max-h-[635px]"
             style={{ resize: "both" }}
           >
-            <div className="flex flex-col h-full max-h-[621px]">
-              <div className="cursor-move draggable-handle flex items-center bg-muted p-2 border-b">
-                <GripVertical className="w-4 h-4" />
-                <span className="ml-1.5 font-bold">執筆のヒント</span>
+            <div className="flex flex-col h-full max-h-[635px]">
+              <div className="cursor-move draggable-handle flex justify-between items-center bg-muted p-2 border-b">
+                <div className="flex items-center">
+                  <GripVertical className="w-4 h-4" />
+                  <span className="ml-1.5 font-bold">執筆のヒント</span>
+                </div>
+
+                <Button
+                  onClick={() => setVisible(false)}
+                  variant="ghost"
+                  size="icon"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
               </div>
               <div className="p-4 space-y-5 flex-1 overflow-y-auto">
                 <div>
