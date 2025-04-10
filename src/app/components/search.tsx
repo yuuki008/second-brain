@@ -16,6 +16,7 @@ import { FileText, PlusCircle } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Search: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
   ...props
@@ -120,6 +121,9 @@ const Search: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
         </kbd>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
+        <DialogHeader className="sr-only">
+          <DialogTitle></DialogTitle>
+        </DialogHeader>
         <div className="relative">
           <CommandInput
             value={searchQuery}
