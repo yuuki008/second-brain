@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
+import { cn } from "@/lib/utils";
 import { memo, useState, useEffect, useRef } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
@@ -40,14 +41,15 @@ export const ShortcutsModal = () => {
 
   return (
     <>
-      <div className="fixed bottom-4 right-4 z-40">
+      <div className="fixed bottom-4 left-4 z-50">
         <Button
+          className="cursor-pointer h-5 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100"
           variant="ghost"
-          size="icon"
-          aria-label="ショートカット情報"
           onClick={() => setVisible(!visible)}
         >
-          <Icon name="Info" />
+          <kbd className="flex items-center gap-1">
+            <div className="text-xs">⌘</div>H
+          </kbd>
         </Button>
       </div>
 
