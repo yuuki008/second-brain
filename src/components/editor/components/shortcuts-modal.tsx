@@ -7,9 +7,18 @@ const ShortcutKeyItem = memo(
     return (
       <div className="flex space-x-2 justify-between items-center py-[2px]">
         <span className="text-sm">{description}</span>
-        <kbd className="flex items-center gap-1">
-          <div className="text-xs">{keys.join(" + ")}</div>
-        </kbd>
+        <div className="flex items-center">
+          {keys.map((key) => (
+            <div className="flex items-center" key={key}>
+              <kbd className="text-xs rounded-md leading-4 border px-1 bg-muted font-mono">
+                {key}
+              </kbd>
+              {key !== keys[keys.length - 1] && (
+                <span className="mx-1 text-xs">+</span>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -71,13 +80,10 @@ export const ShortcutsModal = () => {
                 <div>
                   <h3 className="font-medium mb-2">基本的な操作</h3>
                   <ShortcutKeyItem
-                    keys={["Enter"]}
+                    keys={["enter"]}
                     description="テキスト行を挿入"
                   />
-                  <ShortcutKeyItem
-                    keys={["shift", "Enter"]}
-                    description="改行"
-                  />
+                  <ShortcutKeyItem keys={["⇧", "enter"]} description="改行" />
                   <ShortcutKeyItem keys={["---"]} description="区切り線" />
                 </div>
 
@@ -87,7 +93,7 @@ export const ShortcutsModal = () => {
                   <ShortcutKeyItem keys={["⌘", "I"]} description="斜体" />
                   <ShortcutKeyItem keys={["⌘", "U"]} description="下線" />
                   <ShortcutKeyItem
-                    keys={["⌘", "shift", "S"]}
+                    keys={["⌘", "⇧", "S"]}
                     description="取り消し線"
                   />
                   <ShortcutKeyItem keys={["⌘", "K"]} description="リンク" />
