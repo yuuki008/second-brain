@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
+  Command,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandDialog,
 } from "@/components/ui/command";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { getAllNodes, createNewNode } from "../actions/search";
 import { Node, Tag } from "@prisma/client";
@@ -16,7 +17,6 @@ import { FileText, PlusCircle } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Search: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
   ...props
@@ -114,73 +114,112 @@ const Search: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
         onClick={() => setOpen(true)}
         {...props}
       >
-        <span className="hidden lg:inline-flex">Search documentation...</span>
+        <span className="hidden lg:inline-flex">Search nodes...</span>
         <span className="inline-flex lg:hidden">Search...</span>
         <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <DialogHeader className="sr-only">
-          <DialogTitle></DialogTitle>
-        </DialogHeader>
-        <div className="relative">
-          <CommandInput
-            value={searchQuery}
-            onValueChange={setSearchQuery}
-            placeholder="What are you searching for?"
-            className="flex h-14 w-full bg-transparent text-sm placeholder:text-muted-foreground"
-          />
-          <Badge
-            variant="outline"
-            className="absolute right-2 top-1/2 -translate-y-1/2 font-normal cursor-pointer"
-            onClick={() => setOpen(false)}
-          >
-            Esc
-          </Badge>
-        </div>
-        <CommandList className="overflow-y-auto max-h-96 py-1">
-          <CommandGroup className="p-2 text-sm">
-            {filteredNodes.map((node) => (
-              <CommandItem
-                key={node.id}
-                onSelect={() => handleSelectItem(node)}
-                className="cursor-pointer py-2"
+      <AnimatePresence>
+        {open && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed top-0 left-0 w-screen h-screen z-50 bg-background/70 backdrop-blur-sm flex justify-center"
+              onClick={() => setOpen(false)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="max-w-xl w-[90%] mt-[15vh]"
               >
-                <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
-                <div className="flex">
-                  <div className="line-clamp-1 flex-1 mr-4">{node.name}</div>
-                  {node.tags && node.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {node.tags.map((tag) => (
-                        <Badge
-                          key={tag.id}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {tag.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </CommandItem>
-            ))}
-            {searchQuery.length > 0 && isAuthenticated && (
-              <CommandItem
-                onSelect={handleCreateNew}
-                className="cursor-pointer py-2"
-              >
-                <PlusCircle className="w-4 h-4 mr-3" />
-                <div className="">
-                  Create
-                  <span className="text-accent ml-2">{searchQuery}</span>
-                </div>
-              </CommandItem>
-            )}
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
+                <Command
+                  className="rounded-lg border shadow-lg w-full h-auto"
+                  shouldFilter={false}
+                >
+                  <div className="relative">
+                    <CommandInput
+                      value={searchQuery}
+                      onValueChange={setSearchQuery}
+                      placeholder="What are you searching for?"
+                      className="flex h-14 w-full bg-transparent text-sm placeholder:text-muted-foreground"
+                      autoFocus={true}
+                    />
+                    <Badge
+                      variant="outline"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 font-normal"
+                      onClick={() => setOpen(false)}
+                    >
+                      Esc
+                    </Badge>
+                  </div>
+                  <AnimatePresence>
+                    {open && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <CommandList className="overflow-y-auto max-h-96 py-1">
+                          <CommandGroup className="p-2 text-sm">
+                            {filteredNodes.map((node) => (
+                              <CommandItem
+                                key={node.id}
+                                onSelect={() => handleSelectItem(node)}
+                                className="cursor-pointer py-2"
+                              >
+                                <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
+                                <div className="flex">
+                                  <div className="line-clamp-1 flex-1 mr-4">
+                                    {node.name}
+                                  </div>
+                                  {node.tags && node.tags.length > 0 && (
+                                    <div className="flex flex-wrap gap-1">
+                                      {node.tags.map((tag) => (
+                                        <Badge
+                                          key={tag.id}
+                                          variant="secondary"
+                                          className="text-xs"
+                                        >
+                                          {tag.name}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              </CommandItem>
+                            ))}
+                            {searchQuery.length > 0 && isAuthenticated && (
+                              <CommandItem
+                                onSelect={handleCreateNew}
+                                className="cursor-pointer py-2"
+                              >
+                                <PlusCircle className="w-4 h-4 mr-3" />
+                                <div className="">
+                                  Create
+                                  <span className="text-accent ml-2">
+                                    {searchQuery}
+                                  </span>
+                                </div>
+                              </CommandItem>
+                            )}
+                          </CommandGroup>
+                        </CommandList>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Command>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>{" "}
     </>
   );
 };
