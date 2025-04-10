@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 
 const ShortcutItem = memo(
   ({ shortcut, description }: { shortcut: string; description: string }) => {
@@ -26,9 +26,24 @@ const ShortcutItem = memo(
 ShortcutItem.displayName = "ShortcutItem";
 
 export const ShortcutsModal = () => {
+  const [open, setOpen] = useState(false);
+
+  // キーボードショートカットの設定
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "i" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen(true);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <div className="fixed bottom-4 right-4">
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="ghost" size="icon" aria-label="ショートカット情報">
             <Icon name="Info" />
@@ -136,6 +151,10 @@ export const ShortcutsModal = () => {
 
             <div className="space-y-1">
               <h3 className="font-medium">その他のショートカット</h3>
+              <ShortcutItem
+                shortcut="cmd/ctrl + I"
+                description="ショートカット一覧を表示します"
+              />
               <ShortcutItem
                 shortcut="cmd/ctrl + +"
                 description="ズームインします"
