@@ -2,20 +2,20 @@ import { Button } from "@/components/ui/button";
 import { memo, useState, useEffect, useRef } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
-const ShortcutItem = memo(
-  ({ shortcut, description }: { shortcut: string; description: string }) => {
+const ShortcutKeyItem = memo(
+  ({ keys, description }: { keys: string[]; description: string }) => {
     return (
       <div className="flex space-x-2 justify-between items-center py-[2px]">
         <span className="text-sm">{description}</span>
-        <code className="bg-muted flex-shrink-0 px-2 py-1 rounded text-xs">
-          {shortcut}
-        </code>
+        <kbd className="flex items-center gap-1">
+          <div className="text-xs">{keys.join(" + ")}</div>
+        </kbd>
       </div>
     );
   }
 );
 
-ShortcutItem.displayName = "ShortcutItem";
+ShortcutKeyItem.displayName = "ShortcutKeyItem";
 
 export const ShortcutsModal = () => {
   const [visible, setVisible] = useState(false);
@@ -70,35 +70,38 @@ export const ShortcutsModal = () => {
               <div className="p-4 space-y-4">
                 <div>
                   <h3 className="font-medium mb-2">基本的な操作</h3>
-                  <ShortcutItem
-                    shortcut="Enter"
+                  <ShortcutKeyItem
+                    keys={["Enter"]}
                     description="テキスト行を挿入"
                   />
-                  <ShortcutItem shortcut="shift + Enter" description="改行" />
-                  <ShortcutItem shortcut="---" description="区切り線" />
+                  <ShortcutKeyItem
+                    keys={["shift", "Enter"]}
+                    description="改行"
+                  />
+                  <ShortcutKeyItem keys={["---"]} description="区切り線" />
                 </div>
 
                 <div>
                   <h3 className="font-medium mb-2">テキスト書式設定</h3>
-                  <ShortcutItem shortcut="cmd/ctrl + B" description="太字" />
-                  <ShortcutItem shortcut="cmd/ctrl + I" description="斜体" />
-                  <ShortcutItem shortcut="cmd/ctrl + U" description="下線" />
-                  <ShortcutItem
-                    shortcut="cmd/ctrl + shift + S"
+                  <ShortcutKeyItem keys={["⌘", "B"]} description="太字" />
+                  <ShortcutKeyItem keys={["⌘", "I"]} description="斜体" />
+                  <ShortcutKeyItem keys={["⌘", "U"]} description="下線" />
+                  <ShortcutKeyItem
+                    keys={["⌘", "shift", "S"]}
                     description="取り消し線"
                   />
-                  <ShortcutItem shortcut="cmd/ctrl + K" description="リンク" />
-                  <ShortcutItem
-                    shortcut="cmd/ctrl + E"
+                  <ShortcutKeyItem keys={["⌘", "K"]} description="リンク" />
+                  <ShortcutKeyItem
+                    keys={["⌘", "E"]}
                     description="インラインコード"
                   />
                 </div>
 
                 <div>
                   <h3 className="font-medium mb-2">コンテンツ操作</h3>
-                  <ShortcutItem shortcut="tab" description="インデント" />
-                  <ShortcutItem
-                    shortcut="shift + tab"
+                  <ShortcutKeyItem keys={["tab"]} description="インデント" />
+                  <ShortcutKeyItem
+                    keys={["shift", "tab"]}
                     description="ネストを解除"
                   />
                 </div>
@@ -107,20 +110,20 @@ export const ShortcutsModal = () => {
                   <h3 className="font-medium mb-2">
                     コンテンツ作成ショートカット
                   </h3>
-                  <ShortcutItem
-                    shortcut="cmd/ctrl + option/shift + 0"
+                  <ShortcutKeyItem
+                    keys={["⌘", "⇧", "0"]}
                     description="テキスト"
                   />
-                  <ShortcutItem
-                    shortcut="cmd/ctrl + option/shift + 1"
+                  <ShortcutKeyItem
+                    keys={["⌘", "⇧", "1"]}
                     description="見出し1"
                   />
-                  <ShortcutItem
-                    shortcut="cmd/ctrl + option/shift + 2"
+                  <ShortcutKeyItem
+                    keys={["⌘", "⇧", "2"]}
                     description="見出し2"
                   />
-                  <ShortcutItem
-                    shortcut="cmd/ctrl + option/shift + 3"
+                  <ShortcutKeyItem
+                    keys={["⌘", "⇧", "3"]}
                     description="見出し3"
                   />
                 </div>
