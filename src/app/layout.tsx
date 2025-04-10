@@ -5,6 +5,7 @@ import { AuthProvider } from "@/components/providers/auth-provider";
 import Header from "./components/header";
 import { Noto_Sans_JP } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/react";
 
 const noto_sans_jp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default function RootLayout({
             {children}
           </AuthProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
