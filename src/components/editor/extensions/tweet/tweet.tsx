@@ -37,7 +37,12 @@ export default function TweetComponent({ node }: NodeViewProps) {
 
   return (
     <NodeViewWrapper className="my-4">
-      <ClientTweetCard id={id || ""} />
+      <div
+        className="cursor-pointer"
+        onClick={() => window.open(url, "_blank")}
+      >
+        <ClientTweetCard id={id || ""} />
+      </div>
     </NodeViewWrapper>
   );
 }
