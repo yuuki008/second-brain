@@ -103,7 +103,8 @@ export default function ToC({ items, editor }: Props) {
     const progress = Math.round((scrollPosition / documentHeight) * 100);
 
     if (isNaN(progress)) return 0;
-    return progress;
+
+    return progress > 100 ? 100 : progress;
   };
 
   const progress = calculateProgress();
