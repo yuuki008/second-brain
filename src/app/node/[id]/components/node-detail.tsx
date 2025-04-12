@@ -374,12 +374,12 @@ const NodeNameEditor = React.memo(
 
         <div>
           {isReadOnly ? (
-            <h1 className="leading-[1.5] tracking-wide text-2xl font-bold">
+            <h1 className="leading-[1.5] tracking-wide text-3xl font-bold">
               {nodeName}
             </h1>
           ) : (
             <textarea
-              className="min-w-full max-w-full field-sizing-content resize-none leading-[1.5] border-none tracking-wide text-2xl font-bold bg-transparent focus:outline-none focus:ring-0"
+              className="min-w-full max-w-full field-sizing-content resize-none leading-[1.5] border-none tracking-wide text-3xl font-bold bg-transparent focus:outline-none focus:ring-0"
               value={nodeName}
               onChange={(e) => setNodeName(e.target.value)}
             />
