@@ -417,10 +417,6 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
           viewCount={node.viewCount}
         />
 
-        {!isReadOnly && (
-          <TagManager nodeId={id} currentTags={node.tags} allTags={allTags} />
-        )}
-
         <div className="flex-1 mt-6">
           <NodeEditor
             id={id}
@@ -430,6 +426,9 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
 
           <Separator className="mt-24 mb-5" />
 
+          {!isReadOnly && (
+            <TagManager nodeId={id} currentTags={node.tags} allTags={allTags} />
+          )}
           <ReactionBar nodeId={id} initialReactions={reactions} />
         </div>
       </div>
