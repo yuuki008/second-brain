@@ -9,19 +9,19 @@ import dayjs from "dayjs";
 // fonts
 const fontsDir = join(process.cwd(), "fonts");
 
-const inter300 = readFileSync(join(fontsDir, "inter-latin-300-normal.woff"));
+const notoSansJp300 = readFileSync(
+  join(fontsDir, "noto-sans-jp-latin-300-normal.woff")
+);
 
-const inter400 = readFileSync(join(fontsDir, "inter-latin-400-normal.woff"));
-
-const inter500 = readFileSync(join(fontsDir, "inter-latin-500-normal.woff"));
-
-const inter600 = readFileSync(join(fontsDir, "inter-latin-600-normal.woff"));
+const notoSansJp700 = readFileSync(
+  join(fontsDir, "noto-sans-jp-latin-700-normal.woff")
+);
 
 const robotoMono400 = readFileSync(
   join(fontsDir, "roboto-mono-latin-400-normal.woff")
 );
 
-export const alt = "About Acme";
+export const alt = "Second Brain";
 export const size = {
   width: 1200,
   height: 630,
@@ -50,10 +50,18 @@ export default async function Image(props: {
         style={font("Inter 300")}
       >
         <main tw="flex grow pb-3 flex-col justify-center ml-10">
-          <div tw="text-gray-400 text-3xl mb-5" style={font("Inter 400")}>
-            Yuuki008
+          <div tw="flex items-center gap-2">
+            <div
+              tw="text-gray-400 text-3xl mb-5"
+              style={font("Noto Sans JP 300")}
+            >
+              Yuuki008
+            </div>
           </div>
-          <div tw="text-7xl font-bold text-white" style={font("Inter 500")}>
+          <div
+            tw="text-7xl font-bold text-white"
+            style={font("Noto Sans JP 700")}
+          >
             {node.name}
           </div>
         </main>
@@ -70,20 +78,12 @@ export default async function Image(props: {
       ...size,
       fonts: [
         {
-          name: "Inter 300",
-          data: inter300,
+          name: "Noto Sans JP 300",
+          data: notoSansJp300,
         },
         {
-          name: "Inter 400",
-          data: inter400,
-        },
-        {
-          name: "Inter 500",
-          data: inter500,
-        },
-        {
-          name: "Inter 600",
-          data: inter600,
+          name: "Noto Sans JP 700",
+          data: notoSansJp700,
         },
         {
           name: "Roboto Mono 400",
@@ -94,7 +94,6 @@ export default async function Image(props: {
   );
 }
 
-// lil helper for more succinct styles
 function font(fontFamily: string) {
   return { fontFamily };
 }

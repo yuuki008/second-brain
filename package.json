@@ -24,6 +24,7 @@
     "@emoji-mart/react": "^1.1.1",
     "@faker-js/faker": "^9.6.0",
     "@fontsource/inter": "^5.2.5",
+    "@fontsource/noto-sans-jp": "^5.2.5",
     "@fontsource/roboto-mono": "^5.2.5",
     "@prisma/client": "^6.5.0",
     "@radix-ui/react-checkbox": "^1.1.4",

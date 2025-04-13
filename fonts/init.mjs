@@ -11,6 +11,10 @@ const fontPaths = [
   "node_modules/@fontsource/inter/files/inter-latin-500-normal.woff",
   "node_modules/@fontsource/inter/files/inter-latin-600-normal.woff",
   "node_modules/@fontsource/roboto-mono/files/roboto-mono-latin-400-normal.woff",
+  "node_modules/@fontsource/noto-sans-jp/files/noto-sans-jp-latin-300-normal.woff",
+  "node_modules/@fontsource/noto-sans-jp/files/noto-sans-jp-latin-500-normal.woff",
+  "node_modules/@fontsource/noto-sans-jp/files/noto-sans-jp-latin-700-normal.woff",
+  "node_modules/@fontsource/noto-sans-jp/files/noto-sans-jp-latin-900-normal.woff",
 ];
 
 // Ensure the destination directory exists
