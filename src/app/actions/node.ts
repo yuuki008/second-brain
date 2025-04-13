@@ -12,3 +12,11 @@ export async function createNode(name: string) {
 
   return node;
 }
+
+export async function deleteNode(nodeId: string) {
+  await prisma.node.delete({
+    where: { id: nodeId },
+  });
+
+  return { success: true };
+}
