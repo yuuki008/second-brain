@@ -37,11 +37,6 @@ export async function generateMetadata({ params }: NodePageProps) {
   return {
     title: node.name,
     description,
-    openGraph: {
-      title: node.name,
-      description,
-      images: [{ url: node.imageUrl || "/thinking-brain.png" }],
-    },
   };
 }
 
