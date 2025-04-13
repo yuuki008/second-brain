@@ -424,7 +424,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
             isReadOnly={isReadOnly}
           />
 
-          <Separator className="mt-24 mb-5" />
+          <Separator className="mt-14 mb-5" />
 
           <ReactionBar nodeId={id} initialReactions={reactions} />
         </div>
