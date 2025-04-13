@@ -27,7 +27,7 @@ const ShortcutKeyItem = memo(
 
 ShortcutKeyItem.displayName = "ShortcutKeyItem";
 
-export const ShortcutsModal = () => {
+export const HintModal = () => {
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const nodeRef = useRef<HTMLDivElement>(
@@ -49,15 +49,13 @@ export const ShortcutsModal = () => {
 
   return (
     <>
-      <div className="fixed bottom-4 left-4 z-50">
+      <div className="fixed bottom-2 left-2 z-50">
         <Button
-          className="cursor-pointer h-5 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100"
+          className="cursor-pointer items-center text-xs px-2 h-auto py-1 font-light"
           variant="ghost"
           onClick={() => setVisible(!visible)}
         >
-          <kbd className="flex items-center gap-1">
-            <div className="text-xs">⌘</div>/
-          </kbd>
+          執筆のヒント
         </Button>
       </div>
 

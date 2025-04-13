@@ -27,6 +27,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import { Separator } from "@/components/ui/separator";
+import HelpMenu from "./help-menu";
 
 interface NodeNodeData {
   id: string;
@@ -432,6 +433,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
           <ReactionBar nodeId={id} initialReactions={reactions} />
         </div>
       </div>
+      {!isReadOnly && <HelpMenu />}
     </div>
   );
 };

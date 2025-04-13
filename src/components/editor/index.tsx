@@ -1,7 +1,6 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { generateExtensions } from "./extensions";
 import { cn } from "@/lib/utils";
-import { ShortcutsModal } from "./components/shortcuts-modal";
 import "./styles/markdown.css";
 import { TableOfContentData } from "@tiptap-pro/extension-table-of-contents";
 import { useState } from "react";
@@ -42,7 +41,6 @@ const Editor = ({ content, onChange, className, readOnly }: Props) => {
     <div className={cn("w-full h-full", className)}>
       <ToC items={tableOfContentData} editor={editor} />
       <EditorContent className="h-full" editor={editor} />
-      {!readOnly && <ShortcutsModal />}
     </div>
   );
 };
