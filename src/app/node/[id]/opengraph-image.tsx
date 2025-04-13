@@ -6,7 +6,7 @@ import { join } from "path";
 import { getNode } from "./actions";
 import dayjs from "dayjs";
 
-const fontsDir = join(process.env.NEXT_PUBLIC_URL || "", "fonts");
+const fontsDir = join(process.cwd(), "fonts");
 
 const notoSansJp300 = readFileSync(
   join(fontsDir, "noto-sans-jp-latin-300-normal.woff")
