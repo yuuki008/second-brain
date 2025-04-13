@@ -1,19 +1,16 @@
 export const revalidate = 60;
 
-import { ImageResponse } from "next/og";
-import { readFileSync } from "fs";
-import { join } from "path";
 import { getNode } from "./actions";
 import dayjs from "dayjs";
+import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
-const fontsDir = join(process.cwd(), "public", "fonts");
-
-const notoSansJp300 = readFileSync(
-  join(fontsDir, "noto-sans-jp-latin-300-normal.woff")
+const notoSansJp300 = await readFile(
+  join(process.cwd(), "fonts/noto-sans-jp-latin-300-normal.woff")
 );
-
-const notoSansJp700 = readFileSync(
-  join(fontsDir, "noto-sans-jp-latin-700-normal.woff")
+const notoSansJp700 = await readFile(
+  join(process.cwd(), "fonts/noto-sans-jp-latin-700-normal.woff")
 );
 
 export const alt = "Second Brain";
