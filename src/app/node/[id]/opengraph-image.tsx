@@ -50,11 +50,13 @@ export default async function Image(props: {
         style={font("Inter 300")}
       >
         <main tw="flex grow pb-3 flex-col justify-center ml-10">
-          <div tw="flex items-center gap-2">
-            <div
-              tw="text-gray-400 text-3xl mb-5"
-              style={font("Noto Sans JP 300")}
-            >
+          <div tw="flex items-center mb-5">
+            <img
+              tw="rounded-full w-10 h-10 mr-2"
+              src={process.env.NEXT_PUBLIC_URL + "profile.jpg"}
+              alt="yuuki008"
+            />
+            <div tw="text-gray-400 text-3xl" style={font("Noto Sans JP 300")}>
               Yuuki008
             </div>
           </div>
