@@ -15,7 +15,7 @@ export default function HelpMenu({
   allTags,
 }: HelpMenuProps) {
   return (
-    <div className="fixed bottom-4 left-4 z-50">
+    <div className="fixed bottom-4 left-4 z-50 hidden md:block">
       <div className="flex gap-2 items-center">
         <HintModal />
         <Separator orientation="vertical" className="h-4 mx-1" />
