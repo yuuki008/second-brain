@@ -26,11 +26,11 @@ interface TagsMenuProps {
   allTags: Tag[];
 }
 
-const TagsMenu: React.FC<TagsMenuProps> = ({
+export default function TagsMenu({
   nodeId,
   currentTags,
   allTags,
-}) => {
+}: TagsMenuProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const { isAuthenticated } = useAuth();
@@ -49,20 +49,6 @@ const TagsMenu: React.FC<TagsMenuProps> = ({
     }
   };
 
-  // 検索に基づいてタグをフィルタリング
-  const filteredTags = allTags.filter((tag) =>
-    tag.name.toLowerCase().includes(search.toLowerCase())
-  );
-  const sortedTags = useMemo(() => {
-    return filteredTags.sort((a, b) => {
-      const aSelected = currentTags.some((t) => t.id === a.id);
-      const bSelected = currentTags.some((t) => t.id === b.id);
-      if (aSelected && !bSelected) return -1;
-      if (!aSelected && bSelected) return 1;
-      return 0;
-    });
-  }, [filteredTags, currentTags]);
-
   const handleCreateTag = async (tagName: string) => {
     if (!isAuthenticated) return;
 
@@ -75,7 +61,18 @@ const TagsMenu: React.FC<TagsMenuProps> = ({
     }
   };
 
-  if (!isAuthenticated) return <></>;
+  // フィルタリングと並べ替えを一つのuseMemoにまとめる
+  const sortedTags = useMemo(() => {
+    return allTags
+      .filter((tag) => tag.name.toLowerCase().includes(search.toLowerCase()))
+      .sort((a, b) => {
+        const aSelected = currentTags.some((t) => t.id === a.id);
+        const bSelected = currentTags.some((t) => t.id === b.id);
+        return aSelected === bSelected ? 0 : aSelected ? -1 : 1;
+      });
+  }, [allTags, currentTags, search]);
+
+  if (!isAuthenticated) return null;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -118,7 +115,7 @@ const TagsMenu: React.FC<TagsMenuProps> = ({
                   className="cursor-pointer"
                 >
                   <PlusCircle className="w-4 h-4 mr-3" />
-                  <div className="">
+                  <div>
                     Create
                     <span className="text-accent ml-2">{search}</span>
                   </div>
@@ -130,6 +127,4 @@ const TagsMenu: React.FC<TagsMenuProps> = ({
       </PopoverContent>
     </Popover>
   );
-};
-
-export default TagsMenu;
+}
