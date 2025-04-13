@@ -1,10 +1,25 @@
-import { HintModal } from "./hint-modal";
+import HintModal from "./hint-modal";
+import TagsMenu from "./tags-menu";
+import { Separator } from "@/components/ui/separator";
+import { Tag } from "@prisma/client";
 
-export default function HelpMenu() {
+interface HelpMenuProps {
+  nodeId: string;
+  currentTags: Tag[];
+  allTags: Tag[];
+}
+
+export default function HelpMenu({
+  nodeId,
+  currentTags,
+  allTags,
+}: HelpMenuProps) {
   return (
-    <div className="fixed bottom-2 left-2 z-50">
-      <div className="flex flex-col gap-2">
+    <div className="fixed bottom-4 left-4 z-50">
+      <div className="flex gap-2 items-center">
         <HintModal />
+        <Separator orientation="vertical" className="h-4 mx-1" />
+        <TagsMenu allTags={allTags} nodeId={nodeId} currentTags={currentTags} />
       </div>
     </div>
   );

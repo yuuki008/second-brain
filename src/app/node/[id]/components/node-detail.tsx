@@ -9,7 +9,6 @@ import {
   toggleReaction,
   getVisitorReactions,
 } from "../actions";
-import TagManager from "./tag-manager";
 import { Node, Tag } from "@prisma/client";
 import { useAuth } from "@/components/providers/auth-provider";
 import { uploadFile } from "@/app/actions/supabase";
@@ -427,13 +426,12 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
 
           <Separator className="mt-24 mb-5" />
 
-          {!isReadOnly && (
-            <TagManager nodeId={id} currentTags={node.tags} allTags={allTags} />
-          )}
           <ReactionBar nodeId={id} initialReactions={reactions} />
         </div>
       </div>
-      {!isReadOnly && <HelpMenu />}
+      {!isReadOnly && (
+        <HelpMenu nodeId={id} currentTags={node.tags} allTags={allTags} />
+      )}
     </div>
   );
 };

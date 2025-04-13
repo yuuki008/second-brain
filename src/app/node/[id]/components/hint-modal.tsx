@@ -27,7 +27,7 @@ const ShortcutKeyItem = memo(
 
 ShortcutKeyItem.displayName = "ShortcutKeyItem";
 
-export const HintModal = () => {
+const HintModal = () => {
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const nodeRef = useRef<HTMLDivElement>(
@@ -49,15 +49,12 @@ export const HintModal = () => {
 
   return (
     <>
-      <div className="fixed bottom-2 left-2 z-50">
-        <Button
-          className="cursor-pointer items-center text-xs px-2 h-auto py-1 font-light"
-          variant="ghost"
-          onClick={() => setVisible(!visible)}
-        >
-          執筆のヒント
-        </Button>
-      </div>
+      <button
+        className="text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer items-center text-xs font-light"
+        onClick={() => setVisible(!visible)}
+      >
+        執筆のヒント
+      </button>
 
       {visible && (
         <Draggable
@@ -154,3 +151,5 @@ export const HintModal = () => {
     </>
   );
 };
+
+export default HintModal;
