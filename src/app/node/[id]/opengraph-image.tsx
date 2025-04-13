@@ -6,7 +6,6 @@ import { join } from "path";
 import { getNode } from "./actions";
 import dayjs from "dayjs";
 
-// fonts
 const fontsDir = join(process.cwd(), "fonts");
 
 const notoSansJp300 = readFileSync(
@@ -15,10 +14,6 @@ const notoSansJp300 = readFileSync(
 
 const notoSansJp700 = readFileSync(
   join(fontsDir, "noto-sans-jp-latin-700-normal.woff")
-);
-
-const robotoMono400 = readFileSync(
-  join(fontsDir, "roboto-mono-latin-400-normal.woff")
 );
 
 export const alt = "Second Brain";
@@ -56,15 +51,22 @@ export default async function Image(props: {
             alt="yuuki008"
           />
 
-          <div tw="flex flex-col">
+          <div tw="flex-1 flex flex-col">
             <div tw="flex items-center mb-3">
               <div tw="text-gray-400 text-3xl" style={font("Noto Sans JP 300")}>
                 Yuuki008
               </div>
             </div>
             <div
-              tw="text-7xl font-bold text-white line-clamp-2"
-              style={font("Noto Sans JP 700")}
+              tw="text-7xl font-bold text-white"
+              style={{
+                ...font("Noto Sans JP 700"),
+                display: "-webkit-box",
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
             >
               {node.name}
             </div>
@@ -73,7 +75,7 @@ export default async function Image(props: {
 
         <div
           tw="absolute bottom-4 right-4 flex text-2xl text-gray-400"
-          style={font("Roboto Mono 400")}
+          style={font("Noto Sans JP 300")}
         >
           {formattedCreatedAt} – {node.viewCount} views
         </div>
@@ -89,10 +91,6 @@ export default async function Image(props: {
         {
           name: "Noto Sans JP 700",
           data: notoSansJp700,
-        },
-        {
-          name: "Roboto Mono 400",
-          data: robotoMono400,
         },
       ],
     }
