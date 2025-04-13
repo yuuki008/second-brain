@@ -46,25 +46,28 @@ export default async function Image(props: {
   return new ImageResponse(
     (
       <div
-        tw="flex p-10 h-full w-full bg-[#000] text-white flex-col"
+        tw="flex p-10 h-full w-full bg-[#000] text-white flex-col justify-center"
         style={font("Inter 300")}
       >
-        <main tw="flex grow pb-3 flex-col justify-center ml-10">
-          <div tw="flex items-center mb-5">
-            <img
-              tw="rounded-full w-10 h-10 mr-2"
-              src={process.env.NEXT_PUBLIC_URL + "profile.jpg"}
-              alt="yuuki008"
-            />
-            <div tw="text-gray-400 text-3xl" style={font("Noto Sans JP 300")}>
-              Yuuki008
+        <main tw="flex items-center ml-10">
+          <img
+            tw="rounded-full w-50 h-50 mr-10"
+            src={process.env.NEXT_PUBLIC_URL + "profile.jpg"}
+            alt="yuuki008"
+          />
+
+          <div tw="flex flex-col">
+            <div tw="flex items-center mb-3">
+              <div tw="text-gray-400 text-3xl" style={font("Noto Sans JP 300")}>
+                Yuuki008
+              </div>
             </div>
-          </div>
-          <div
-            tw="text-7xl font-bold text-white"
-            style={font("Noto Sans JP 700")}
-          >
-            {node.name}
+            <div
+              tw="text-7xl font-bold text-white line-clamp-2"
+              style={font("Noto Sans JP 700")}
+            >
+              {node.name}
+            </div>
           </div>
         </main>
 
