@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { addTagToNode, createTag, removeTagFromNode } from "../actions";
 import { Tag } from "@prisma/client";
 import { Check, PlusCircle } from "lucide-react";
@@ -53,6 +53,15 @@ const TagsMenu: React.FC<TagsMenuProps> = ({
   const filteredTags = allTags.filter((tag) =>
     tag.name.toLowerCase().includes(search.toLowerCase())
   );
+  const sortedTags = useMemo(() => {
+    return filteredTags.sort((a, b) => {
+      const aSelected = currentTags.some((t) => t.id === a.id);
+      const bSelected = currentTags.some((t) => t.id === b.id);
+      if (aSelected && !bSelected) return -1;
+      if (!aSelected && bSelected) return 1;
+      return 0;
+    });
+  }, [filteredTags, currentTags]);
 
   const handleCreateTag = async (tagName: string) => {
     if (!isAuthenticated) return;
@@ -85,7 +94,7 @@ const TagsMenu: React.FC<TagsMenuProps> = ({
           <CommandEmpty>タグが見つかりません</CommandEmpty>
           <CommandList>
             <CommandGroup className="max-h-[200px] overflow-auto">
-              {filteredTags.map((tag) => {
+              {sortedTags.map((tag) => {
                 const isSelected = currentTags.some((t) => t.id === tag.id);
                 return (
                   <CommandItem
