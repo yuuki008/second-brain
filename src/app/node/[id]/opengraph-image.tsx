@@ -3,15 +3,6 @@ export const revalidate = 60;
 import { getNode } from "./actions";
 import dayjs from "dayjs";
 import { ImageResponse } from "next/og";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
-
-const notoSansJp300 = await readFile(
-  join(process.cwd(), "fonts/noto-sans-jp-latin-300-normal.woff")
-);
-const notoSansJp700 = await readFile(
-  join(process.cwd(), "fonts/noto-sans-jp-latin-700-normal.woff")
-);
 
 export const alt = "Second Brain";
 export const size = {
@@ -32,6 +23,16 @@ export default async function Image(props: {
   if (!node) {
     return new Response("Not found", { status: 404 });
   }
+
+  console.log(import.meta.url);
+
+  const notoSansJp300 = fetch(
+    new URL("./fonts/noto-sans-jp-latin-300-normal.woff", import.meta.url)
+  ).then((res) => res.arrayBuffer());
+
+  const notoSansJp700 = fetch(
+    new URL("./fonts/noto-sans-jp-latin-700-normal.woff", import.meta.url)
+  ).then((res) => res.arrayBuffer());
 
   const formattedCreatedAt = dayjs(node.createdAt).format("MMMM D, YYYY");
 
@@ -83,11 +84,11 @@ export default async function Image(props: {
       fonts: [
         {
           name: "Noto Sans JP 300",
-          data: notoSansJp300,
+          data: await notoSansJp300,
         },
         {
           name: "Noto Sans JP 700",
-          data: notoSansJp700,
+          data: await notoSansJp700,
         },
       ],
     }
