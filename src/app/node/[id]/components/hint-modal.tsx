@@ -68,7 +68,7 @@ const HintModal = () => {
         >
           <div
             ref={nodeRef}
-            className="fixed top-20 left-4 z-50 bg-background border rounded-lg shadow-lg overflow-hidden w-[400px] max-h-[635px]"
+            className="fixed top-20 left-4 z-50 bg-background border rounded-lg shadow-lg overflow-hidden w-[400px] max-h-[670px]"
             style={{ resize: "both" }}
           >
             <div className="flex flex-col h-full max-h-[635px]">
@@ -89,12 +89,9 @@ const HintModal = () => {
               <div className="p-4 space-y-5 flex-1 overflow-y-auto">
                 <div>
                   <h3 className="font-medium mb-2">基本的な操作</h3>
-                  <ShortcutKeyItem
-                    keys={["enter"]}
-                    description="テキスト行を挿入"
-                  />
                   <ShortcutKeyItem keys={["⇧", "enter"]} description="改行" />
                   <ShortcutKeyItem keys={["---"]} description="区切り線" />
+                  <ShortcutKeyItem keys={["/"]} description="コマンドリスト" />
                 </div>
 
                 <div>
