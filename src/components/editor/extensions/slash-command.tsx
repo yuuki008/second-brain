@@ -112,14 +112,14 @@ const CommandListWithKeyboardHandling = forwardRef<
   }));
 
   return (
-    <div className="relative bg-background border rounded-md p-1 shadow-lg overflow-hidden">
+    <div className="relative bg-background border rounded-md p-1 shadow-lg overflow-hidden w-[200px]">
       {items.length > 0 ? (
         <div className="command-list">
           {items.map((item: CommandItem, index: number) => (
             <button
               key={index}
               className={cn(
-                "flex items-center gap-2 w-full px-2 py-1 text-left rounded-sm text-sm transition-colors duration-200",
+                "flex items-center gap-2 w-full px-2 py-[6px] text-left rounded-sm text-xs transition-colors duration-200",
                 index === selectedIndex
                   ? "bg-secondary text-secondary-foreground"
                   : ""
