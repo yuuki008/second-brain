@@ -7,30 +7,32 @@ import { uploadFile } from "@/app/actions/supabase";
 
 export function ImageComponent({ node, updateAttributes }: NodeViewProps) {
   const { src, alt, loading } = node.attrs;
-
   const [isLoading, setIsLoading] = useState(loading);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSkeletonClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = async (
+  const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setIsLoading(true);
+    try {
+      const { url } = await uploadFile(file);
+      updateAttributes({
+        src: url,
+        alt: file.name,
+        loading: false,
+      });
+    } catch (error) {
+      console.error("画像のアップロードに失敗しました:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    const { url } = await uploadFile(file);
-
-    updateAttributes({
-      src: url,
-      alt: file.name,
-      loading: false,
-    });
-    setIsLoading(false);
+  const openFileSelector = () => {
+    fileInputRef.current?.click();
   };
 
   if (isLoading) {
@@ -46,14 +48,14 @@ export function ImageComponent({ node, updateAttributes }: NodeViewProps) {
       <NodeViewWrapper className="mx-auto w-full max-w-[300px] my-4 cursor-pointer">
         <div
           className="w-[300px] h-[300px] flex items-center justify-center bg-muted"
-          onClick={handleSkeletonClick}
+          onClick={openFileSelector}
         >
           <ImageIcon className="w-10 h-10" />
         </div>
         <input
           type="file"
           ref={fileInputRef}
-          onChange={handleFileChange}
+          onChange={handleFileUpload}
           accept="image/*"
           style={{ display: "none" }}
         />

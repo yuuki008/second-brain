@@ -1,40 +1,37 @@
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useRef, useState } from "react";
-import { Image as ImageIcon } from "lucide-react";
+import { useRef, useState } from "react";
+import { Video as VideoIcon } from "lucide-react";
 import { uploadFile } from "@/app/actions/supabase";
 
 export function VideoComponent({ node, updateAttributes }: NodeViewProps) {
   const { src, loading } = node.attrs;
-  const [isLoading, setIsLoading] = useState(loading);
+  const [isLoading, setIsLoading] = useState(loading || false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSkeletonClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = async (
+  const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setIsLoading(true);
-
-    const { url } = await uploadFile(file);
-
-    updateAttributes({
-      src: url,
-      loading: false,
-    });
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    if (src) {
+    try {
+      const { url } = await uploadFile(file);
+      updateAttributes({
+        src: url,
+        loading: false,
+      });
+    } catch (error) {
+      console.error("動画のアップロードに失敗しました:", error);
+    } finally {
       setIsLoading(false);
     }
-  }, [src]);
+  };
+
+  const openFileSelector = () => {
+    fileInputRef.current?.click();
+  };
 
   if (isLoading) {
     return (
@@ -49,15 +46,15 @@ export function VideoComponent({ node, updateAttributes }: NodeViewProps) {
       <NodeViewWrapper className="mx-auto w-full max-w-[500px] my-4 cursor-pointer">
         <div
           className="w-[500px] h-[281px] flex items-center justify-center bg-muted"
-          onClick={handleSkeletonClick}
+          onClick={openFileSelector}
         >
-          <ImageIcon className="w-10 h-10" />
+          <VideoIcon className="w-10 h-10" />
         </div>
         <input
           type="file"
           ref={fileInputRef}
-          onChange={handleFileChange}
-          accept="video/*" // accept 属性を video/* に変更
+          onChange={handleFileUpload}
+          accept="video/*"
           style={{ display: "none" }}
         />
       </NodeViewWrapper>
@@ -67,7 +64,7 @@ export function VideoComponent({ node, updateAttributes }: NodeViewProps) {
   return (
     <NodeViewWrapper className="mx-auto w-full max-w-[500px] my-4">
       <video controls width="500" src={src}>
-        Your browser does not support the video tag.
+        ブラウザが動画タグをサポートしていません。
       </video>
     </NodeViewWrapper>
   );
