@@ -1,7 +1,7 @@
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image as ImageIcon } from "lucide-react";
 import { uploadFile } from "@/app/actions/supabase";
 
@@ -34,6 +34,12 @@ export function ImageComponent({ node, updateAttributes }: NodeViewProps) {
   const openFileSelector = () => {
     fileInputRef.current?.click();
   };
+
+  useEffect(() => {
+    if (src) {
+      setIsLoading(false);
+    }
+  }, [src]);
 
   if (isLoading) {
     return (

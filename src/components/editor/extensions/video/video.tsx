@@ -1,6 +1,6 @@
 import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Video as VideoIcon } from "lucide-react";
 import { uploadFile } from "@/app/actions/supabase";
 
@@ -32,6 +32,12 @@ export function VideoComponent({ node, updateAttributes }: NodeViewProps) {
   const openFileSelector = () => {
     fileInputRef.current?.click();
   };
+
+  useEffect(() => {
+    if (src) {
+      setIsLoading(false);
+    }
+  }, [src]);
 
   if (isLoading) {
     return (
