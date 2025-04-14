@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const NodeDetailSkeleton = () => {
   return (
-    <div className="w-[90%] mx-auto pt-24 pb-[80vh]">
+    <div className="w-[90%] mx-auto pt-16 pb-[80vh]">
       <div className="relative max-w-2xl mx-auto">
         <div className="min-h-full flex flex-col">
           <div>

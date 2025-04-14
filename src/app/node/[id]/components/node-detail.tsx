@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import { Separator } from "@/components/ui/separator";
 import HelpMenu from "./help-menu";
+import dayjs from "dayjs";
 
 interface NodeNodeData {
   id: string;
@@ -348,11 +349,13 @@ const NodeNameEditor = React.memo(
     initialName,
     isReadOnly,
     viewCount,
+    lastUpdated,
   }: {
     id: string;
     initialName: string;
     isReadOnly: boolean;
     viewCount: number;
+    lastUpdated: Date;
   }) => {
     const [nodeName, setNodeName] = useState(initialName);
 
@@ -366,12 +369,10 @@ const NodeNameEditor = React.memo(
       return () => clearTimeout(timer);
     }, [nodeName, id, initialName, isReadOnly]);
 
-    return (
-      <div className="relative flex flex-col mb-4">
-        <div className="text-muted-foreground text-right mb-2">
-          <span className="text-sm">{viewCount} views</span>
-        </div>
+    const formatLastUpdated = dayjs(lastUpdated).format("MMMM D, YYYY");
 
+    return (
+      <div className="relative flex flex-col my-4">
         <div>
           {isReadOnly ? (
             <h1 className="leading-[1.5] tracking-wide text-3xl font-bold">
@@ -379,11 +380,16 @@ const NodeNameEditor = React.memo(
             </h1>
           ) : (
             <textarea
-              className="min-w-full max-w-full field-sizing-content resize-none leading-[1.5] border-none tracking-wide text-3xl font-bold bg-transparent focus:outline-none focus:ring-0"
+              className="min-w-full max-w-full field-sizing-content resize-none border-none tracking-wide text-3xl font-bold bg-transparent focus:outline-none focus:ring-0 leading-[1.5]"
               value={nodeName}
               onChange={(e) => setNodeName(e.target.value)}
             />
           )}
+        </div>
+        <div className="text-muted-foreground text-xs flex justify-between items-center">
+          <div>{formatLastUpdated}</div>
+
+          <div>{viewCount} views</div>
         </div>
       </div>
     );
@@ -403,7 +409,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
 
   return (
     <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto pb-20">
-      <div className="flex-1 flex flex-col pt-20">
+      <div className="flex-1 flex flex-col pt-16">
         <ThumbnailUploader
           id={id}
           initialImgUrl={node.imageUrl}
@@ -415,6 +421,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
           initialName={node.name}
           isReadOnly={isReadOnly}
           viewCount={node.viewCount}
+          lastUpdated={node.updatedAt}
         />
 
         <div className="flex-1 mt-6">
