@@ -1,45 +1,43 @@
-import { Node, nodeInputRule } from "@tiptap/react";
+import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { VideoComponent } from "./video";
 
 export interface VideoOptions {
-  HTMLAttributes: Record<string, string>;
+  HTMLAttributes: Record<string, unknown>;
 }
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     video: {
       /**
-       * Set a video node
+       * Add a video
        */
       setVideo: (options: { src: string; loading?: boolean }) => ReturnType;
-      /**
-       * Toggle a video
-       */
-      toggleVideo: (src: string) => ReturnType;
     };
   }
 }
 
-const VIDEO_INPUT_REGEX = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/;
-
-export const Video = Node.create({
+export const Video = Node.create<VideoOptions>({
   name: "video",
-
   group: "block",
+  atom: true,
 
   addAttributes() {
     return {
       src: {
         default: null,
-        parseHTML: (el) => (el as HTMLSpanElement).getAttribute("src"),
-        renderHTML: (attrs) => ({ src: attrs.src }),
+        parseHTML: (element) =>
+          element.querySelector("source")?.getAttribute("src"),
+        renderHTML: (attributes) => ({
+          src: attributes.src,
+        }),
       },
       loading: {
         default: false,
-        parseHTML: (el) =>
-          (el as HTMLSpanElement).getAttribute("loading") === "true",
-        renderHTML: (attrs) => ({ loading: attrs.loading }),
+        parseHTML: (element) => element.getAttribute("data-loading") === "true",
+        renderHTML: (attributes) => ({
+          "data-loading": attributes.loading ? "true" : undefined,
+        }),
       },
     };
   },
@@ -48,9 +46,6 @@ export const Video = Node.create({
     return [
       {
         tag: "video",
-        getAttrs: (el) => ({
-          src: (el as HTMLVideoElement).getAttribute("src"),
-        }),
       },
     ];
   },
@@ -58,8 +53,8 @@ export const Video = Node.create({
   renderHTML({ HTMLAttributes }) {
     return [
       "video",
-      { controls: "true", style: "width: 100%", ...HTMLAttributes },
-      ["source", HTMLAttributes],
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+      ["source"],
     ];
   },
 
@@ -71,30 +66,25 @@ export const Video = Node.create({
     return {
       setVideo:
         (options: { src: string; loading?: boolean }) =>
-        ({ commands }) =>
-          commands.insertContent({
+        ({ commands }) => {
+          return commands.insertContent({
             type: this.name,
             attrs: options,
-          }),
-
-      toggleVideo:
-        () =>
-        ({ commands }) =>
-          commands.toggleNode(this.name, "paragraph"),
+          });
+        },
     };
   },
 
-  addInputRules() {
-    return [
-      nodeInputRule({
-        find: VIDEO_INPUT_REGEX,
-        type: this.type,
-        getAttributes: (match) => {
-          const [, , src] = match;
-
-          return { src };
-        },
-      }),
-    ];
-  },
+  // addInputRules() {
+  //   return [
+  //     nodeInputRule({
+  //       find: VIDEO_INPUT_REGEX,
+  //       type: this.type,
+  //       getAttributes: (match) => {
+  //         const [, alt, src, title] = match;
+  //         return { src, alt, title };
+  //       },
+  //     }),
+  //   ];
+  // },
 });

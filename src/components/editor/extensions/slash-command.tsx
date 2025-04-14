@@ -10,6 +10,8 @@ import {
   List,
   ListChecks,
   Minus,
+  Image as ImageIcon,
+  Video as VideoIcon,
 } from "lucide-react";
 import React, {
   forwardRef,
@@ -19,6 +21,7 @@ import React, {
 } from "react";
 import { cn } from "@/lib/utils";
 
+// CommandProps をここで定義
 interface CommandProps {
   editor: Editor;
   range: Range;
@@ -195,23 +198,30 @@ const Command = Extension.create({
                   .run();
               },
             },
-            // 画像と動画は別途実装が必要
-            // {
-            //   title: "画像",
-            //   icon: <ImageIcon size={18} />,
-            //   onCommand: ({ editor, range }: CommandProps) => {
-            //     // TODO: 画像挿入ロジック
-            //     editor.chain().focus().deleteRange(range).run();
-            //   },
-            // },
-            // {
-            //   title: "動画",
-            //   icon: <VideoIcon size={18} />,
-            //   onCommand: ({ editor, range }: CommandProps) => {
-            //     // TODO: 動画挿入ロジック
-            //     editor.chain().focus().deleteRange(range).run();
-            //   },
-            // },
+            {
+              title: "画像",
+              icon: <ImageIcon className="w-4 h-4" />,
+              onCommand: ({ editor, range }: CommandProps) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .setImage({ src: "", alt: "", loading: false })
+                  .run();
+              },
+            },
+            {
+              title: "動画",
+              icon: <VideoIcon className="w-4 h-4" />,
+              onCommand: ({ editor, range }: CommandProps) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .setVideo({ src: "", loading: false })
+                  .run();
+              },
+            },
             {
               title: "コードブロック",
               icon: <Code size={18} />,

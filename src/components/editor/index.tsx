@@ -2,7 +2,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { generateExtensions } from "./extensions";
 import { cn } from "@/lib/utils";
 import "./styles/markdown.css";
-import { TableOfContentData } from "@tiptap-pro/extension-table-of-contents";
+import { type TableOfContentData } from "@tiptap-pro/extension-table-of-contents";
 import { useState } from "react";
 import ToC from "./components/toc";
 

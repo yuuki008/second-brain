@@ -16,6 +16,7 @@ declare module "@tiptap/core" {
         src: string;
         alt?: string;
         title?: string;
+        loading?: boolean;
       }) => ReturnType;
     };
   }
