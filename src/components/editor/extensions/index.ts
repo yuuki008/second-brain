@@ -28,10 +28,8 @@ import { KeyboardShortcuts } from "./keyboard-shortcuts";
 import { Details } from "@tiptap-pro/extension-details";
 import DetailsContent from "@tiptap-pro/extension-details-content";
 import DetailsSummary from "@tiptap-pro/extension-details-summary";
-export { Details } from "@tiptap-pro/extension-details";
-export { DetailsContent } from "@tiptap-pro/extension-details-content";
-export { DetailsSummary } from "@tiptap-pro/extension-details-summary";
 import { Blockquote } from "./blockquote";
+import Command from "./slash-command";
 
 export type GenerateExtensionsArgs = TableOfContentsExtensionArgs;
 
@@ -71,5 +69,6 @@ export const generateExtensions = ({
     Details,
     DetailsContent,
     DetailsSummary,
+    Command,
   ];
 };
