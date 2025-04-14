@@ -133,7 +133,7 @@ const CommandListWithKeyboardHandling = forwardRef<
         </div>
       ) : (
         <div className="px-2 py-1 text-sm text-muted-foreground">
-          一致するコマンドがありません
+          コマンドがありません
         </div>
       )}
     </div>
