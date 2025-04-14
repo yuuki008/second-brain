@@ -23,8 +23,8 @@ export default function Header() {
           <Image
             src={theme === "dark" ? "/dark-sign.png" : "/light-sign.png"}
             alt="logo"
-            width={100}
-            height={100}
+            width={35}
+            height={35}
             className="object-contain"
           />
         </Link>
