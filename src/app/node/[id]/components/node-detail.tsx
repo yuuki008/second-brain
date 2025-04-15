@@ -10,6 +10,7 @@ import ReactionBar from "./reaction-bar";
 import HelpMenu from "./help-menu";
 import dayjs from "dayjs";
 import { cn } from "@/lib/utils";
+import { useZen } from "@/hooks/use-zen";
 
 interface NodeNodeData {
   id: string;
@@ -149,17 +150,14 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
   reactions,
 }) => {
   const { isAuthenticated } = useAuth();
-  const isReadOnly = !isAuthenticated;
-  const [isZenMode, setIsZenMode] = useState(false);
-
-  const toggleZenMode = () => setIsZenMode(!isZenMode);
+  const { isZenMode, toggleZenMode } = useZen();
 
   return (
     <div
       className={cn(
         "w-full min-h-screen relative bg-background transition-all duration-300",
         // 禅モードの時は z-index を 100 にしてヘッダーを非表示にする
-        isZenMode ? "z-[100]" : "z-0"
+        isZenMode && isAuthenticated ? "z-[100]" : "z-0"
       )}
     >
       <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto pb-20">
@@ -167,7 +165,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
           <NodeNameEditor
             id={id}
             initialName={node.name}
-            isReadOnly={isReadOnly}
+            isReadOnly={!isAuthenticated}
             viewCount={node.viewCount}
             lastUpdated={node.updatedAt}
           />
@@ -176,11 +174,11 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
             <NodeEditor
               id={id}
               initialContent={node.content}
-              isReadOnly={isReadOnly}
+              isReadOnly={!isAuthenticated}
               isZenMode={isZenMode}
             />
 
-            {!isZenMode && (
+            {(!isZenMode || !isAuthenticated) && (
               <>
                 <Separator className="mt-14 mb-5" />
                 <ReactionBar nodeId={id} initialReactions={reactions} />
@@ -188,7 +186,8 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
             )}
           </div>
         </div>
-        {!isReadOnly && (
+
+        {isAuthenticated && (
           <HelpMenu
             nodeId={id}
             currentTags={node.tags}
