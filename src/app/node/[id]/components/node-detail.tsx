@@ -5,16 +5,13 @@ import Editor from "@/components/editor";
 import {
   updateNodeDefinition,
   updateNodeName,
-  updateNodeImageUrl,
   toggleReaction,
   getVisitorReactions,
 } from "../actions";
 import { Node, Tag } from "@prisma/client";
 import { useAuth } from "@/components/providers/auth-provider";
-import { uploadFile } from "@/app/actions/supabase";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { SmilePlus, Trash2, Image as ImageIcon } from "lucide-react";
+import { SmilePlus } from "lucide-react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { getOrCreateVisitorId } from "@/lib/visitor-id";
@@ -185,125 +182,6 @@ const ReactionBar = React.memo(
 );
 ReactionBar.displayName = "ReactionBar";
 
-// サムネイル画像アップロードコンポーネント
-const ThumbnailUploader = React.memo(
-  ({
-    id,
-    initialImgUrl,
-    isReadOnly,
-  }: {
-    id: string;
-    initialImgUrl?: string | null;
-    isReadOnly: boolean;
-  }) => {
-    const [imgUrl, setImgUrl] = useState(initialImgUrl || null);
-
-    const handleImageUpload = async (
-      e: React.ChangeEvent<HTMLInputElement>
-    ) => {
-      if (!e.target.files || e.target.files.length === 0) return;
-
-      try {
-        const file = e.target.files[0];
-        const { url } = await uploadFile(file);
-        setImgUrl(url);
-
-        // ノードのimageUrlを更新
-        await updateNodeImageUrl(id, url);
-      } catch (error) {
-        console.error("画像アップロードエラー:", error);
-      }
-    };
-
-    const handleImageDelete = async () => {
-      try {
-        // 画像URLをnullに設定してデータベースを更新
-        await updateNodeImageUrl(id, null);
-        setImgUrl(null);
-      } catch (error) {
-        console.error("画像削除エラー:", error);
-      }
-    };
-
-    if (!imgUrl && isReadOnly) return <></>;
-    if (imgUrl && isReadOnly)
-      return (
-        <div className="w-full mb-1">
-          <div className="relative w-full">
-            <Image
-              src={imgUrl || ""}
-              alt="ノードサムネイル"
-              width={1000}
-              height={0}
-              style={{ width: "100%", height: "auto" }}
-              className="object-cover"
-            />
-          </div>
-        </div>
-      );
-
-    if (!imgUrl) {
-      return (
-        <div className="w-full flex mb-1">
-          <div className="w-full relative h-[300px] flex items-center justify-center bg-secondary hover:bg-black/30 transition-colors duration-300">
-            <label
-              htmlFor="thumbnailUpload"
-              className="absolute inset-0 cursor-pointer"
-            />
-            <ImageIcon className="h-10 w-10 text-muted-foreground" />
-          </div>
-
-          <input
-            id="thumbnailUpload"
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-          />
-        </div>
-      );
-    }
-
-    return (
-      <div className="mb-1">
-        <div className="relative w-full overflow-hidden">
-          <label
-            htmlFor="thumbnailUpload"
-            className="absolute inset-0 cursor-pointer z-10 hover:bg-black/30 transition-colors duration-300"
-          />
-          <div className="relative w-full">
-            <Image
-              src={imgUrl}
-              alt="ノードサムネイル"
-              width={1000}
-              height={0}
-              style={{ width: "100%", height: "auto" }}
-              className="object-cover max-h-[640px]"
-            />
-          </div>
-          <Button
-            onClick={handleImageDelete}
-            variant="outline"
-            size="icon"
-            className="absolute top-2 right-2 z-20 rounded-full"
-            aria-label="画像を削除"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-        <input
-          id="thumbnailUpload"
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="hidden"
-        />
-      </div>
-    );
-  }
-);
-ThumbnailUploader.displayName = "ThumbnailUploader";
-
 // エディタ部分のみを扱う別コンポーネント
 const NodeEditor = React.memo(
   ({
@@ -410,12 +288,6 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
   return (
     <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto pb-20">
       <div className="flex-1 flex flex-col pt-16">
-        <ThumbnailUploader
-          id={id}
-          initialImgUrl={node.imageUrl}
-          isReadOnly={isReadOnly}
-        />
-
         <NodeNameEditor
           id={id}
           initialName={node.name}

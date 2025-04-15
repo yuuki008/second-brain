@@ -16,7 +16,6 @@ model Node {
   content     String
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
-  imageUrl    String?   @map("image_url")
   tags        Tag[]     @relation("NodeToTag")
   viewCount   Int       @default(0) @map("view_count")
   reactions   Reaction[]

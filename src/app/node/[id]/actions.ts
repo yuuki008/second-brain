@@ -40,32 +40,6 @@ export async function updateNodeDefinition(nodeId: string, definition: string) {
 }
 
 /**
- * ノードの画像URLを更新するサーバーアクション
- * @param nodeId - 更新するノードのID
- * @param imageUrl - 新しい画像URL（nullの場合は画像を削除）
- */
-export async function updateNodeImageUrl(
-  nodeId: string,
-  imageUrl: string | null
-) {
-  try {
-    await prisma.node.update({
-      where: { id: nodeId },
-      data: {
-        imageUrl,
-        updatedAt: new Date(),
-      },
-    });
-
-    revalidatePath(`/node/${nodeId}`);
-    return { success: true };
-  } catch (error) {
-    console.error("Error updating node image URL:", error);
-    return { success: false, error: (error as Error).message };
-  }
-}
-
-/**
  * ノードからタグを削除するサーバーアクション
  * @param nodeId - タグを削除するノードのID
  * @param tagId - 削除するタグのID

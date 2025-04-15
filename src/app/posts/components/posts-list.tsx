@@ -2,7 +2,6 @@
 
 import { Node, Tag } from "@prisma/client";
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -34,7 +33,6 @@ export default function PostsList({
   const [nextCursor, setNextCursor] = useState<string | undefined>(
     initialNextCursor
   );
-  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -93,8 +91,6 @@ export default function PostsList({
             <li
               key={node.id}
               className="group relative rounded-lg border p-4 transition-all hover:bg-accent/5"
-              onMouseEnter={() => setHoveredNodeId(node.id)}
-              onMouseLeave={() => setHoveredNodeId(null)}
             >
               <Link href={`/node/${node.id}`} className="block">
                 <h2 className="flex-1 line-clamp-1 mr-4 text-xl mb-2 font-medium group-hover:text-accent transition-colors">
@@ -107,18 +103,6 @@ export default function PostsList({
                   </p>
                 )}
               </Link>
-
-              {/* サムネイル画像（ホバー時に表示） */}
-              {hoveredNodeId === node.id && node.imageUrl && (
-                <div className="absolute top-0 -right-60 w-56 h-40 overflow-hidden rounded-md border shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Image
-                    src={node.imageUrl}
-                    alt={node.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              )}
             </li>
           );
         })}

@@ -60,7 +60,6 @@ async function main() {
     const nodeData = {
       name: `${i + 1}_${faker.book.title()}`,
       content: faker.lorem.lines(10),
-      imageUrl: faker.image.url(),
       tags: {
         connect: tagIds,
       },
