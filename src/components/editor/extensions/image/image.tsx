@@ -43,7 +43,7 @@ export function ImageComponent({ node, updateAttributes }: NodeViewProps) {
 
   if (isLoading) {
     return (
-      <NodeViewWrapper className="mx-auto w-full max-w-[500px] my-4">
+      <NodeViewWrapper className="mx-auto w-full my-4">
         <Skeleton className="w-[300px] h-[300px]" />
       </NodeViewWrapper>
     );
@@ -51,7 +51,7 @@ export function ImageComponent({ node, updateAttributes }: NodeViewProps) {
 
   if (!src) {
     return (
-      <NodeViewWrapper className="mx-auto w-full max-w-[300px] my-4 cursor-pointer">
+      <NodeViewWrapper className="mx-auto w-full my-4 cursor-pointer">
         <div
           className="w-[300px] h-[300px] flex items-center justify-center bg-muted"
           onClick={openFileSelector}
@@ -70,8 +70,8 @@ export function ImageComponent({ node, updateAttributes }: NodeViewProps) {
   }
 
   return (
-    <NodeViewWrapper className="mx-auto w-full max-w-[500px] my-4">
-      <Image src={src} width={500} height={500} alt={alt || ""} />
+    <NodeViewWrapper className="mx-auto w-full my-4">
+      <Image src={src} width={1000} height={1000} alt={alt || ""} />
     </NodeViewWrapper>
   );
 }
