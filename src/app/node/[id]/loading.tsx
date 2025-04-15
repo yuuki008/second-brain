@@ -7,17 +7,13 @@ const NodeDetailSkeleton = () => {
       <div className="relative max-w-2xl mx-auto">
         <div className="min-h-full flex flex-col">
           <div>
-            {/* ノードサムネイルのスケルトン */}
-            <Skeleton className="h-[360px] w-full mb-6" />
-
             {/* ノード名エディタのスケルトン */}
-            <Skeleton className="h-14 w-full mb-4" />
+            <Skeleton className="h-14 w-[70%] mb-4" />
 
             {/* タグマネージャーのスケルトン */}
-            <div className="flex flex-wrap gap-2 mb-4">
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-6 w-20 rounded-full" />
-              ))}
+            <div className="flex justify-between items-center">
+              <Skeleton className="h-6 w-20" />
+              <Skeleton className="h-6 w-20" />
             </div>
           </div>
 
