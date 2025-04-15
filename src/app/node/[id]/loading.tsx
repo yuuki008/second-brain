@@ -3,12 +3,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const NodeDetailSkeleton = () => {
   return (
-    <div className="w-[90%] mx-auto pt-16 pb-[80vh]">
+    <div className="w-[90%] mx-auto pt-[4.6rem]">
       <div className="relative max-w-2xl mx-auto">
         <div className="min-h-full flex flex-col">
           <div>
             {/* ノード名エディタのスケルトン */}
-            <Skeleton className="h-14 w-[70%] mb-4" />
+            <Skeleton className="h-10 w-[70%] mb-2" />
 
             {/* タグマネージャーのスケルトン */}
             <div className="flex justify-between items-center">

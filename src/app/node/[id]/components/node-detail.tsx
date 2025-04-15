@@ -287,7 +287,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
 
   return (
     <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto pb-20">
-      <div className="flex-1 flex flex-col pt-16">
+      <div className="flex-1 flex flex-col pt-14">
         <NodeNameEditor
           id={id}
           initialName={node.name}
