@@ -93,12 +93,14 @@ const NodeNameEditor = React.memo(
     id,
     initialName,
     isReadOnly,
+    isZenMode,
     viewCount,
     lastUpdated,
   }: {
     id: string;
     initialName: string;
     isReadOnly: boolean;
+    isZenMode: boolean;
     viewCount: number;
     lastUpdated: Date;
   }) => {
@@ -117,7 +119,7 @@ const NodeNameEditor = React.memo(
     const formatLastUpdated = dayjs(lastUpdated).format("MMMM D, YYYY");
 
     return (
-      <div className="relative flex flex-col my-4">
+      <div className="relative flex flex-col">
         <div>
           {isReadOnly ? (
             <h1 className="leading-[1.5] tracking-wide text-3xl font-bold">
@@ -131,11 +133,12 @@ const NodeNameEditor = React.memo(
             />
           )}
         </div>
-        <div className="text-muted-foreground text-xs flex justify-between items-center">
-          <div>{formatLastUpdated}</div>
-
-          <div>{viewCount} views</div>
-        </div>
+        {(isReadOnly || !isZenMode) && (
+          <div className="text-muted-foreground text-xs flex justify-between items-center">
+            <div>{formatLastUpdated}</div>
+            <div>{viewCount} views</div>
+          </div>
+        )}
       </div>
     );
   }
@@ -166,6 +169,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
             id={id}
             initialName={node.name}
             isReadOnly={!isAuthenticated}
+            isZenMode={isZenMode}
             viewCount={node.viewCount}
             lastUpdated={node.updatedAt}
           />
