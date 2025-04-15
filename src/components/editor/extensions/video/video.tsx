@@ -41,7 +41,7 @@ export function VideoComponent({ node, updateAttributes }: NodeViewProps) {
 
   if (isLoading) {
     return (
-      <NodeViewWrapper className="mx-auto w-full max-w-[500px] my-4">
+      <NodeViewWrapper className="mx-auto w-full my-4">
         <Skeleton className="w-[500px] h-[281px]" />
       </NodeViewWrapper>
     );
@@ -49,9 +49,9 @@ export function VideoComponent({ node, updateAttributes }: NodeViewProps) {
 
   if (!src) {
     return (
-      <NodeViewWrapper className="mx-auto w-full max-w-[500px] my-4 cursor-pointer">
+      <NodeViewWrapper className="mx-auto w-full my-4 cursor-pointer">
         <div
-          className="w-[500px] h-[281px] flex items-center justify-center bg-muted"
+          className="w-full h-[281px] flex items-center justify-center bg-muted"
           onClick={openFileSelector}
         >
           <VideoIcon className="w-10 h-10" />
@@ -68,7 +68,7 @@ export function VideoComponent({ node, updateAttributes }: NodeViewProps) {
   }
 
   return (
-    <NodeViewWrapper className="mx-auto w-full max-w-[500px] my-4">
+    <NodeViewWrapper className="mx-auto w-full my-4">
       <video controls width="500" src={src}>
         ブラウザが動画タグをサポートしていません。
       </video>
