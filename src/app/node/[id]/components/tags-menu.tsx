@@ -81,7 +81,7 @@ export default function TagsMenu({
           タグ
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
+      <PopoverContent className="w-[200px] p-0 z-[120]" align="start">
         <Command>
           <CommandInput
             placeholder="タグを検索..."
