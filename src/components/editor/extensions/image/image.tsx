@@ -44,7 +44,7 @@ export function ImageComponent({ node, updateAttributes }: NodeViewProps) {
   if (isLoading) {
     return (
       <NodeViewWrapper className="mx-auto w-full my-4">
-        <Skeleton className="w-[300px] h-[300px]" />
+        <Skeleton className="w-full h-[350px]" />
       </NodeViewWrapper>
     );
   }
@@ -53,7 +53,7 @@ export function ImageComponent({ node, updateAttributes }: NodeViewProps) {
     return (
       <NodeViewWrapper className="mx-auto w-full my-4 cursor-pointer">
         <div
-          className="w-[300px] h-[300px] flex items-center justify-center bg-muted"
+          className="w-full h-[350px] flex items-center justify-center bg-muted"
           onClick={openFileSelector}
         >
           <ImageIcon className="w-10 h-10" />
