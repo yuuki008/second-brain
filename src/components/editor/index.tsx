@@ -11,9 +11,16 @@ type Props = {
   onChange: (content: string) => void;
   className?: string;
   readOnly?: boolean;
+  isZenMode?: boolean;
 };
 
-const Editor = ({ content, onChange, className, readOnly }: Props) => {
+const Editor = ({
+  content,
+  onChange,
+  className,
+  readOnly,
+  isZenMode,
+}: Props) => {
   const [tableOfContentData, setTableOfContentData] =
     useState<TableOfContentData>([]);
 
@@ -39,7 +46,7 @@ const Editor = ({ content, onChange, className, readOnly }: Props) => {
 
   return (
     <div className={cn("w-full h-full", className)}>
-      <ToC items={tableOfContentData} editor={editor} />
+      {!isZenMode && <ToC items={tableOfContentData} editor={editor} />}
       <EditorContent className="h-full" editor={editor} />
     </div>
   );

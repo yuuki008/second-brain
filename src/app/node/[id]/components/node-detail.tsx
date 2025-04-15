@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import ReactionBar from "./reaction-bar";
 import HelpMenu from "./help-menu";
 import dayjs from "dayjs";
+import { cn } from "@/lib/utils";
 
 interface NodeNodeData {
   id: string;
@@ -46,10 +47,12 @@ const NodeEditor = React.memo(
     id,
     initialContent,
     isReadOnly,
+    isZenMode,
   }: {
     id: string;
     initialContent: string;
     isReadOnly: boolean;
+    isZenMode: boolean;
   }) => {
     const [content, setContent] = useState(initialContent);
 
@@ -72,7 +75,12 @@ const NodeEditor = React.memo(
     }, [content, id, initialContent, isReadOnly]);
 
     return (
-      <Editor content={content} onChange={setContent} readOnly={isReadOnly} />
+      <Editor
+        content={content}
+        onChange={setContent}
+        readOnly={isReadOnly}
+        isZenMode={isZenMode}
+      />
     );
   }
 );
@@ -142,33 +150,54 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
 }) => {
   const { isAuthenticated } = useAuth();
   const isReadOnly = !isAuthenticated;
+  const [isZenMode, setIsZenMode] = useState(false);
+
+  const toggleZenMode = () => setIsZenMode(!isZenMode);
 
   return (
-    <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto pb-20">
-      <div className="flex-1 flex flex-col pt-14">
-        <NodeNameEditor
-          id={id}
-          initialName={node.name}
-          isReadOnly={isReadOnly}
-          viewCount={node.viewCount}
-          lastUpdated={node.updatedAt}
-        />
-
-        <div className="flex-1 mt-6">
-          <NodeEditor
+    <div
+      className={cn(
+        "w-full min-h-screen relative bg-background transition-all duration-300",
+        // 禅モードの時は z-index を 100 にしてヘッダーを非表示にする
+        isZenMode ? "z-[100]" : "z-0"
+      )}
+    >
+      <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto pb-20">
+        <div className="flex-1 flex flex-col pt-14">
+          <NodeNameEditor
             id={id}
-            initialContent={node.content}
+            initialName={node.name}
             isReadOnly={isReadOnly}
+            viewCount={node.viewCount}
+            lastUpdated={node.updatedAt}
           />
 
-          <Separator className="mt-14 mb-5" />
+          <div className="flex-1 mt-6">
+            <NodeEditor
+              id={id}
+              initialContent={node.content}
+              isReadOnly={isReadOnly}
+              isZenMode={isZenMode}
+            />
 
-          <ReactionBar nodeId={id} initialReactions={reactions} />
+            {!isZenMode && (
+              <>
+                <Separator className="mt-14 mb-5" />
+                <ReactionBar nodeId={id} initialReactions={reactions} />
+              </>
+            )}
+          </div>
         </div>
+        {!isReadOnly && (
+          <HelpMenu
+            nodeId={id}
+            currentTags={node.tags}
+            allTags={allTags}
+            isZenMode={isZenMode}
+            toggleZenMode={toggleZenMode}
+          />
+        )}
       </div>
-      {!isReadOnly && (
-        <HelpMenu nodeId={id} currentTags={node.tags} allTags={allTags} />
-      )}
     </div>
   );
 };
