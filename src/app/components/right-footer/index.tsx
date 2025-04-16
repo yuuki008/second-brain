@@ -7,7 +7,7 @@ import { LoginDialog } from "./login-dialog";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 
-export default function Footer() {
+export default function RightFooter() {
   const { isAuthenticated, logout } = useAuth();
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
