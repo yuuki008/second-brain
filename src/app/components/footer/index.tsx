@@ -5,7 +5,7 @@ import { ThemeToggle } from "../header/theme-toggle";
 import CmdKSearchModal from "./cmd-k-search-modal";
 import { LoginDialog } from "./login-dialog";
 import { useEffect, useState } from "react";
-import { Separator } from "@radix-ui/react-separator";
+import { Separator } from "@/components/ui/separator";
 
 export default function Footer() {
   const { isAuthenticated, logout } = useAuth();
