@@ -8,7 +8,7 @@ export default function Header() {
   const { theme } = useTheme();
 
   return (
-    <div className="fixed top-0 left-0 pl-5 z-[30] bg-transparent w-full">
+    <div className="fixed top-0 left-0 pl-5 z-[30] bg-transparent py-4">
       <Link className="cursor-pointer" href="/">
         <Image
           src={theme === "dark" ? "/dark-sign.png" : "/light-sign.png"}
