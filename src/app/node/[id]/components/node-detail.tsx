@@ -122,7 +122,7 @@ const NodeNameEditor = React.memo(
       <div className="relative flex flex-col">
         <div>
           {isReadOnly ? (
-            <h1 className="leading-[1.5] tracking-wide text-3xl font-bold">
+            <h1 className="leading-[1.5] mb-2 tracking-wide text-3xl font-bold">
               {nodeName}
             </h1>
           ) : (
