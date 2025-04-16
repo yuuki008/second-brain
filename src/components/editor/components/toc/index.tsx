@@ -140,7 +140,7 @@ export default function ToC({ items, editor }: Props) {
         {/* コンテンツ部分 */}
         <div
           className={cn(
-            "max-h-0 overflow-auto transition-all duration-300 ease-in-out",
+            "max-h-0 overflow-auto transition-height duration-300 ease-in-out",
             isOpen && "max-h-[50vh] mt-3"
           )}
         >

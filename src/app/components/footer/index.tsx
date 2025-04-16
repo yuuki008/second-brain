@@ -41,6 +41,8 @@ export default function Footer() {
             検索
           </button>
           <Separator orientation="vertical" className="h-4 mx-1" />
+          <ThemeToggle />
+          <Separator orientation="vertical" className="h-4 mx-1" />
           {isAuthenticated ? (
             <button
               className="text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer items-center text-xs font-light"
@@ -58,8 +60,6 @@ export default function Footer() {
               ログイン
             </button>
           )}
-          <Separator orientation="vertical" className="h-4 mx-1" />
-          <ThemeToggle />
         </div>
       </div>
     </>
