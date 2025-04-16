@@ -45,41 +45,45 @@
   }
 
   .dark {
-    /* ダークモードでの目に優しい色設定 */
-    --background: 0 0% 14%; /* rgb(35 35 35) */
-    --foreground: 0 0% 95%; /* より明るいグレーでコントラストを確保 */
-    --card: 0 0% 14%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 14%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 0 0% 98%; /* ダークモードでもモノクロに戻す */
-    --primary-foreground: 210 10% 10%;
-    --secondary: 215 10% 17%;
-    --secondary-foreground: 210 10% 90%;
-    --muted: 215 10% 17%;
-    --muted-foreground: 210 10% 65%;
-    --accent: 210 50% 60%;
-    --accent-foreground: 210 10% 90%;
-    --destructive: 0 60% 40%; /* 彩度を下げた赤 */
-    --destructive-foreground: 210 10% 90%;
-    --border: 215 10% 25%;
-    --input: 215 10% 17%;
-    --ring: 0 0% 98%;
-    /* ダークモードでの目に優しい色指定 */
-    --blue: 210 50% 60%; /* ダークモードでの彩度を抑えた青 */
-    --green: 145 40% 50%; /* ダークモードでの彩度を抑えた緑 */
-    --yellow: 45 50% 65%; /* ダークモードでの彩度を抑えたイエロー */
-    --orange: 25 55% 60%; /* ダークモードでの彩度を抑えたオレンジ */
-    --red: 0 55% 55%; /* ダークモードでの彩度を抑えた赤 */
-    --purple: 270 40% 55%; /* ダークモードでの彩度を抑えた紫 */
-    --teal: 180 35% 55%; /* ダークモードでの彩度を抑えたティール */
+    --background: 240 10% 10%;
+    --foreground: 0 0% 85%;
+    --card: 240 5% 14%;
+    --card-foreground: 0 0% 85%;
+    --popover: 240 5% 14%;
+    --popover-foreground: 0 0% 85%;
 
-    /* ダークモードのチャート色 - 明度を上げて彩度を抑えた色を使用 */
-    --chart-1: 210 50% 60%; /* 青系 */
-    --chart-2: 145 40% 50%; /* 緑系 */
-    --chart-3: 180 35% 55%; /* ティール系 */
-    --chart-4: 45 50% 65%; /* イエロー系 */
-    --chart-5: 25 55% 60%; /* オレンジ系 */
+    --primary: 0 0% 95%;
+    --primary-foreground: 240 5% 10%;
+
+    --secondary: 220 5% 20%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 220 5% 18%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 30 40% 55%; /* 柔らかいオレンジ系 */
+    --accent-foreground: 0 0% 95%;
+
+    --destructive: 0 50% 45%; /* 刺激を抑えた赤 */
+    --destructive-foreground: 0 0% 95%;
+
+    --border: 220 5% 25%;
+    --input: 220 5% 18%;
+    --ring: 0 0% 95%;
+
+    --blue: 220 40% 60%;
+    --green: 145 30% 50%;
+    --yellow: 40 45% 60%;
+    --orange: 30 45% 55%;
+    --red: 0 45% 50%;
+    --purple: 270 30% 55%;
+    --teal: 180 25% 50%;
+
+    --chart-1: 220 40% 60%;
+    --chart-2: 145 30% 50%;
+    --chart-3: 180 25% 50%;
+    --chart-4: 40 45% 60%;
+    --chart-5: 30 45% 55%;
   }
 
   .field-sizing-content {
