@@ -114,9 +114,9 @@ export default function ToC({ items, editor }: Props) {
       style={{
         maxWidth: `${BREAKPOINT_MD}px`,
       }}
-      className="fixed z-[20] bottom-0 left-1/2 -translate-x-1/2 w-full h-0"
+      className="fixed z-[20] top-0 left-1/2 -translate-x-1/2 w-full h-0"
     >
-      <div className="absolute bottom-4 right-4 p-3 bg-secondary text-secondary-foreground rounded-xl shadow-xl w-[300px] overflow-hidden">
+      <div className="absolute top-4 right-4 p-3 bg-secondary text-secondary-foreground rounded-xl shadow-xl w-[300px] overflow-hidden">
         {/* ヘッダー部分 - クリック可能エリア */}
         <div
           className="flex items-center justify-between w-full cursor-pointer"
