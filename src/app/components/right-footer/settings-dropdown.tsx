@@ -66,7 +66,7 @@ export default function SettingsDropdown() {
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
                   <p>
-                    執筆や閲読にのみ集中するモードです。オンにすると「ビュー数」「リアクション」などの情報が消え、余計な要素に惑わされることなくコンテンツそのものに没頭できます。
+                    執筆や閲読にのみ集中するモードです。オンにすると「ビュー数」「リアクション」などの情報が消え、コンテンツそのものに没頭できます。
                   </p>
                 </TooltipContent>
               </Tooltip>
