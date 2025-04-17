@@ -30,7 +30,5 @@ export function useZen() {
     [setZenModeCookie]
   );
 
-  console.log(isZenMode);
-
   return { isZenMode, setZenMode };
 }
