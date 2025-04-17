@@ -38,7 +38,7 @@ export default function SettingsDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[220px] p-0">
         <div className="bg-muted text-muted-foreground px-4 py-3 border-b text-sm flex items-center justify-between">
-          サイト設定
+          サイトの設定
           <Settings className="w-4 h-4 text-muted-foreground" />
         </div>
         <div className="px-4 py-3 space-y-2">
