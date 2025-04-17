@@ -22,13 +22,15 @@ export function useZen() {
   }, []);
 
   // 禅モードを切り替える関数
-  const toggleZenMode = useCallback(() => {
-    setIsZenMode((prevMode) => {
-      const newMode = !prevMode;
-      setZenModeCookie(newMode);
-      return newMode;
-    });
-  }, [setZenModeCookie]);
+  const setZenMode = useCallback(
+    (checked: boolean) => {
+      setIsZenMode(checked);
+      setZenModeCookie(checked);
+    },
+    [setZenModeCookie]
+  );
 
-  return { isZenMode, toggleZenMode };
+  console.log(isZenMode);
+
+  return { isZenMode, setZenMode };
 }

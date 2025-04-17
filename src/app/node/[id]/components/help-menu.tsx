@@ -10,16 +10,12 @@ interface HelpMenuProps {
   nodeId: string;
   currentTags: Tag[];
   allTags: Tag[];
-  isZenMode: boolean;
-  toggleZenMode: () => void;
 }
 
 export default function HelpMenu({
   nodeId,
   currentTags,
   allTags,
-  isZenMode,
-  toggleZenMode,
 }: HelpMenuProps) {
   const router = useRouter();
 
@@ -48,13 +44,6 @@ export default function HelpMenu({
         <TagsMenu allTags={allTags} nodeId={nodeId} currentTags={currentTags} />
         <Separator orientation="vertical" className="h-4 mx-1" />
         <HintModal />
-        <Separator orientation="vertical" className="h-4 mx-1" />
-        <button
-          className="text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer items-center text-xs font-light"
-          onClick={toggleZenMode}
-        >
-          {isZenMode ? "通常" : "禅"}
-        </button>
       </div>
     </div>
   );

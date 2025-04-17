@@ -1,11 +1,11 @@
 "use client";
 
-import { useAuth } from "@/components/providers/auth-provider";
-import { ThemeToggle } from "../header/theme-toggle";
 import CmdKSearchModal from "./cmd-k-search-modal";
 import { LoginDialog } from "./login-dialog";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import SettingsDropdown from "./settings-dropdown";
+import { useAuth } from "@/components/providers/auth-provider";
 
 export default function RightFooter() {
   const { isAuthenticated, logout } = useAuth();
@@ -41,8 +41,6 @@ export default function RightFooter() {
             検索
           </button>
           <Separator orientation="vertical" className="h-4 mx-1" />
-          <ThemeToggle />
-          <Separator orientation="vertical" className="h-4 mx-1" />
           {isAuthenticated ? (
             <button
               className="text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer items-center text-xs font-light"
@@ -60,6 +58,8 @@ export default function RightFooter() {
               ログイン
             </button>
           )}
+          <Separator orientation="vertical" className="h-4 mx-1" />
+          <SettingsDropdown />
         </div>
       </div>
     </>

@@ -153,7 +153,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
   reactions,
 }) => {
   const { isAuthenticated } = useAuth();
-  const { isZenMode, toggleZenMode } = useZen();
+  const { isZenMode } = useZen();
 
   return (
     <div
@@ -192,13 +192,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
         </div>
 
         {isAuthenticated && (
-          <HelpMenu
-            nodeId={id}
-            currentTags={node.tags}
-            allTags={allTags}
-            isZenMode={isZenMode}
-            toggleZenMode={toggleZenMode}
-          />
+          <HelpMenu nodeId={id} currentTags={node.tags} allTags={allTags} />
         )}
       </div>
     </div>
