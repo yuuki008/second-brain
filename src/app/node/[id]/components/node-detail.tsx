@@ -10,7 +10,7 @@ import ReactionBar from "./reaction-bar";
 import HelpMenu from "./help-menu";
 import dayjs from "dayjs";
 import { cn } from "@/lib/utils";
-import { useZen } from "@/hooks/use-zen";
+import { useZen } from "@/components/providers/zen-provider";
 
 interface NodeNodeData {
   id: string;

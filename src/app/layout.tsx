@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
+import { ZenProvider } from "@/components/providers/zen-provider";
 import Header from "./components/header";
 import { Noto_Sans_JP } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -33,10 +34,12 @@ export default function RootLayout({
       <body suppressHydrationWarning className={cn(noto_sans_jp.className)}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <AuthProvider>
-            <Header />
-            {children}
-            <Toaster />
-            <RightFooter />
+            <ZenProvider>
+              <Header />
+              {children}
+              <Toaster />
+              <RightFooter />
+            </ZenProvider>
           </AuthProvider>
         </ThemeProvider>
         <Analytics />

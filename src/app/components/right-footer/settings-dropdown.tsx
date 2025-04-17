@@ -1,6 +1,6 @@
 "use client";
 
-import { useZen } from "@/hooks/use-zen";
+import { useZen } from "@/components/providers/zen-provider";
 import { useTheme } from "next-themes";
 import {
   DropdownMenu,
