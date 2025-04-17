@@ -46,9 +46,7 @@ const Editor = ({
 
   return (
     <div className={cn("w-full h-full", className)}>
-      {(readOnly || !isZenMode) && (
-        <ToC items={tableOfContentData} editor={editor} />
-      )}
+      {!isZenMode && <ToC items={tableOfContentData} editor={editor} />}
       <EditorContent className="h-full" editor={editor} />
     </div>
   );

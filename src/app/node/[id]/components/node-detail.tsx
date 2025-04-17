@@ -9,7 +9,6 @@ import { Separator } from "@/components/ui/separator";
 import ReactionBar from "./reaction-bar";
 import HelpMenu from "./help-menu";
 import dayjs from "dayjs";
-import { cn } from "@/lib/utils";
 import { useZen } from "@/components/providers/zen-provider";
 
 interface NodeNodeData {
@@ -133,7 +132,7 @@ const NodeNameEditor = React.memo(
             />
           )}
         </div>
-        {(isReadOnly || !isZenMode) && (
+        {!isZenMode && (
           <div className="text-muted-foreground text-xs flex justify-between items-center">
             <div>{formatLastUpdated}</div>
             <div>{viewCount} views</div>
@@ -157,11 +156,9 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
 
   return (
     <div
-      className={cn(
-        "w-full min-h-screen relative bg-background transition-all duration-300",
-        // 禅モードの時は z-index を 100 にしてヘッダーを非表示にする
-        isZenMode && isAuthenticated ? "z-[100]" : "z-0"
-      )}
+      className={
+        "w-full min-h-screen relative bg-background transition-all duration-300"
+      }
     >
       <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto pb-20">
         <div className="flex-1 flex flex-col pt-14">
@@ -182,7 +179,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
               isZenMode={isZenMode}
             />
 
-            {(!isZenMode || !isAuthenticated) && (
+            {!isZenMode && (
               <>
                 <Separator className="mt-14 mb-5" />
                 <ReactionBar nodeId={id} initialReactions={reactions} />
