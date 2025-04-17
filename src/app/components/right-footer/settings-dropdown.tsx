@@ -15,7 +15,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Settings } from "lucide-react";
+import { Info, Settings } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function SettingsDropdown() {
   const { isZenMode, setZenMode } = useZen();
@@ -53,7 +58,19 @@ export default function SettingsDropdown() {
           </div>
 
           <div className="flex items-center justify-between h-10">
-            <div className="text-sm shrink-0 font-light">禅モード</div>
+            <div className="text-sm shrink-0 font-light flex items-center">
+              禅モード
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info className="w-3.5 h-3.5 ml-1 text-muted-foreground cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <p>
+                    執筆や閲読にのみ集中するモードです。オンにすると「ビュー数」「リアクション」などの情報が消え、余計な要素に惑わされることなくコンテンツそのものに没頭できます。
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
             <Switch
               checked={isZenMode}
               onCheckedChange={setZenMode}

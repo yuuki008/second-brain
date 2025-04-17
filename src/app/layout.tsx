@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/sonner";
 import RightFooter from "./components/right-footer";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const noto_sans_jp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -32,16 +33,18 @@ export default function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <body suppressHydrationWarning className={cn(noto_sans_jp.className)}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <AuthProvider>
-            <ZenProvider>
-              <Header />
-              {children}
-              <Toaster />
-              <RightFooter />
-            </ZenProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <TooltipProvider>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+            <AuthProvider>
+              <ZenProvider>
+                <Header />
+                {children}
+                <Toaster />
+                <RightFooter />
+              </ZenProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </TooltipProvider>
         <Analytics />
       </body>
     </html>
