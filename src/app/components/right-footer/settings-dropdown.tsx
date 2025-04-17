@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Settings } from "lucide-react";
 
 export default function SettingsDropdown() {
   const { isZenMode, setZenMode } = useZen();
@@ -30,29 +31,35 @@ export default function SettingsDropdown() {
           設定
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[250px] p-4 space-y-6">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <div className="text-sm shrink-0">テーマ</div>
-            <Select value={theme} onValueChange={setTheme}>
-              <SelectTrigger className="w-24">
-                <SelectValue placeholder="テーマ" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="light">ライト</SelectItem>
-                <SelectItem value="dark">ダーク</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+      <DropdownMenuContent align="end" className="w-[220px] p-0">
+        <div className="bg-muted text-muted-foreground px-4 py-3 border-b text-sm flex items-center justify-between">
+          サイト設定
+          <Settings className="w-4 h-4 text-muted-foreground" />
         </div>
+        <div className="px-4 py-3 space-y-2">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between h-10">
+              <div className="text-sm shrink-0 font-light">テーマ</div>
+              <Select value={theme} onValueChange={setTheme}>
+                <SelectTrigger className="w-24">
+                  <SelectValue placeholder="テーマ" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">ライト</SelectItem>
+                  <SelectItem value="dark">ダーク</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
-        <div className="flex items-center justify-between">
-          <div className="text-sm shrink-0">Zenモード</div>
-          <Switch
-            checked={isZenMode}
-            onCheckedChange={setZenMode}
-            className="data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted"
-          />
+          <div className="flex items-center justify-between h-10">
+            <div className="text-sm shrink-0 font-light">禅モード</div>
+            <Switch
+              checked={isZenMode}
+              onCheckedChange={setZenMode}
+              className="data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted"
+            />
+          </div>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
