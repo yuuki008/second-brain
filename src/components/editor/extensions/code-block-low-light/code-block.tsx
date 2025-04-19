@@ -51,11 +51,7 @@ export const CodeBlockComponent: React.FC<NodeViewProps> = (props) => {
       >
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1 px-3 h-7 rounded-xl"
-            >
+            <Button variant="ghost" size="sm" className="gap-1 px-3 h-7">
               {getLanguageLabel(selectedLanguage)}
               <ChevronDown className="h-4 w-4" />
             </Button>
