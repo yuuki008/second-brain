@@ -75,20 +75,24 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
           rel="noopener noreferrer"
           className="block !no-underline"
         >
-          <CardContent className="p-4">
-            <div className="flex gap-4 items-center">
+          <CardContent className="p-0 sm:p-2">
+            <div className="flex flex-col md:flex-row sm:gap-4 sm:items-center">
               {ogData.ogImage && (
-                <div className="relative h-24 w-auto flex-shrink-0">
+                <div className="relative w-full h-auto sm:w-auto sm:h-24 flex-shrink-0">
                   {/* Note: next/image を使うとサーバー側リクエストが発生して、URL のサイト側でブラウザ以外からのアクセスを拒んでいることがあるため、img を使う */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={ogData.ogImage || ogData.faviconUrl}
                     alt={ogData.title}
-                    className="rounded-md w-full h-full object-cover !my-0"
+                    className="w-full h-full object-cover !my-0 rounded-t-lg md:rounded-md"
                   />
+
+                  <div className="sm:hidden absolute bottom-2 left-2 text-xs text-muted-foreground line-clamp-1">
+                    {ogData.title}
+                  </div>
                 </div>
               )}
-              <div className="flex-1 flex flex-col justify-center">
+              <div className="hidden sm:flex flex-1 flex-col justify-center p-4 sm:p-0">
                 <div className="font-semibold line-clamp-1 text-accent text-base">
                   {ogData.title}
                 </div>
