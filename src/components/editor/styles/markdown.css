@@ -57,14 +57,6 @@
     @apply bg-muted text-foreground px-1 py-0.5 rounded-md text-sm;
   }
 
-  pre {
-    @apply bg-muted text-foreground p-4 rounded-md overflow-auto mb-4 text-sm;
-
-    code {
-      @apply text-foreground bg-transparent;
-    }
-  }
-
   a {
     @apply text-primary underline hover:text-primary/80 cursor-pointer;
   }

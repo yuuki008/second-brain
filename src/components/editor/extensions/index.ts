@@ -17,7 +17,6 @@ import { Video } from "./video";
 import { YouTubeExtension } from "./youtube";
 import EmojiExtension from "./emoji";
 import FileHandlerExtension from "./file-handler";
-import CodeBlockLowlightExtension from "./code-block-low-light";
 import generateTableOfContents from "./table-of-contents";
 import { TableOfContentsExtensionArgs } from "./table-of-contents";
 import Table from "@tiptap/extension-table";
@@ -30,7 +29,7 @@ import DetailsContent from "@tiptap-pro/extension-details-content";
 import DetailsSummary from "@tiptap-pro/extension-details-summary";
 import { Blockquote } from "./blockquote";
 import Command from "./slash-command";
-
+import CodeBlockWithLanguage from "./code-block-with-langueage";
 export type GenerateExtensionsArgs = TableOfContentsExtensionArgs;
 
 export const generateExtensions = ({
@@ -42,7 +41,7 @@ export const generateExtensions = ({
     }),
     Blockquote,
     generateTableOfContents({ setTableOfContentData }),
-    CodeBlockLowlightExtension,
+    CodeBlockWithLanguage,
     Link,
     TextAlign,
     Underline,
