@@ -60,7 +60,7 @@ export default function RightFooter() {
         <DropdownMenuTrigger className="fixed bottom-4 right-4" asChild>
           <button
             className="text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer items-center text-xs font-light"
-            title="設定"
+            title="サイトの設定"
           >
             サイトの設定
           </button>
