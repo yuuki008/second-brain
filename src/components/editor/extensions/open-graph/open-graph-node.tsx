@@ -37,7 +37,7 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
           <CardContent className="p-0 xs:p-2">
             <div className="flex flex-col xs:flex-row xs:gap-4 xs:items-center">
               <Skeleton className="w-full h-48 xs:w-24 xs:h-24 rounded-t-lg xs:rounded-md flex-shrink-0 !my-0" />
-              <div className="hidden xs:flex flex-1 p-4 xs:p-0 space-y-2">
+              <div className="hidden xs:block flex-1 p-4 xs:p-0 space-y-2">
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-1/2" />
