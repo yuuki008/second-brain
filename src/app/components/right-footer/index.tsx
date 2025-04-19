@@ -127,27 +127,32 @@ export default function RightFooter() {
 
             <DropdownMenuSeparator />
 
-            <div className="flex justify-end w-full">
-              {isAuthenticated ? (
+            {isAuthenticated ? (
+              <div className="flex items-center justify-between h-10">
+                <div className="text-sm shrink-0 font-light">ログアウト</div>
                 <Button
                   className="text-sm font-light"
                   variant="ghost"
+                  size="icon"
                   onClick={logout}
                 >
                   <LogOut className="w-4 h-4" />
-                  ログアウト
                 </Button>
-              ) : (
+              </div>
+            ) : (
+              <div className="flex items-center justify-between h-10">
+                <div className="text-sm shrink-0 font-light">ログイン</div>
+
                 <Button
                   className="text-sm font-light"
                   variant="ghost"
+                  size="icon"
                   onClick={() => setIsLoginDialogOpen(true)}
                 >
                   <LogIn className="w-4 h-4" />
-                  ログイン
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
