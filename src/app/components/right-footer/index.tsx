@@ -62,12 +62,12 @@ export default function RightFooter() {
             className="text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer items-center text-xs font-light"
             title="設定"
           >
-            設定
+            アカウントの設定
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[220px] p-0">
           <div className="bg-muted text-muted-foreground mb-3 px-4 py-3 border-b text-sm flex items-center justify-between">
-            サイトの設定
+            アカウントの設定
             <Settings className="w-4 h-4 text-muted-foreground" />
           </div>
 
