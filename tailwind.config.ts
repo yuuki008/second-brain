@@ -22,6 +22,9 @@ export default {
       ],
     },
     extend: {
+      screens: {
+        xs: "30rem",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

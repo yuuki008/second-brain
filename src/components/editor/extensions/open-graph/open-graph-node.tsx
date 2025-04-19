@@ -36,7 +36,7 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
         <Card className="w-full overflow-hidden my-4">
           <CardContent className="p-4">
             <div className="flex gap-4">
-              <Skeleton className="h-24 w-24 rounded-md" />
+              <Skeleton className="h-24 w-24 rounded-" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-4 w-full" />
@@ -75,24 +75,24 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
           rel="noopener noreferrer"
           className="block !no-underline"
         >
-          <CardContent className="p-0 sm:p-2">
-            <div className="flex flex-col md:flex-row sm:gap-4 sm:items-center">
+          <CardContent className="p-0 xs:p-2">
+            <div className="flex flex-col xs:flex-row xs:gap-4 xs:items-center">
               {ogData.ogImage && (
-                <div className="relative w-full h-auto sm:w-auto sm:h-24 flex-shrink-0">
+                <div className="relative w-full h-auto xs:w-auto xs:h-24 flex-shrink-0">
                   {/* Note: next/image を使うとサーバー側リクエストが発生して、URL のサイト側でブラウザ以外からのアクセスを拒んでいることがあるため、img を使う */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={ogData.ogImage || ogData.faviconUrl}
                     alt={ogData.title}
-                    className="w-full h-full object-cover !my-0 rounded-t-lg md:rounded-md"
+                    className="w-full h-full object-cover !my-0 rounded-t-lg xs:rounded-md"
                   />
 
-                  <div className="sm:hidden absolute bottom-2 left-2 text-xs text-muted-foreground line-clamp-1">
+                  <div className="xs:hidden absolute bottom-2 left-2 text-xs text-muted-foreground line-clamp-1">
                     {ogData.title}
                   </div>
                 </div>
               )}
-              <div className="hidden sm:flex flex-1 flex-col justify-center p-4 sm:p-0">
+              <div className="hidden xs:flex flex-1 flex-col justify-center p-4 xs:p-0">
                 <div className="font-semibold line-clamp-1 text-accent text-base">
                   {ogData.title}
                 </div>
