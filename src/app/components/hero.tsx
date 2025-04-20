@@ -24,7 +24,7 @@ export default function Hero() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-secondary/10">
       <div className="max-w-lg w-full space-y-8 text-center">
-        <div className="fixed top-4 left-4">
+        <div className="fixed top-0 left-0 w-full p-4">
           <div className="flex items-start gap-3">
             <Image
               src="/profile.jpg"
@@ -38,10 +38,10 @@ export default function Hero() {
               <TypeAnimation
                 className="whitespace-pre-wrap"
                 sequence={[
-                  `アイデアや知識を整理できずに悩んでいませんか？
-Second Brainは、あなたの頭の中を整理し、
-思考をつなげるデジタルツールです。
-情報をただ保存するだけでなく、活用できる形に変えます。`,
+                  `頭の中がいつもごちゃごちゃしてる。
+本で読んだこと、人から聞いた話、思いつき、どれも大切なのにすぐ忘れてしまう。
+Second Brainは、情報を整理し、つなげることで思考を拡張するプロダクトです。
+まだ開発途中ですが、ぜひ使ってみてください。`,
                 ]}
                 speed={15}
                 cursor={true}
@@ -64,7 +64,7 @@ Second Brainは、あなたの頭の中を整理し、
           Second Brain
         </h2>
 
-        <p className="mt-6 text-lg text-muted-foreground">
+        <p className="mt-6 text-base lg:text-lg text-muted-foreground">
           考えを整理し、知識をつなげ、創造性を高める新しい方法
         </p>
 
@@ -73,7 +73,7 @@ Second Brainは、あなたの頭の中を整理し、
             onClick={handleSignIn}
             variant="default"
             disabled={isLoading}
-            className="w-full max-w-xs mx-auto shadow-md hover:shadow-lg transition-all text-lg py-6"
+            className="w-full max-w-xs mx-auto shadow-md hover:shadow-lg transition-all text-base py-6"
           >
             {isLoading ? (
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
