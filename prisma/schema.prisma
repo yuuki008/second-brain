@@ -21,8 +21,8 @@ model Node {
   reactions   Reaction[]
   relations   Relation[] @relation("NodeFromRelation")
   relatedTo   Relation[] @relation("NodeToRelation")
-  userId      String?
-  user        User?     @relation(fields: [userId], references: [id])
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
 
   @@map("nodes")
 }
@@ -36,8 +36,8 @@ model Tag {
   parent    Tag?     @relation("TagToTag", fields: [parentId], references: [id])
   parentId  String?
   children  Tag[]    @relation("TagToTag")
-  userId    String?
-  user      User?    @relation(fields: [userId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 
   @@map("tags")
 }
