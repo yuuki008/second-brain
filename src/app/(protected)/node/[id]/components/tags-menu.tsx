@@ -18,7 +18,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/components/providers/auth-provider";
 
 interface TagsMenuProps {
   nodeId: string;
@@ -33,11 +32,8 @@ export default function TagsMenu({
 }: TagsMenuProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const { isAuthenticated } = useAuth();
 
   const handleTagToggle = async (tagId: string, isSelected: boolean) => {
-    if (!isAuthenticated) return;
-
     try {
       if (isSelected) {
         await addTagToNode(nodeId, tagId);
@@ -50,8 +46,6 @@ export default function TagsMenu({
   };
 
   const handleCreateTag = async (tagName: string) => {
-    if (!isAuthenticated) return;
-
     try {
       const tag = await createTag(tagName);
       await addTagToNode(nodeId, tag.id);
@@ -71,8 +65,6 @@ export default function TagsMenu({
         return aSelected === bSelected ? 0 : aSelected ? -1 : 1;
       });
   }, [allTags, currentTags, search]);
-
-  if (!isAuthenticated) return null;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

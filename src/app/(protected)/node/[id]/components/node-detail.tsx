@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import Editor from "@/components/editor";
-import { updateNodeDefinition, updateNodeName } from "../actions";
+import { updateNodeContent, updateNodeName } from "../actions";
 import { Node, Tag } from "@prisma/client";
-import { useAuth } from "@/components/providers/auth-provider";
 import { Separator } from "@/components/ui/separator";
 import ReactionBar from "./reaction-bar";
 import HelpMenu from "./help-menu";
 import dayjs from "dayjs";
 import { useZen } from "@/components/providers/zen-provider";
+import { useSession } from "next-auth/react";
 
 interface NodeNodeData {
   id: string;
@@ -64,7 +64,7 @@ const NodeEditor = React.memo(
       // デバウンス処理のための変数
       const timer = setTimeout(async () => {
         try {
-          await updateNodeDefinition(id, content);
+          await updateNodeContent(id, content);
         } catch (error) {
           console.error("保存エラー:", error);
         }
@@ -151,7 +151,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
   allTags,
   reactions,
 }) => {
-  const { isAuthenticated } = useAuth();
+  const { data: session } = useSession();
   const { isZenMode } = useZen();
 
   return (
@@ -165,7 +165,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
           <NodeNameEditor
             id={id}
             initialName={node.name}
-            isReadOnly={!isAuthenticated}
+            isReadOnly={!session}
             isZenMode={isZenMode}
             viewCount={node.viewCount}
             lastUpdated={node.updatedAt}
@@ -175,7 +175,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
             <NodeEditor
               id={id}
               initialContent={node.content}
-              isReadOnly={!isAuthenticated}
+              isReadOnly={!session}
               isZenMode={isZenMode}
             />
 
@@ -188,7 +188,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
           </div>
         </div>
 
-        {isAuthenticated && (
+        {session && (
           <HelpMenu nodeId={id} currentTags={node.tags} allTags={allTags} />
         )}
       </div>

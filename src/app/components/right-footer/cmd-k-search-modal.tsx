@@ -13,10 +13,10 @@ import { getAllNodes } from "@/app/actions/search";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Node, Tag } from "@prisma/client";
-import { createNewNode } from "@/app/actions/search";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { useSession } from "next-auth/react";
+import { createNode } from "@/app/actions/node";
 
 type CmdKSearchModalProps = {
   open: boolean;
@@ -84,9 +84,7 @@ export default function CmdKSearchModal({
   // 何も見つからなかった場合に新規作成
   const handleCreateNew = async () => {
     try {
-      const newNode = await createNewNode(searchQuery);
-      console.log(newNode);
-      // 新規作成した用語をallNodesに追加
+      const newNode = await createNode(searchQuery);
       setAllNodes((prev) => [...prev, newNode]);
       router.push(`/node/${newNode.id}`);
       setSearchQuery("");
