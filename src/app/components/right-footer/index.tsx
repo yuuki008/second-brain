@@ -24,13 +24,11 @@ import {
 import CmdKSearchModal from "./cmd-k-search-modal";
 import { useEffect } from "react";
 import { useState } from "react";
-import { LoginDialog } from "./login-dialog";
 
 export default function RightFooter() {
   const { isZenMode, setZenMode } = useZen();
   const { theme, setTheme } = useTheme();
 
-  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
 
   useEffect(() => {
@@ -48,10 +46,6 @@ export default function RightFooter() {
   return (
     <>
       <CmdKSearchModal open={isCmdKOpen} setOpen={setIsCmdKOpen} />
-      <LoginDialog
-        isOpen={isLoginDialogOpen}
-        onClose={() => setIsLoginDialogOpen(false)}
-      />
       <DropdownMenu>
         <DropdownMenuTrigger className="fixed bottom-4 right-4" asChild>
           <button
