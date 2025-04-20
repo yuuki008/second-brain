@@ -5,9 +5,7 @@ import { notFound } from "next/navigation";
 import { Tag } from "@prisma/client";
 
 interface UserPageProps {
-  params: {
-    username: string;
-  };
+  params: Promise<{ username: string }>;
 }
 
 async function getTags(userId: string) {
@@ -88,8 +86,10 @@ async function getRelations(nodeIds: string[]) {
 }
 
 export default async function UserHomePage({ params }: UserPageProps) {
+  const { username } = await params;
+
   const user = await prisma.user.findUnique({
-    where: { username: params.username },
+    where: { username },
     select: { username: true, id: true },
   });
 
