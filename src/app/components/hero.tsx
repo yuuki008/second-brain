@@ -22,17 +22,17 @@ export default function Hero() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-secondary/10">
       <div className="max-w-md w-full space-y-8 text-center">
         <div className="relative w-full flex justify-center">
-          <div className="w-full max-w-[500px] absolute bottom-[180px] left-1/2 -translate-x-1/2 p-4 bg-secondary rounded-lg text-left text-sm">
+          <div className="w-full max-w-[500px] absolute bottom-[180px] left-1/2 -translate-x-1/2 p-4 bg-secondary rounded-lg text-left text-sm shadow-lg">
             <TypeAnimation
               className="whitespace-pre-wrap"
               sequence={[
-                `頭の中がたくさんの情報で溢れてる。
-本で読んだこと、人から聞いた話、思いつき、どれも大切なのにすぐ忘れてしまう。
-Second Brainは、情報を整理し、つなげることで思考を拡張するプロダクトです。
-まだ開発途中ですが、ぜひ使ってみてください。`,
+                `アイデアや知識を整理できずに悩んでいませんか？
+Second Brainは、あなたの頭の中を整理し、
+思考をつなげるデジタルツールです。
+情報をただ保存するだけでなく、活用できる形に変えます。`,
               ]}
               speed={15}
               cursor={true}
@@ -46,29 +46,40 @@ Second Brainは、情報を整理し、つなげることで思考を拡張す�
             alt="キャラクター"
             width={150}
             height={150}
-            className="rounded-full"
+            className="rounded-full shadow-lg border-2 border-primary/20"
             priority
           />
         </div>
 
-        <h2 className="mt-8 text-2xl lg:text-3xl font-extrabold text-center font-inter">
-          Folk Your Brain
+        <h2 className="mt-8 font-extrabold text-lg lg:text-xl text-center font-inter">
+          <span className="text-2xl lg:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue">
+            Folk
+          </span>{" "}
+          Your Brain
           <br />
-          Build Second Brain
+          <span className="text-2xl lg:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue">
+            Build
+          </span>{" "}
+          Second Brain
         </h2>
+
+        <p className="mt-4 text-muted-foreground">
+          考えを整理し、知識をつなげ、創造性を高める新しい方法
+        </p>
+
         <div className="mt-8">
           <Button
             onClick={handleSignIn}
-            variant="outline"
+            variant="default"
             disabled={isLoading}
-            className="w-full max-w-xs mx-auto"
+            className="w-full max-w-xs mx-auto shadow-md hover:shadow-lg transition-all"
           >
             {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <FcGoogle className="mr-2 h-5 w-5" />
             )}
-            Google でサインインして始める
+            Google で今すぐ始める
           </Button>
         </div>
       </div>
