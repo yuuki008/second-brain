@@ -15,8 +15,8 @@ import { useEffect } from "react";
 import { Node, Tag } from "@prisma/client";
 import { createNewNode } from "@/app/actions/search";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/components/providers/auth-provider";
 import { Badge } from "@/components/ui/badge";
+import { useSession } from "next-auth/react";
 
 type CmdKSearchModalProps = {
   open: boolean;
@@ -27,8 +27,8 @@ export default function CmdKSearchModal({
   open,
   setOpen,
 }: CmdKSearchModalProps) {
+  const { data: session } = useSession();
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [allNodes, setAllNodes] = useState<(Node & { tags: Tag[] })[]>([]);
   const [filteredNodes, setFilteredNodes] = useState<
@@ -172,7 +172,7 @@ export default function CmdKSearchModal({
                               </div>
                             </CommandItem>
                           ))}
-                          {searchQuery.length > 0 && isAuthenticated && (
+                          {searchQuery.length > 0 && session && (
                             <CommandItem
                               onSelect={handleCreateNew}
                               className="cursor-pointer py-2"
