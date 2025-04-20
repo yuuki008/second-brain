@@ -24,10 +24,6 @@ export default function Hero() {
     });
   }, []);
 
-  const particlesInit = useCallback(async (engine: Engine) => {
-    await loadSlim(engine);
-  }, []);
-
   const particlesLoaded = useCallback(
     async (container: Container | undefined) => {
       await console.log("Particles loaded:", container);
@@ -98,7 +94,6 @@ export default function Hero() {
       number: {
         density: {
           enable: true,
-          value_area: 800,
         },
         value: 80,
       },
@@ -120,10 +115,9 @@ export default function Hero() {
       {init && (
         <Particles
           id="tsparticles"
-          init={particlesInit}
-          loaded={particlesLoaded}
+          particlesLoaded={particlesLoaded}
           options={particlesOptions}
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 !z-0"
         />
       )}
       <div className="relative z-10 max-w-xl w-full text-center px-4">
