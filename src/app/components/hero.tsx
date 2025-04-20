@@ -120,7 +120,7 @@ export default function Hero() {
           className="absolute inset-0 !z-0"
         />
       )}
-      <div className="relative z-10 max-w-2xl w-full text-center px-4">
+      <div className="relative z-10 w-full text-center px-4">
         <h2 className="font-extrabold text-[35px] lg:text-[max(5vw,76px)] leading-none lg:leading-[1.1] tracking-tighter text-center font-sans">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-blue">
             Folk
