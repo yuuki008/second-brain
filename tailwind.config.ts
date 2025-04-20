@@ -12,13 +12,12 @@ export default {
   theme: {
     fontFamily: {
       sans: [
-        "Inter",
-        "GenJyuuGothicL",
-        "Hiragino Kaku Gothic ProN",
-        "Hiragino Sans",
-        "BIZ UDPGothic",
-        "Meiryo",
-        "sans-serif",
+        "Geist",
+        "Geist Fallback",
+        "Arial",
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
+        "Segoe UI Symbol",
       ],
       inter: ["Inter", "sans-serif"],
     },
