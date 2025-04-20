@@ -26,7 +26,7 @@ export default function GoogleSignInButton() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-var(--header-height))]">
+    <div className="flex flex-col items-center justify-center">
       <div className="p-8 space-y-6 bg-card text-card-foreground rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold text-center">ようこそ</h1>
         <p className="text-center text-muted-foreground">

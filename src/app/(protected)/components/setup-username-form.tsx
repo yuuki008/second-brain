@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { setUsernameAction } from "../actions"; // サーバーアクションをインポート
+import { setUsernameAction } from "@/app/actions/user"; // サーバーアクションをインポート
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 

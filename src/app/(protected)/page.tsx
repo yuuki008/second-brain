@@ -4,9 +4,8 @@ import prisma from "@/lib/prisma";
 import { HierarchicalTag } from "@/app/components/tag-filter";
 import TopPageClient from "@/app/components/top-page-client";
 import { Tag } from "@prisma/client";
-import GoogleSignInButton from "@/components/auth/google-signin-button";
 
-async function getTags(): Promise<HierarchicalTag[]> {
+async function getTags(userId: string): Promise<HierarchicalTag[]> {
   try {
     const buildHierarchy = (
       tagsData: (Tag & { children?: HierarchicalTag[] })[],
@@ -22,7 +21,12 @@ async function getTags(): Promise<HierarchicalTag[]> {
           children: buildHierarchy(tagsData, tag.id),
         }));
     };
-    const allTags = await prisma.tag.findMany({ orderBy: { name: "asc" } });
+    const allTags = await prisma.tag.findMany({
+      where: {
+        userId,
+      },
+      orderBy: { name: "asc" },
+    });
     return buildHierarchy(allTags);
   } catch (error) {
     console.error("タグの取得エラー:", error);
@@ -30,13 +34,15 @@ async function getTags(): Promise<HierarchicalTag[]> {
   }
 }
 
-async function getNodes() {
+async function getNodes(userId: string) {
   try {
     const nodes = await prisma.node.findMany({
       include: {
         tags: true,
       },
-      // ここでユーザーIDによる絞り込みは行わない（トップページ用）
+      where: {
+        userId,
+      },
     });
     return nodes.map((node) => ({
       id: node.id,
@@ -54,9 +60,14 @@ async function getNodes() {
 }
 
 // リレーションデータを取得する関数
-async function getRelations() {
+async function getRelations(nodeIds: string[]) {
   try {
-    const relations = await prisma.relation.findMany({});
+    const relations = await prisma.relation.findMany({
+      where: {
+        fromNodeId: { in: nodeIds },
+        toNodeId: { in: nodeIds },
+      },
+    });
     return relations.map((relation) => ({
       source: relation.fromNodeId,
       target: relation.toNodeId,
@@ -70,21 +81,18 @@ async function getRelations() {
 export default async function RootPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
-    // 未認証の場合: Google サインインボタンを表示
-    return <GoogleSignInButton />;
-  } else {
-    // 認証済みの場合: データを取得して TopPageClient を表示
-    // 初回ログインで username がまだない場合も、ここでは TopPageClient を表示
-    // (username 設定は /username ルートアクセス時に処理される)
-    const [tags, nodes] = await Promise.all([getTags(), getNodes()]);
-    const links = await getRelations();
+  if (!session) throw new Error("セッションがありません");
 
-    const graphData = {
-      nodes,
-      links,
-    };
+  const [tags, nodes] = await Promise.all([
+    getTags(session?.user.id),
+    getNodes(session?.user.id),
+  ]);
+  const links = await getRelations(nodes.map((node) => node.id));
 
-    return <TopPageClient tags={tags} graphData={graphData} />;
-  }
+  const graphData = {
+    nodes,
+    links,
+  };
+
+  return <TopPageClient tags={tags} graphData={graphData} />;
 }
