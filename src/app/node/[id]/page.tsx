@@ -8,6 +8,7 @@ import {
   getNodeReactions,
 } from "./actions";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 interface NodePageProps {
   params: Promise<{ id: string }>;
@@ -46,7 +47,7 @@ export default async function NodePage({ params }: NodePageProps) {
   const allTags = await getAllTags();
   const reactions = await getNodeReactions(id);
 
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   await incrementNodeViewCount(id, !!session?.user.id);
 
   if (!nodeData) {
