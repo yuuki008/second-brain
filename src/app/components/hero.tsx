@@ -31,14 +31,14 @@ export default function Hero() {
               sequence={[
                 `頭の中がたくさんの情報で溢れてる。
 本で読んだこと、人から聞いた話、思いつき、どれも大切なのにすぐ忘れてしまう。
-Second Brainは、情報を整理し、つなげることであなたの思考を拡張するプロダクトです。
+Second Brainは、情報を整理し、つなげることで思考を拡張するプロダクトです。
 まだ開発途中ですが、ぜひ使ってみてください。`,
               ]}
               speed={15}
               cursor={true}
               style={{ display: "inline-block" }}
             />
-            <div className="absolute left-1/2 -translate-x-1/2 -bottom-[7px] w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-secondary transform" />
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-[7px] w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-secondary transform" />
           </div>
 
           <Image
@@ -51,8 +51,8 @@ Second Brainは、情報を整理し、つなげることであなたの思考�
           />
         </div>
 
-        <h2 className="mt-16 text-3xl leading-10 font-extrabold text-center">
-          Folk Your Brain,
+        <h2 className="mt-8 text-2xl lg:text-3xl font-extrabold text-center font-inter">
+          Folk Your Brain
           <br />
           Build Second Brain
         </h2>

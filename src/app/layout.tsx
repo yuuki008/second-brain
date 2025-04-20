@@ -33,7 +33,13 @@ async function ProtectedLayout({ children }: { children: React.ReactNode }) {
 
   if (!user?.username) return <SetupUsernameForm userId={session.user.id} />;
 
-  return <>{children}</>;
+  return (
+    <div>
+      {children}
+      <Toaster />
+      <RightFooter />
+    </div>
+  );
 }
 
 export const metadata: Metadata = {
@@ -59,8 +65,6 @@ export default function RootLayout({
               <ZenProvider>
                 <Header />
                 <ProtectedLayout>{children}</ProtectedLayout>
-                <Toaster />
-                <RightFooter />
               </ZenProvider>
             </ThemeProvider>
           </TooltipProvider>

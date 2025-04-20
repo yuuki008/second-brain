@@ -20,6 +20,7 @@ export default {
         "Meiryo",
         "sans-serif",
       ],
+      inter: ["Inter", "sans-serif"],
     },
     extend: {
       screens: {
