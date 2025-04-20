@@ -67,7 +67,7 @@ Second Brainは、情報を整理し、つなげることで思考を拡張す�
         <div className="mt-10">
           <Button
             onClick={handleSignIn}
-            variant="default"
+            variant="outline"
             disabled={isLoading}
             className="w-full max-w-[250px] lg:max-w-xs mx-auto shadow-md hover:shadow-lg transition-all lg:text-base py-4 lg:py-6"
           >
@@ -76,7 +76,7 @@ Second Brainは、情報を整理し、つなげることで思考を拡張す�
             ) : (
               <FcGoogle className="!w-4 !h-4 lg:!w-5 lg:!h-5" />
             )}
-            Google で始める
+            Google で始めよう
           </Button>
         </div>
       </div>
