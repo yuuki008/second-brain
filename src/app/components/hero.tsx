@@ -134,7 +134,7 @@ export default function Hero() {
         </h2>
 
         <p className="text-sm lg:text-lg text-gray-400 mt-5">
-          記憶・知識・思いつきを入れて、第二の脳を作ろう
+          記憶・知識・アイデアを入れて、第二の脳を作ろう
         </p>
 
         <div className="mt-10">
