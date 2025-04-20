@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { Tag } from "@prisma/client";
+import { authOptions } from "@/lib/auth";
 
 export async function updateNodeName(nodeId: string, name: string) {
   return await prisma.node.update({
@@ -17,6 +18,9 @@ export async function updateNodeName(nodeId: string, name: string) {
  * @param content - 新しい定義内容
  */
 export async function updateNodeContent(nodeId: string, content: string) {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error("セッションがありません");
+
   try {
     // Prismaを使用してデータベースを直接更新
     await prisma.node.update({
@@ -40,6 +44,9 @@ export async function updateNodeContent(nodeId: string, content: string) {
  * @param tagId - 削除するタグのID
  */
 export async function removeTagFromNode(nodeId: string, tagId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error("セッションがありません");
+
   try {
     // 現在のノードを取得
     const node = await prisma.node.findUnique({
@@ -78,6 +85,9 @@ export async function removeTagFromNode(nodeId: string, tagId: string) {
  * @param tagId - 追加するタグのID
  */
 export async function addTagToNode(nodeId: string, tagId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error("セッションがありません");
+
   try {
     // ノードにタグを関連付ける
     await prisma.node.update({
@@ -106,7 +116,7 @@ export async function addTagToNode(nodeId: string, tagId: string) {
 export async function getAllTags(userIdArg?: string): Promise<Tag[]> {
   let userId = userIdArg;
   if (!userId) {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     userId = session?.user.id;
   }
 
@@ -179,13 +189,13 @@ export async function getNode(id: string) {
  * @param nodeId - ビュー数を増やすノードのID
  * @param isAuthenticated - 管理者としてログインしているかどうか
  */
-export async function incrementNodeViewCount(
-  nodeId: string,
-  isAuthenticated: boolean = false
-) {
+export async function incrementNodeViewCount(nodeId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error("セッションがありません");
+
   try {
     // 管理者としてログインしている場合はカウントを増やさない
-    if (isAuthenticated) {
+    if (session.user.id) {
       return { success: true };
     }
 
