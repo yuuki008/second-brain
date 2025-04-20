@@ -10,11 +10,31 @@ import { Toaster } from "@/components/ui/sonner";
 import RightFooter from "./components/right-footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NextAuthProvider } from "@/components/providers/session-provider";
+import { getServerSession } from "next-auth";
+import Hero from "./components/hero";
+import prisma from "@/lib/prisma";
+import SetupUsernameForm from "./components/setup-username-form";
+import { authOptions } from "@/lib/auth";
 
 const noto_sans_jp = Noto_Sans_JP({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
+
+async function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession(authOptions);
+  if (!session) return <Hero />;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: session.user.id,
+    },
+  });
+
+  if (!user?.username) return <SetupUsernameForm userId={session.user.id} />;
+
+  return <>{children}</>;
+}
 
 export const metadata: Metadata = {
   title: "Second Brain",
@@ -38,7 +58,7 @@ export default function RootLayout({
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
               <ZenProvider>
                 <Header />
-                {children}
+                <ProtectedLayout>{children}</ProtectedLayout>
                 <Toaster />
                 <RightFooter />
               </ZenProvider>

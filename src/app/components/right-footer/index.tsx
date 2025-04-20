@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Info, Search, Settings } from "lucide-react";
+import { Info, LogOut, Search, Settings } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -24,6 +24,9 @@ import {
 import CmdKSearchModal from "./cmd-k-search-modal";
 import { useEffect } from "react";
 import { useState } from "react";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { signOut } from "next-auth/react";
 
 export default function RightFooter() {
   const { isZenMode, setZenMode } = useZen();
@@ -114,6 +117,17 @@ export default function RightFooter() {
                 className="data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted"
               />
             </div>
+
+            <Separator className="my-2" />
+            <Button
+              onClick={() => signOut()}
+              variant="outline"
+              size="sm"
+              className="w-full flex items-center"
+            >
+              ログアウト
+              <LogOut className="w-4 h-4" />
+            </Button>
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
