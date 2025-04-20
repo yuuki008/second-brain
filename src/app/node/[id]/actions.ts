@@ -139,7 +139,9 @@ export async function getAllTags() {
         }));
     };
 
-    const hierarchicalTags = buildHierarchy(tags as TagWithChildren[]);
+    const hierarchicalTags = buildHierarchy(
+      tags as unknown as TagWithChildren[]
+    );
 
     return hierarchicalTags;
   } catch (error) {

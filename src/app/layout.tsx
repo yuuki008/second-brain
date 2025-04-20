@@ -10,6 +10,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/sonner";
 import RightFooter from "./components/right-footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { NextAuthProvider } from "@/components/providers/session-provider";
 
 const noto_sans_jp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -33,18 +34,20 @@ export default function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <body suppressHydrationWarning className={cn(noto_sans_jp.className)}>
-        <TooltipProvider>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-            <AuthProvider>
-              <ZenProvider>
-                <Header />
-                {children}
-                <Toaster />
-                <RightFooter />
-              </ZenProvider>
-            </AuthProvider>
-          </ThemeProvider>
-        </TooltipProvider>
+        <NextAuthProvider>
+          <TooltipProvider>
+            <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+              <AuthProvider>
+                <ZenProvider>
+                  <Header />
+                  {children}
+                  <Toaster />
+                  <RightFooter />
+                </ZenProvider>
+              </AuthProvider>
+            </ThemeProvider>
+          </TooltipProvider>
+        </NextAuthProvider>
         <Analytics />
       </body>
     </html>
