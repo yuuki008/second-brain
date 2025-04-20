@@ -5,7 +5,6 @@ import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -16,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Info, LogIn, LogOut, Search, Settings } from "lucide-react";
+import { Info, Search, Settings } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -25,14 +24,11 @@ import {
 import CmdKSearchModal from "./cmd-k-search-modal";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useAuth } from "@/components/providers/auth-provider";
 import { LoginDialog } from "./login-dialog";
-import { Button } from "@/components/ui/button";
 
 export default function RightFooter() {
   const { isZenMode, setZenMode } = useZen();
   const { theme, setTheme } = useTheme();
-  const { isAuthenticated, logout } = useAuth();
 
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
@@ -124,35 +120,6 @@ export default function RightFooter() {
                 className="data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted"
               />
             </div>
-
-            <DropdownMenuSeparator />
-
-            {isAuthenticated ? (
-              <div className="flex items-center justify-between h-10">
-                <div className="text-sm shrink-0 font-light">ログアウト</div>
-                <Button
-                  className="text-sm font-light"
-                  variant="ghost"
-                  size="icon"
-                  onClick={logout}
-                >
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between h-10">
-                <div className="text-sm shrink-0 font-light">ログイン</div>
-
-                <Button
-                  className="text-sm font-light"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsLoginDialogOpen(true)}
-                >
-                  <LogIn className="w-4 h-4" />
-                </Button>
-              </div>
-            )}
           </div>
         </DropdownMenuContent>
       </DropdownMenu>

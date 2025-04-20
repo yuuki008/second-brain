@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { AuthProvider } from "@/components/providers/auth-provider";
 import { ZenProvider } from "@/components/providers/zen-provider";
 import Header from "./components/header";
 import { Noto_Sans_JP } from "next/font/google";
@@ -37,14 +36,12 @@ export default function RootLayout({
         <NextAuthProvider>
           <TooltipProvider>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-              <AuthProvider>
-                <ZenProvider>
-                  <Header />
-                  {children}
-                  <Toaster />
-                  <RightFooter />
-                </ZenProvider>
-              </AuthProvider>
+              <ZenProvider>
+                <Header />
+                {children}
+                <Toaster />
+                <RightFooter />
+              </ZenProvider>
             </ThemeProvider>
           </TooltipProvider>
         </NextAuthProvider>
