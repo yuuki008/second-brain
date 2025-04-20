@@ -31,8 +31,8 @@ export default function Hero() {
           className="mx-auto rounded-full"
           priority
         />
-        <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white tracking-wide">
-          Second Brain へようこそ
+        <h2 className="mt-4 text-3xl font-extrabold text-center">
+          Folk Your Brain
         </h2>
         <div className="mt-8">
           <Button
