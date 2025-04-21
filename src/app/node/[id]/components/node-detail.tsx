@@ -154,6 +154,8 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
   const { data: session } = useSession();
   const { isZenMode } = useZen();
 
+  const isAuthenticated = session?.user.id === node.userId;
+
   return (
     <div
       className={
@@ -165,7 +167,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
           <NodeNameEditor
             id={id}
             initialName={node.name}
-            isReadOnly={!session}
+            isReadOnly={!isAuthenticated}
             isZenMode={isZenMode}
             viewCount={node.viewCount}
             lastUpdated={node.updatedAt}
@@ -175,7 +177,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
             <NodeEditor
               id={id}
               initialContent={node.content}
-              isReadOnly={!session}
+              isReadOnly={!isAuthenticated}
               isZenMode={isZenMode}
             />
 
