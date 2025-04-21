@@ -1,10 +1,19 @@
 "use server";
 
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Node, Tag } from "@prisma/client";
+import { getServerSession } from "next-auth";
 
-export async function getAllNodes(): Promise<(Node & { tags: Tag[] })[]> {
+export async function getAllNodes(
+  userIdArg?: string
+): Promise<(Node & { tags: Tag[] })[]> {
+  const userId = userIdArg ?? (await getServerSession(authOptions))?.user?.id;
+
   const nodes = await prisma.node.findMany({
+    where: {
+      userId,
+    },
     include: {
       tags: true,
     },
