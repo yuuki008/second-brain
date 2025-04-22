@@ -1,10 +1,10 @@
 export const revalidate = 60;
 
 import { getNode } from "./actions";
-import dayjs from "dayjs";
 import { ImageResponse } from "next/og";
 import fs from "fs/promises";
 import path from "path";
+import { getUser } from "@/app/actions/user";
 
 export const alt = "Second Brain";
 export const size = {
@@ -26,49 +26,45 @@ export default async function Image(props: {
     return new Response("Not found", { status: 404 });
   }
 
+  const user = await getUser(node.userId);
+
   const fontPath300 = path.join(
     process.cwd(),
     "public",
     "fonts",
     "noto-sans-jp-latin-300-normal.woff"
   );
-  const fontPath700 = path.join(
+  const fontPath500 = path.join(
     process.cwd(),
     "public",
     "fonts",
-    "noto-sans-jp-latin-700-normal.woff"
+    "noto-sans-jp-latin-500-normal.woff"
+  );
+  const fontPath900 = path.join(
+    process.cwd(),
+    "public",
+    "fonts",
+    "noto-sans-jp-latin-900-normal.woff"
   );
 
-  const [notoSansJp300, notoSansJp700] = await Promise.all([
+  const [notoSansJp300, notoSansJp500, notoSansJp900] = await Promise.all([
     fs.readFile(fontPath300),
-    fs.readFile(fontPath700),
+    fs.readFile(fontPath500),
+    fs.readFile(fontPath900),
   ]);
-
-  const formattedCreatedAt = dayjs(node.createdAt).format("MMMM D, YYYY");
 
   return new ImageResponse(
     (
       <div
-        tw="flex p-10 h-full w-full bg-[#000] text-white flex-col justify-center"
+        tw="flex flex-col justify-between px-15 py-20 h-full w-full bg-gray-900 text-white"
         style={font("Inter 300")}
       >
-        <main tw="flex items-center ml-10">
-          <img
-            tw="rounded-full w-50 h-50 mr-10"
-            src={process.env.NEXT_PUBLIC_URL + "profile.jpg"}
-            alt="yuuki008"
-          />
-
+        <main tw="flex items-center">
           <div tw="flex-1 flex flex-col">
-            <div tw="flex items-center mb-3">
-              <div tw="text-gray-400 text-3xl" style={font("Noto Sans JP 300")}>
-                Yuuki008
-              </div>
-            </div>
             <div
               tw="text-7xl font-bold text-white"
               style={{
-                ...font("Noto Sans JP 700"),
+                ...font("Noto Sans JP 900"),
                 display: "-webkit-box",
                 WebkitLineClamp: 3,
                 WebkitBoxOrient: "vertical",
@@ -81,11 +77,28 @@ export default async function Image(props: {
           </div>
         </main>
 
-        <div
-          tw="absolute bottom-4 right-4 flex text-2xl text-gray-400"
-          style={font("Noto Sans JP 300")}
-        >
-          {formattedCreatedAt} – {node.viewCount} views
+        <div tw="w-full flex justify-between">
+          <div tw="flex items-center">
+            {user?.image ? (
+              <img
+                tw="rounded-full w-20 h-20 mr-6"
+                src={user?.image || ""}
+                alt={user?.username || ""}
+              />
+            ) : (
+              <div tw="rounded-full flex w-20 h-20 mr-6 bg-gray-400" />
+            )}
+
+            <div tw="text-4xl" style={font("Noto Sans JP 500")}>
+              {user?.username || ""}
+            </div>
+          </div>
+
+          <img
+            tw="rounded-full w-32 h-32"
+            src={process.env.NEXT_PUBLIC_URL + "dark-sign.png"}
+            alt="second brain"
+          />
         </div>
       </div>
     ),
@@ -97,8 +110,12 @@ export default async function Image(props: {
           data: notoSansJp300,
         },
         {
-          name: "Noto Sans JP 700",
-          data: notoSansJp700,
+          name: "Noto Sans JP 500",
+          data: notoSansJp500,
+        },
+        {
+          name: "Noto Sans JP 900",
+          data: notoSansJp900,
         },
       ],
     }

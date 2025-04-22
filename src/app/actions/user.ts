@@ -8,6 +8,13 @@ interface ActionResult {
   error?: string;
 }
 
+export async function getUser(id: string) {
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+  return user;
+}
+
 /**
  * ユーザー名を設定するサーバーアクション
  * @param userId - ユーザーID
