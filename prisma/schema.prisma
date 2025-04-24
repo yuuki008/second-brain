@@ -7,7 +7,11 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  seed     = "ts-node prisma/seed.ts"
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
 }
 
 model Node {
@@ -23,6 +27,7 @@ model Node {
   relatedTo   Relation[] @relation("NodeToRelation")
   userId      String
   user        User      @relation(fields: [userId], references: [id])
+  visibility  Visibility @default(PRIVATE)
 
   @@map("nodes")
 }
