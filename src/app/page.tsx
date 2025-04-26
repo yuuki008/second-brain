@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { HierarchicalTag } from "@/app/components/tag-filter";
 import TopPageClient from "@/app/components/top-page-client";
 import { Tag } from "@prisma/client";
+import Hero from "./components/hero";
+import SetupUsernameForm from "./components/setup-username-form";
 
 async function getTags(userId: string): Promise<HierarchicalTag[]> {
   try {
@@ -81,7 +83,9 @@ async function getRelations(nodeIds: string[]) {
 export default async function RootPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session) throw new Error("セッションがありません");
+  if (!session) return <Hero />;
+  if (!session.user?.username)
+    return <SetupUsernameForm userId={session.user.id} />;
 
   const [tags, nodes] = await Promise.all([
     getTags(session?.user.id),

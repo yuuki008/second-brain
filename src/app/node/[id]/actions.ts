@@ -191,13 +191,9 @@ export async function getNode(id: string) {
  */
 export async function incrementNodeViewCount(nodeId: string) {
   const session = await getServerSession(authOptions);
-  if (!session) throw new Error("セッションがありません");
 
   try {
-    // 管理者としてログインしている場合はカウントを増やさない
-    if (session.user.id) {
-      return { success: true };
-    }
+    if (session) return { success: true };
 
     await prisma.node.update({
       where: { id: nodeId },

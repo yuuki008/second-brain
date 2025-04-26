@@ -64,7 +64,7 @@ export default function RightFooter() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[220px] p-0">
           <div className="bg-muted text-muted-foreground mb-3 px-4 py-3 border-b text-sm flex items-center justify-between">
-            {session?.user?.username}
+            {session?.user?.username || "ゲスト"}
             <Settings className="w-4 h-4 text-muted-foreground" />
           </div>
 
@@ -122,16 +122,20 @@ export default function RightFooter() {
               />
             </div>
 
-            <Separator className="my-2" />
-            <Button
-              onClick={() => signOut()}
-              variant="outline"
-              size="sm"
-              className="w-full flex items-center"
-            >
-              ログアウト
-              <LogOut className="w-4 h-4" />
-            </Button>
+            {session && (
+              <div>
+                <Separator className="my-2" />
+                <Button
+                  onClick={() => signOut()}
+                  variant="outline"
+                  size="sm"
+                  className="w-full flex items-center"
+                >
+                  ログアウト
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
