@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Info, LogOut, Search, Settings } from "lucide-react";
+import { Info, LogOut, Search, Settings, User } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -26,12 +26,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function RightFooter() {
+  const { data: session } = useSession();
   const { isZenMode, setZenMode } = useZen();
   const { theme, setTheme } = useTheme();
-
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
 
   useEffect(() => {
@@ -50,17 +51,20 @@ export default function RightFooter() {
     <>
       <CmdKSearchModal open={isCmdKOpen} setOpen={setIsCmdKOpen} />
       <DropdownMenu>
-        <DropdownMenuTrigger className="fixed bottom-4 right-4" asChild>
-          <button
-            className="text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer items-center text-xs font-light"
-            title="サイトの設定"
-          >
-            サイトの設定
-          </button>
+        <DropdownMenuTrigger
+          className="fixed bottom-4 right-4 cursor-pointer hover:opacity-80 transition-opacity duration-200"
+          asChild
+        >
+          <Avatar>
+            <AvatarImage src={session?.user?.image || ""} />
+            <AvatarFallback>
+              <User className="w-4 h-4" />
+            </AvatarFallback>
+          </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[220px] p-0">
           <div className="bg-muted text-muted-foreground mb-3 px-4 py-3 border-b text-sm flex items-center justify-between">
-            サイトの設定
+            {session?.user?.username}
             <Settings className="w-4 h-4 text-muted-foreground" />
           </div>
 
