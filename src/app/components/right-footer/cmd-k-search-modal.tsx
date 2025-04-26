@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { useSession } from "next-auth/react";
 import { createNode } from "@/app/actions/node";
+import Editor from "@/components/editor";
 
 type CmdKSearchModalProps = {
   open: boolean;
@@ -34,6 +35,9 @@ export default function CmdKSearchModal({
   const [filteredNodes, setFilteredNodes] = useState<
     (Node & { tags: Tag[] })[]
   >([]);
+  const [focusedNode, setFocusedNode] = useState<
+    (Node & { tags: Tag[] }) | null
+  >(null);
 
   // 初期データの取得
   useEffect(() => {
@@ -54,6 +58,7 @@ export default function CmdKSearchModal({
   useEffect(() => {
     if (!searchQuery) {
       setFilteredNodes(allNodes);
+      setFocusedNode(null);
       return;
     }
 
@@ -78,6 +83,7 @@ export default function CmdKSearchModal({
   const handleSelectItem = (node: Node & { tags: Tag[] }) => {
     router.push(`/node/${node.id}`);
     setSearchQuery("");
+    setFocusedNode(null);
     setOpen(false);
   };
 
@@ -88,6 +94,7 @@ export default function CmdKSearchModal({
       setAllNodes((prev) => [...prev, newNode]);
       router.push(`/node/${newNode.id}`);
       setSearchQuery("");
+      setFocusedNode(null);
       setOpen(false);
     } catch (error) {
       console.error("新規作成エラー:", error);
@@ -111,7 +118,7 @@ export default function CmdKSearchModal({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="max-w-xl w-[90%] mt-[15vh]"
+              className="max-w-2xl w-[90%] mt-[15vh]"
             >
               <Command
                 className="rounded-lg border shadow-lg w-full h-auto"
@@ -120,7 +127,10 @@ export default function CmdKSearchModal({
                 <div className="relative">
                   <CommandInput
                     value={searchQuery}
-                    onValueChange={setSearchQuery}
+                    onValueChange={(value) => {
+                      setSearchQuery(value);
+                      setFocusedNode(null);
+                    }}
                     placeholder="What are you searching for?"
                     className="flex h-14 w-full bg-transparent text-sm placeholder:text-muted-foreground"
                     autoFocus={true}
@@ -141,51 +151,73 @@ export default function CmdKSearchModal({
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <CommandList className="overflow-y-auto max-h-96 py-1">
-                        <CommandGroup className="p-2 text-sm">
-                          {filteredNodes.map((node) => (
-                            <CommandItem
-                              key={node.id}
-                              onSelect={() => handleSelectItem(node)}
-                              className="cursor-pointer py-2"
-                            >
-                              <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
-                              <div className="flex">
-                                <div className="line-clamp-1 flex-1 mr-4">
-                                  {node.name}
-                                </div>
-                                {node.tags && node.tags.length > 0 && (
-                                  <div className="flex flex-wrap gap-1">
-                                    {node.tags.map((tag) => (
-                                      <Badge
-                                        key={tag.id}
-                                        variant="secondary"
-                                        className="text-xs"
-                                      >
-                                        {tag.name}
-                                      </Badge>
-                                    ))}
+                      <div className="flex h-auto border-t">
+                        <CommandList
+                          className="overflow-y-auto max-h-[500px] py-1 w-full border-none"
+                          onMouseLeave={() => setFocusedNode(null)}
+                        >
+                          <CommandGroup className="p-2 text-sm">
+                            {filteredNodes.map((node) => (
+                              <CommandItem
+                                key={node.id}
+                                onSelect={() => handleSelectItem(node)}
+                                onFocus={() => {
+                                  console.log(node);
+                                  setFocusedNode(node);
+                                }}
+                                onMouseEnter={() => {
+                                  console.log(node);
+                                  setFocusedNode(node);
+                                }}
+                                className="cursor-pointer py-2"
+                              >
+                                <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
+                                <div className="flex justify-between w-full">
+                                  <div className="line-clamp-1 flex-1 mr-4">
+                                    {node.name}
                                   </div>
-                                )}
-                              </div>
-                            </CommandItem>
-                          ))}
-                          {searchQuery.length > 0 && session && (
-                            <CommandItem
-                              onSelect={handleCreateNew}
-                              className="cursor-pointer py-2"
-                            >
-                              <PlusCircle className="w-4 h-4 mr-3" />
-                              <div className="">
-                                Create
-                                <span className="text-accent ml-2">
-                                  {searchQuery}
-                                </span>
-                              </div>
-                            </CommandItem>
-                          )}
-                        </CommandGroup>
-                      </CommandList>
+                                  {node.tags && node.tags.length > 0 && (
+                                    <div className="flex flex-wrap gap-1">
+                                      {node.tags.map((tag) => (
+                                        <Badge
+                                          key={tag.id}
+                                          variant="secondary"
+                                          className="text-xs"
+                                        >
+                                          {tag.name}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              </CommandItem>
+                            ))}
+                            {searchQuery.length > 0 && session && (
+                              <CommandItem
+                                onSelect={handleCreateNew}
+                                className="cursor-pointer py-2"
+                              >
+                                <PlusCircle className="w-4 h-4 mr-3" />
+                                <div className="">
+                                  Create
+                                  <span className="text-accent ml-2">
+                                    {searchQuery}
+                                  </span>
+                                </div>
+                              </CommandItem>
+                            )}
+                          </CommandGroup>
+                        </CommandList>
+                        <div className="hidden lg:block w-[400px] h-[500px] flex-shrink-0 border-l">
+                          <div className="p-2">
+                            <Editor
+                              key={focusedNode?.id}
+                              readOnly={true}
+                              content={focusedNode?.content || ""}
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
