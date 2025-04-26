@@ -44,9 +44,7 @@ export default function SetupUsernameForm({ userId }: SetupUsernameFormProps) {
       const result = await setUsernameAction(userId, data.username);
       if (result.success) {
         toast.success("ユーザー名を設定しました。");
-        // ユーザー名設定後、正しいユーザー名パスにリダイレクト
-        router.push(`/${data.username}`);
-        router.refresh(); // ページをリフレッシュして最新のセッション情報を反映
+        router.refresh();
       } else {
         toast.error(result.error || "ユーザー名の設定に失敗しました。");
       }
