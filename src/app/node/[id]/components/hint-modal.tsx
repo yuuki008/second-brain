@@ -68,7 +68,7 @@ const HintModal = () => {
         >
           <div
             ref={nodeRef}
-            className="fixed top-20 left-4 z-50 bg-background border rounded-lg shadow-lg overflow-hidden w-[400px] max-h-[670px]"
+            className="fixed top-20 left-4 z-50 bg-background border rounded-lg shadow-lg overflow-hidden w-[400px] max-h-[670px] min-h-[300px] min-w-[300px]"
             style={{ resize: "both" }}
           >
             <div className="flex flex-col h-full max-h-[635px]">
