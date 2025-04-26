@@ -7,6 +7,8 @@ import {
   incrementNodeViewCount,
   getNodeReactions,
 } from "./actions";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 interface NodePageProps {
   params: Promise<{ id: string }>;
@@ -21,6 +23,8 @@ export async function generateMetadata({ params }: NodePageProps) {
       title: "ノードが見つかりません",
     };
   }
+
+  if (node.visibility === "PRIVATE") return { title: node.name };
 
   // description が HTML の場合は、テキストを抽出
   const extractText = (html: string) => {
@@ -40,6 +44,7 @@ export async function generateMetadata({ params }: NodePageProps) {
 }
 
 export default async function NodePage({ params }: NodePageProps) {
+  const session = await getServerSession(authOptions);
   const { id } = await params;
   const nodeData = await getNodeWithRelatedNodes(id);
   const allTags = await getAllTags();
@@ -49,6 +54,19 @@ export default async function NodePage({ params }: NodePageProps) {
 
   if (!nodeData) {
     notFound();
+  }
+
+  const isAuthenticated = session?.user.id === nodeData.node.userId;
+  const isPrivate = nodeData.node.visibility === "PRIVATE";
+
+  if (isPrivate && !isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h1 className="text-2xl font-bold">
+          この{nodeData.node.name}は非公開です
+        </h1>
+      </div>
+    );
   }
 
   return (
