@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { GripVertical, X } from "lucide-react";
+import { GripVertical, Lightbulb, X } from "lucide-react";
 import { memo, useState, useEffect, useRef } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
@@ -49,12 +49,14 @@ const HintModal = () => {
 
   return (
     <>
-      <button
-        className="text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer items-center text-xs font-light"
+      <Button
+        variant="ghost"
+        className="text-xs font-light px-2"
         onClick={() => setVisible(!visible)}
       >
+        <Lightbulb />
         執筆のヒント
-      </button>
+      </Button>
 
       {visible && (
         <Draggable

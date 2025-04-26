@@ -1,14 +1,18 @@
 import { Separator } from "@/components/ui/separator";
+
 import HintModal from "./hint-modal";
+import { Button } from "@/components/ui/button";
+import { Settings } from "lucide-react";
 
 export default function NodeFooter() {
   return (
-    <div className="fixed bottom-4 left-4 z-50 hidden md:block">
-      <div className="flex gap-2 items-center">
-        <button className="text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer items-center text-xs font-light">
+    <div className="fixed bottom-2 left-2 z-50 hidden md:block">
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" className="text-xs font-light px-2">
+          <Settings />
           設定
-        </button>
-        <Separator orientation="vertical" className="h-4 mx-1" />
+        </Button>
+        <Separator orientation="vertical" className="h-4" />
         <HintModal />
       </div>
     </div>
