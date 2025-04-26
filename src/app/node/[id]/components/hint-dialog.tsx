@@ -27,7 +27,7 @@ const ShortcutKeyItem = memo(
 
 ShortcutKeyItem.displayName = "ShortcutKeyItem";
 
-const HintModal = () => {
+const HintDialog = () => {
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const nodeRef = useRef<HTMLDivElement>(
@@ -151,4 +151,4 @@ const HintModal = () => {
   );
 };
 
-export default HintModal;
+export default HintDialog;

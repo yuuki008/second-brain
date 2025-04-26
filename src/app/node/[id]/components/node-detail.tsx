@@ -185,7 +185,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, reactions }) => {
           </div>
         </div>
 
-        {session && <NodeFooter />}
+        {session && <NodeFooter node={node} />}
       </div>
     </div>
   );

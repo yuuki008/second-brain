@@ -2,7 +2,9 @@
 
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { Visibility } from "@prisma/client";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 
 export async function createNode(name: string) {
   const session = await getServerSession(authOptions);
@@ -33,4 +35,21 @@ export async function deleteNode(nodeId: string) {
   });
 
   return { success: true };
+}
+
+export async function updateNodeVisibility(
+  nodeId: string,
+  visibility: Visibility
+) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    throw new Error("ログインしてください");
+  }
+
+  await prisma.node.update({
+    where: { id: nodeId },
+    data: { visibility },
+  });
+
+  revalidatePath(`/node/${nodeId}`);
 }
