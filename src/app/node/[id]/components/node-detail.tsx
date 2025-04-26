@@ -6,10 +6,10 @@ import { updateNodeContent, updateNodeName } from "../actions";
 import { Node, Tag } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
 import ReactionBar from "./reaction-bar";
-import HelpMenu from "./help-menu";
 import dayjs from "dayjs";
 import { useZen } from "@/components/providers/zen-provider";
 import { useSession } from "next-auth/react";
+import NodeFooter from "./node-footer";
 
 interface NodeNodeData {
   id: string;
@@ -145,12 +145,7 @@ const NodeNameEditor = React.memo(
 
 NodeNameEditor.displayName = "NodeNameEditor";
 
-const NodeDetail: React.FC<NodeDetailProps> = ({
-  id,
-  node,
-  allTags,
-  reactions,
-}) => {
+const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, reactions }) => {
   const { data: session } = useSession();
   const { isZenMode } = useZen();
 
@@ -190,9 +185,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({
           </div>
         </div>
 
-        {session && (
-          <HelpMenu nodeId={id} currentTags={node.tags} allTags={allTags} />
-        )}
+        {session && <NodeFooter />}
       </div>
     </div>
   );
