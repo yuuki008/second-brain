@@ -7,11 +7,10 @@ import { Button } from "@/components/ui/button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { setUsernameAction } from "@/app/actions/user"; // サーバーアクションをインポート
+import { setUsernameAction } from "@/app/actions/user";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
-// Zod スキーマでバリデーションルールを定義
 const usernameSchema = z.object({
   username: z
     .string()
@@ -63,20 +62,14 @@ export default function SetupUsernameForm({ userId }: SetupUsernameFormProps) {
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="w-full max-w-md p-8 space-y-6 bg-card text-card-foreground rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-center">
-          ユーザー名を設定してください
+          あなたの名前を教えてください
         </h2>
-        <p className="text-sm text-muted-foreground text-center">
-          このユーザー名はプロフィールURLの一部となり、後から変更できません。
-        </p>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="username" className="sr-only">
-              ユーザー名
-            </label>
             <Input
               id="username"
               type="text"
-              placeholder="希望のユーザー名"
+              placeholder=""
               {...register("username")}
               className={errors.username ? "border-destructive" : ""}
               disabled={isLoading}
@@ -91,7 +84,7 @@ export default function SetupUsernameForm({ userId }: SetupUsernameFormProps) {
             {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              "設定する"
+              "登録する"
             )}
           </Button>
         </form>
