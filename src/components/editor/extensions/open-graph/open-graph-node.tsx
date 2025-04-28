@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import scrapeMetaInfo, { MetaInfo } from "@/app/actions/open-graph";
+import { cn } from "@/lib/utils";
 
 function OpenGraphNodeComponent(props: NodeViewProps) {
   const url = props.node.attrs.url;
@@ -92,7 +93,12 @@ function OpenGraphNodeComponent(props: NodeViewProps) {
                   </div>
                 </div>
               )}
-              <div className="hidden xs:flex flex-1 flex-col justify-center p-4 xs:p-0">
+              <div
+                className={cn(
+                  ogData.ogImage && "hidden",
+                  "xs:flex flex-1 flex-col justify-center p-4 xs:p-0"
+                )}
+              >
                 <div className="font-semibold line-clamp-1 text-accent text-base">
                   {ogData.title}
                 </div>
