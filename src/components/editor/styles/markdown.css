@@ -57,10 +57,6 @@
     }
   }
 
-  code {
-    @apply bg-muted text-foreground px-1 py-0.5 rounded-md text-sm;
-  }
-
   a {
     @apply text-primary underline hover:text-primary/80 cursor-pointer;
   }

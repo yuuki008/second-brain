@@ -13,6 +13,8 @@ const CodeBlockWithLanguage = CodeBlock.extend<CodeBlockWithLanguageOptions>({
   addOptions() {
     return {
       ...this.parent?.(),
+      exitOnTripleEnter: false,
+      defaultLanguage: "typescript",
       languages: [
         { name: "typescript", label: "TypeScript" },
         { name: "javascript", label: "JavaScript" },
@@ -34,7 +36,7 @@ const CodeBlockWithLanguage = CodeBlock.extend<CodeBlockWithLanguageOptions>({
       language: {
         default: "typescript",
         parseHTML: (element) =>
-          element.getAttribute("data-language") || "typescript",
+          element.getAttribute("data-language") || this.options.defaultLanguage,
         renderHTML: (attributes) => {
           return {
             "data-language": attributes.language,

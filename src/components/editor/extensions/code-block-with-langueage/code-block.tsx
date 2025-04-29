@@ -1,4 +1,3 @@
-// components/editor/CodeBlockComponent.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { NodeViewContent, NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import Prism from "prismjs";
@@ -85,15 +84,14 @@ export default function CodeBlockComponent({
   extension,
   updateAttributes,
 }: NodeViewProps) {
+  const [language, setLanguage] = useState(node.attrs.language);
   const codeRef = useRef<HTMLPreElement>(null);
 
   const languages = extension.options.languages;
 
   useEffect(() => {
-    if (codeRef.current) {
-      Prism.highlightElement(codeRef.current);
-    }
-  }, [node.attrs.language, node.textContent]);
+    setLanguage(node.attrs.language);
+  }, [node.attrs.language]);
 
   const selectLanguage = (value: string) => {
     updateAttributes({ language: value });
@@ -107,14 +105,14 @@ export default function CodeBlockComponent({
   return (
     <NodeViewWrapper className="relative my-4">
       <LanguagePopover
-        selectedLanguage={node.attrs.language}
+        selectedLanguage={language}
         selectLanguage={selectLanguage}
         languages={languages}
       />
 
       <pre
         ref={codeRef}
-        className={`language-${node.attrs.language} p-4 m-0 overflow-x-auto text-sm`}
+        className={`language-${language} p-4 m-0 overflow-x-auto !text-sm`}
       >
         <NodeViewContent as="code" />
       </pre>
