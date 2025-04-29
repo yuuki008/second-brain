@@ -99,6 +99,7 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
         const nodes = await getAllNodes();
         setAllNodes(nodes);
         setFilteredNodes(nodes);
+        setFocusedNodeId(nodes[0].id);
       } catch (error) {
         console.error("データ取得エラー:", error);
       }
@@ -193,7 +194,7 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
                 Esc
               </Badge>
             </div>
-            <div className="flex flex-1 h-full z-0 pt-[56px]">
+            <div className="flex flex-1 h-full z-0 pt-[58px]">
               <CommandList className="overflow-y-auto w-full border-none flex-1 h-full max-h-full">
                 <CommandGroup className="p-2 text-sm h-full">
                   {filteredNodes.map((node) => (
@@ -221,7 +222,7 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
               <div
                 className={cn(
                   focusedNode && "xl:block",
-                  "hidden border-l p-4 w-[700px] h-full overflow-y-auto"
+                  "hidden border-l p-4 w-[800px] h-full overflow-y-auto"
                 )}
               >
                 {focusedNode && <NodePreview node={focusedNode} />}
