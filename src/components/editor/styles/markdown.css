@@ -1,7 +1,7 @@
 .markdown-editor > :first-child {
   @apply mt-0;
 
-  :first-child {
+  > :first-child {
     @apply mt-0;
   }
 }

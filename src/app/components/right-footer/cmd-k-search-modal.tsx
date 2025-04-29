@@ -30,6 +30,7 @@ function NodePreview({ node }: { node: Node & { tags: Tag[] } }) {
   const editor = useEditor({
     extensions: generateExtensions(),
     content: node.content,
+    immediatelyRender: false,
     editable: false,
   });
 
