@@ -1,4 +1,4 @@
-import { FileText, PlusCircle } from "lucide-react";
+import { FileText, Loader2, PlusCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
   CommandGroup,
@@ -10,7 +10,7 @@ import {
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 import { getAllNodes } from "@/app/actions/search";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useEffect } from "react";
 import { Node, Tag } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -44,6 +44,43 @@ function NodePreview({ node }: { node: Node & { tags: Tag[] } }) {
   }, [editor, node.content]);
 
   return <Editor editor={editor} />;
+}
+
+function CommandItemWrapper({
+  onMouseEnter,
+  node,
+  onSelect,
+}: {
+  onMouseEnter: () => void;
+  node: Node & { tags: Tag[] };
+  onSelect: () => void;
+}) {
+  const [isPending, startTransition] = useTransition();
+
+  const handleSelect = () => {
+    startTransition(() => {
+      onSelect();
+    });
+  };
+
+  return (
+    <CommandItem
+      className="cursor-pointer py-2"
+      value={node.id}
+      onSelect={handleSelect}
+      onMouseEnter={onMouseEnter}
+    >
+      {isPending ? (
+        <Loader2 className="w-4 h-4 mr-3 flex-shrink-0 animate-spin" />
+      ) : (
+        <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
+      )}
+
+      <div className="flex justify-between w-full">
+        <div className="line-clamp-1 flex-1 mr-4">{node.name}</div>
+      </div>
+    </CommandItem>
+  );
 }
 
 export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
@@ -103,14 +140,6 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
     };
   }, [open]);
 
-  // 検索結果をクリックしたときの処理
-  const handleSelectItem = (node: Node & { tags: Tag[] }) => {
-    router.push(`/node/${node.id}`);
-    setSearchQuery("");
-    setOpen(false);
-  };
-
-  // 何も見つからなかった場合に新規作成
   const handleCreateNew = async () => {
     try {
       const newNode = await createNode(searchQuery);
@@ -121,6 +150,12 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
     } catch (error) {
       console.error("新規作成エラー:", error);
     }
+  };
+
+  const handleSelectItem = (node: Node & { tags: Tag[] }) => {
+    router.push(`/node/${node.id}`);
+    setSearchQuery("");
+    setOpen(false);
   };
 
   const focusedNode =
@@ -162,20 +197,12 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
               <CommandList className="overflow-y-auto w-full border-none flex-1 h-full max-h-full">
                 <CommandGroup className="p-2 text-sm h-full">
                   {filteredNodes.map((node) => (
-                    <CommandItem
+                    <CommandItemWrapper
                       key={node.id}
-                      onSelect={() => handleSelectItem(node)}
+                      node={node}
                       onMouseEnter={() => setFocusedNodeId(node.id)}
-                      className="cursor-pointer py-2"
-                      value={node.id}
-                    >
-                      <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
-                      <div className="flex justify-between w-full">
-                        <div className="line-clamp-1 flex-1 mr-4">
-                          {node.name}
-                        </div>
-                      </div>
-                    </CommandItem>
+                      onSelect={() => handleSelectItem(node)}
+                    />
                   ))}
                   {searchQuery.length > 0 && session && (
                     <CommandItem
