@@ -1,12 +1,13 @@
 import { FileText, PlusCircle } from "lucide-react";
-
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
-  Command,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
+  Command,
 } from "@/components/ui/command";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 import { getAllNodes } from "@/app/actions/search";
 import { useState } from "react";
@@ -126,82 +127,76 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
     allNodes.find((node) => node.id === focusedNodeId) || allNodes[0];
 
   return (
-    <>
-      {open && (
-        <div className="fixed top-0 left-0 w-screen h-screen z-[110] bg-background/70 backdrop-blur-sm flex justify-center items-center">
-          <div className="xl:w-[90vw] xl:h-[90vh] xl:max-w-screen-xl w-[500px] h-[500px]">
-            <Command
-              value={focusedNodeId || undefined}
-              onValueChange={(value) => setFocusedNodeId(value || null)}
-              className="rounded-lg border shadow-lg relative"
-              shouldFilter={false}
-            >
-              <div className="absolute z-10 bg-inherit w-full border-b">
-                <CommandInput
-                  value={searchQuery}
-                  onValueChange={(value) => {
-                    setSearchQuery(value);
-                  }}
-                  placeholder="検索または新規作成..."
-                  className="flex h-14 w-full bg-transparent text-sm placeholder:text-muted-foreground"
-                  autoFocus={true}
-                />
-                <Badge
-                  variant="outline"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 font-normal"
-                  onClick={() => setOpen(false)}
-                >
-                  Esc
-                </Badge>
-              </div>
-              <div className="flex h-full z-0 pt-[56px]">
-                <CommandList className="overflow-y-auto w-full border-none flex-1 h-full max-h-full">
-                  <CommandGroup className="p-2 text-sm h-full">
-                    {filteredNodes.map((node) => (
-                      <CommandItem
-                        key={node.id}
-                        onSelect={() => handleSelectItem(node)}
-                        onMouseEnter={() => setFocusedNodeId(node.id)}
-                        className="cursor-pointer py-2"
-                        value={node.id}
-                      >
-                        <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
-                        <div className="flex justify-between w-full">
-                          <div className="line-clamp-1 flex-1 mr-4">
-                            {node.name}
-                          </div>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="xl:w-[90vw] xl:h-[90vh] xl:max-w-screen-xl w-[500px] h-[500px] p-0">
+        <VisuallyHidden.Root>
+          <DialogTitle>CmdKSearch</DialogTitle>
+        </VisuallyHidden.Root>
+        <Command className="h-full">
+          <div className="relative h-full flex flex-col">
+            <div className="absolute z-10 bg-inherit w-full border-b">
+              <CommandInput
+                value={searchQuery}
+                onValueChange={(value) => {
+                  setSearchQuery(value);
+                }}
+                placeholder="検索または新規作成..."
+                className="flex h-14 w-full bg-transparent text-sm placeholder:text-muted-foreground"
+                autoFocus={true}
+              />
+              <Badge
+                variant="outline"
+                className="absolute right-2 top-1/2 -translate-y-1/2 font-normal"
+                onClick={() => setOpen(false)}
+              >
+                Esc
+              </Badge>
+            </div>
+            <div className="flex flex-1 h-full z-0 pt-[56px]">
+              <CommandList className="overflow-y-auto w-full border-none flex-1 h-full max-h-full">
+                <CommandGroup className="p-2 text-sm h-full">
+                  {filteredNodes.map((node) => (
+                    <CommandItem
+                      key={node.id}
+                      onSelect={() => handleSelectItem(node)}
+                      onMouseEnter={() => setFocusedNodeId(node.id)}
+                      className="cursor-pointer py-2"
+                      value={node.id}
+                    >
+                      <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
+                      <div className="flex justify-between w-full">
+                        <div className="line-clamp-1 flex-1 mr-4">
+                          {node.name}
                         </div>
-                      </CommandItem>
-                    ))}
-                    {searchQuery.length > 0 && session && (
-                      <CommandItem
-                        onSelect={handleCreateNew}
-                        className="cursor-pointer py-2"
-                      >
-                        <PlusCircle className="w-4 h-4 mr-3" />
-                        <div className="">
-                          新規作成:
-                          <span className="text-accent ml-2">
-                            {searchQuery}
-                          </span>
-                        </div>
-                      </CommandItem>
-                    )}
-                  </CommandGroup>
-                </CommandList>
-                <div
-                  className={cn(
-                    focusedNode && "xl:block",
-                    "hidden border-l p-4 w-8/12 h-full overflow-y-auto"
+                      </div>
+                    </CommandItem>
+                  ))}
+                  {searchQuery.length > 0 && session && (
+                    <CommandItem
+                      onSelect={handleCreateNew}
+                      className="cursor-pointer py-2"
+                    >
+                      <PlusCircle className="w-4 h-4 mr-3" />
+                      <div className="">
+                        新規作成:
+                        <span className="text-accent ml-2">{searchQuery}</span>
+                      </div>
+                    </CommandItem>
                   )}
-                >
-                  {focusedNode && <NodePreview node={focusedNode} />}
-                </div>
+                </CommandGroup>
+              </CommandList>
+              <div
+                className={cn(
+                  focusedNode && "xl:block",
+                  "hidden border-l p-4 w-[700px] h-full overflow-y-auto"
+                )}
+              >
+                {focusedNode && <NodePreview node={focusedNode} />}
               </div>
-            </Command>
+            </div>
           </div>
-        </div>
-      )}
-    </>
+        </Command>
+      </DialogContent>
+    </Dialog>
   );
 }
