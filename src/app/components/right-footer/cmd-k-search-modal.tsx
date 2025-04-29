@@ -135,7 +135,7 @@ export default function CmdKSearchModal({
             <Command
               value={focusedNodeId || undefined}
               onValueChange={(value) => setFocusedNodeId(value || null)}
-              className="rounded-lg border shadow-lg"
+              className="rounded-lg border shadow-lg relative"
               shouldFilter={false}
             >
               <div className="absolute z-10 bg-inherit w-full border-b">
