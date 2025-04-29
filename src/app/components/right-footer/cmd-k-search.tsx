@@ -40,6 +40,7 @@ function NodePreview({ node }: { node: Node & { tags: Tag[] } }) {
     },
     [editorKey]
   );
+
   return <Editor editor={editor} />;
 }
 
@@ -122,21 +123,13 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
         return nameMatch || tagMatch;
       });
       setFilteredNodes(results);
+
+      if (results.length > 0) {
+        setFocusedNodeId(results[0].id);
+      }
     };
     search();
-  }, [searchQuery, allNodes]);
-
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
+  }, [searchQuery, allNodes, focusedNodeId]);
 
   const handleCreateNew = async () => {
     try {
@@ -166,6 +159,7 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
           <DialogTitle>CmdKSearch</DialogTitle>
         </VisuallyHidden.Root>
         <Command
+          shouldFilter={false}
           value={focusedNodeId || undefined}
           onValueChange={(value) => {
             setFocusedNodeId(value);
