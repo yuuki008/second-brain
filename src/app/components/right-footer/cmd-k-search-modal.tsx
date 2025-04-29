@@ -174,19 +174,6 @@ export default function CmdKSearchModal({
                           <div className="line-clamp-1 flex-1 mr-4">
                             {node.name}
                           </div>
-                          {node.tags && node.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-1">
-                              {node.tags.map((tag) => (
-                                <Badge
-                                  key={tag.id}
-                                  variant="secondary"
-                                  className="text-xs"
-                                >
-                                  {tag.name}
-                                </Badge>
-                              ))}
-                            </div>
-                          )}
                         </div>
                       </CommandItem>
                     ))}
