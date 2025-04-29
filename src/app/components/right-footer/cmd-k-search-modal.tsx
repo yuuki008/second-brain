@@ -33,6 +33,15 @@ function NodePreview({ node }: { node: Node & { tags: Tag[] } }) {
     content: node.content,
     editable: false,
   });
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (editor) {
+        editor.commands.setContent(node.content);
+      }
+    });
+  }, [editor, node.content]);
+
   return <Editor className="overflow-y-auto h-full" editor={editor} />;
 }
 
@@ -84,6 +93,18 @@ export default function CmdKSearchModal({
     search();
   }, [searchQuery, allNodes]);
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   // 検索結果をクリックしたときの処理
   const handleSelectItem = (node: Node & { tags: Tag[] }) => {
     router.push(`/node/${node.id}`);
@@ -124,7 +145,7 @@ export default function CmdKSearchModal({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="w-[90vw] h-[90vh]"
+              className="xl:w-[90vw] xl:h-[90vh] w-[500px] h-[500px]"
             >
               <Command
                 value={focusedNodeId || undefined}
@@ -157,17 +178,18 @@ export default function CmdKSearchModal({
                   {open && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
+                      animate={{ opacity: 1, height: "100%" }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
                     >
                       <div className="flex h-full border-t">
-                        <CommandList className="overflow-y-auto py-1 w-full h-full border-none max-w-[500px] max-h-full">
+                        <CommandList className="overflow-y-auto py-1 w-full h-full border-none max-w-full xl:max-w-[500px] max-h-full">
                           <CommandGroup className="p-2 text-sm">
                             {filteredNodes.map((node) => (
                               <CommandItem
                                 key={node.id}
                                 onSelect={() => handleSelectItem(node)}
+                                onMouseEnter={() => setFocusedNodeId(node.id)}
                                 className="cursor-pointer py-2"
                                 value={node.id}
                               >
@@ -210,8 +232,8 @@ export default function CmdKSearchModal({
                         </CommandList>
                         <div
                           className={cn(
-                            focusedNode ? "xl:block" : "hidden",
-                            "flex-1 border-l p-2"
+                            focusedNode && "xl:block",
+                            "hidden flex-1 border-l p-2"
                           )}
                         >
                           {focusedNode && <NodePreview node={focusedNode} />}
