@@ -81,6 +81,34 @@ function CommandItemWrapper({
   );
 }
 
+type CreateNewNodeItemProps = {
+  searchQuery: string;
+  onSelect: () => void;
+};
+
+function CreateNewNodeItem({ searchQuery, onSelect }: CreateNewNodeItemProps) {
+  const [isPending, startTransition] = useTransition();
+  const handleSelect = () => {
+    startTransition(() => {
+      onSelect();
+    });
+  };
+
+  return (
+    <CommandItem className="cursor-pointer py-2" onSelect={handleSelect}>
+      {isPending ? (
+        <Loader2 className="w-4 h-4 mr-3 flex-shrink-0 animate-spin" />
+      ) : (
+        <PlusCircle className="w-4 h-4 mr-3 flex-shrink-0" />
+      )}
+      <div className="">
+        「<span className="text-accent mx-[2px]">{searchQuery}</span>
+        」を新しく作る
+      </div>
+    </CommandItem>
+  );
+}
+
 export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
   const { data: session } = useSession();
   const router = useRouter();
@@ -152,6 +180,8 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
   const focusedNode =
     allNodes.find((node) => node.id === focusedNodeId) || allNodes[0];
 
+  if (!session) return null;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="xl:w-[90vw] xl:h-[90vh] xl:max-w-screen-xl w-[500px] h-[500px] p-0">
@@ -197,16 +227,10 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
                     />
                   ))}
                   {searchQuery.length > 0 && session && (
-                    <CommandItem
+                    <CreateNewNodeItem
+                      searchQuery={searchQuery}
                       onSelect={handleCreateNew}
-                      className="cursor-pointer py-2"
-                    >
-                      <PlusCircle className="w-4 h-4 mr-3" />
-                      <div className="">
-                        新規作成:
-                        <span className="text-accent ml-2">{searchQuery}</span>
-                      </div>
-                    </CommandItem>
+                    />
                   )}
                 </CommandGroup>
               </CommandList>
