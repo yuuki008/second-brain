@@ -42,7 +42,7 @@ function NodePreview({ node }: { node: Node & { tags: Tag[] } }) {
     });
   }, [editor, node.content]);
 
-  return <Editor className="overflow-y-auto h-full" editor={editor} />;
+  return <Editor editor={editor} />;
 }
 
 export default function CmdKSearchModal({
@@ -132,7 +132,7 @@ export default function CmdKSearchModal({
     <>
       {open && (
         <div className="fixed top-0 left-0 w-screen h-screen z-[110] bg-background/70 backdrop-blur-sm flex justify-center items-center">
-          <div className="xl:w-[90vw] xl:h-[90vh] w-[500px] h-[500px]">
+          <div className="xl:w-[90vw] xl:h-[90vh] xl:max-w-screen-xl w-[500px] h-[500px]">
             <Command
               value={focusedNodeId || undefined}
               onValueChange={(value) => setFocusedNodeId(value || null)}
@@ -195,7 +195,7 @@ export default function CmdKSearchModal({
                 <div
                   className={cn(
                     focusedNode && "xl:block",
-                    "hidden border-l p-4 w-8/12 h-full"
+                    "hidden border-l p-4 w-8/12 h-full overflow-y-auto"
                   )}
                 >
                   {focusedNode && <NodePreview node={focusedNode} />}

@@ -9,6 +9,10 @@
 .markdown-editor {
   @apply w-full min-h-full border-none bg-transparent text-[1.06rem] tracking-[0.02em];
 
+  .ProseMirror {
+    @apply focus:outline-none;
+  }
+
   h1 {
     @apply text-2xl mb-3 mt-10 font-bold;
   }
