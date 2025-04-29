@@ -133,12 +133,6 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, reactions }) => {
         }
       }, 1000);
     },
-    editorProps: {
-      attributes: {
-        class:
-          "markdown-editor focus:outline-none dark:prose-invert h-full px-1",
-      },
-    },
   });
 
   useEffect(() => {

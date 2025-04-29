@@ -11,7 +11,10 @@ type Props = {
 const Editor = memo(({ editor, className }: Props) => {
   return (
     <div className={cn("w-full h-full", className)}>
-      <EditorContent className="h-full" editor={editor} />
+      <EditorContent
+        className="markdown-editor focus:outline-none dark:prose-invert h-full px-1"
+        editor={editor}
+      />
     </div>
   );
 });

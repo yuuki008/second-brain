@@ -19,11 +19,22 @@ import { useSession } from "next-auth/react";
 import { createNode } from "@/app/actions/node";
 import Editor from "@/components/editor";
 import { cn } from "@/lib/utils";
+import { generateExtensions } from "@/components/editor/extensions";
+import { useEditor } from "@tiptap/react";
 
 type CmdKSearchModalProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
 };
+
+function NodePreview({ node }: { node: Node & { tags: Tag[] } }) {
+  const editor = useEditor({
+    extensions: generateExtensions(),
+    content: node.content,
+    editable: false,
+  });
+  return <Editor className="overflow-y-auto h-full" editor={editor} />;
+}
 
 export default function CmdKSearchModal({
   open,
@@ -37,7 +48,7 @@ export default function CmdKSearchModal({
     (Node & { tags: Tag[] })[]
   >([]);
   const [focusedNodeId, setFocusedNodeId] = useState<string | null>(null);
-  // 初期データの取得
+
   useEffect(() => {
     const fetchNodes = async () => {
       try {
@@ -52,7 +63,6 @@ export default function CmdKSearchModal({
     fetchNodes();
   }, []);
 
-  // 検索クエリが変更されたら検索を実行
   useEffect(() => {
     if (!searchQuery) {
       setFilteredNodes(allNodes);
@@ -61,11 +71,9 @@ export default function CmdKSearchModal({
 
     const search = () => {
       const results = allNodes.filter((node) => {
-        // 用語名での検索
         const nameMatch = node.name
           .toLowerCase()
           .includes(searchQuery.toLowerCase());
-        // タグでの検索
         const tagMatch = node.tags.some((tag) =>
           tag.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
@@ -96,7 +104,8 @@ export default function CmdKSearchModal({
     }
   };
 
-  console.log(focusedNodeId);
+  const focusedNode =
+    allNodes.find((node) => node.id === focusedNodeId) || allNodes[0];
 
   return (
     <AnimatePresence>
@@ -107,7 +116,7 @@ export default function CmdKSearchModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-0 left-0 w-screen h-screen z-[110] bg-background/70 backdrop-blur-sm flex justify-center"
+            className="fixed top-0 left-0 w-screen h-screen z-[110] bg-background/70 backdrop-blur-sm flex justify-center items-center"
             onClick={() => setOpen(false)}
           >
             <motion.div
@@ -115,7 +124,7 @@ export default function CmdKSearchModal({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="max-w-2xl w-[90%] mt-[15vh]"
+              className="w-[90vw] h-[90vh]"
             >
               <Command
                 value={focusedNodeId || undefined}
@@ -123,7 +132,7 @@ export default function CmdKSearchModal({
                   console.log(value);
                   setFocusedNodeId(value || null);
                 }}
-                className="rounded-lg border shadow-lg w-full h-auto"
+                className="rounded-lg border shadow-lg w-full h-full"
                 shouldFilter={false}
               >
                 <div className="relative">
@@ -152,8 +161,8 @@ export default function CmdKSearchModal({
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <div className="flex h-auto border-t">
-                        <CommandList className="overflow-y-auto max-h-[500px] py-1 w-full border-none">
+                      <div className="flex h-full border-t">
+                        <CommandList className="overflow-y-auto py-1 w-full h-full border-none max-w-[500px] max-h-full">
                           <CommandGroup className="p-2 text-sm">
                             {filteredNodes.map((node) => (
                               <CommandItem
@@ -201,21 +210,11 @@ export default function CmdKSearchModal({
                         </CommandList>
                         <div
                           className={cn(
-                            focusedNodeId ? "xl:block" : "hidden",
-                            "w-[400px] h-[500px] flex-shrink-0 border-l"
+                            focusedNode ? "xl:block" : "hidden",
+                            "flex-1 border-l p-2"
                           )}
                         >
-                          <div className="p-2">
-                            <Editor
-                              key={focusedNodeId}
-                              readOnly={true}
-                              content={
-                                allNodes.find(
-                                  (node) => node.id === focusedNodeId
-                                )?.content || ""
-                              }
-                            />
-                          </div>
+                          {focusedNode && <NodePreview node={focusedNode} />}
                         </div>
                       </div>
                     </motion.div>

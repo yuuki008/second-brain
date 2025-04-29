@@ -32,15 +32,13 @@ import Command from "./slash-command";
 import CodeBlockWithLanguage from "./code-block-with-langueage";
 export type GenerateExtensionsArgs = TableOfContentsExtensionArgs;
 
-export const generateExtensions = ({
-  setTableOfContentData,
-}: GenerateExtensionsArgs) => {
+export const generateExtensions = (args?: GenerateExtensionsArgs) => {
   return [
     StarterKit.configure({
       blockquote: false,
     }),
     Blockquote,
-    generateTableOfContents({ setTableOfContentData }),
+    generateTableOfContents(args),
     CodeBlockWithLanguage,
     Link,
     TextAlign,
