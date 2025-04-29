@@ -45,10 +45,7 @@ function NodePreview({ node }: { node: Node & { tags: Tag[] } }) {
   return <Editor editor={editor} />;
 }
 
-export default function CmdKSearchModal({
-  open,
-  setOpen,
-}: CmdKSearchModalProps) {
+export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");

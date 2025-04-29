@@ -21,7 +21,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import CmdKSearchModal from "./cmd-k-search-modal";
+import CmdKSearch from "./cmd-k-search";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
@@ -49,7 +49,7 @@ export default function RightFooter() {
 
   return (
     <>
-      <CmdKSearchModal open={isCmdKOpen} setOpen={setIsCmdKOpen} />
+      <CmdKSearch open={isCmdKOpen} setOpen={setIsCmdKOpen} />
       <DropdownMenu>
         <DropdownMenuTrigger
           className="fixed bottom-4 right-4 cursor-pointer hover:opacity-80 transition-opacity duration-200"
