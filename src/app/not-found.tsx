@@ -13,14 +13,15 @@ export default function NotFound() {
         />
       </div>
       <div className="text-center font-medium font-mono leading-[1.5]">
-        <div className="text-3xl tracking-wider mb-4">404 error</div>
+        <div className="text-3xl tracking-wider mb-4">404 Not Found</div>
         <p className="text-base">
-          page not found, click{" "}
+          お探しのページが見つかりませんでした。
           <Link href="/" className="text-blue-500 hover:underline">
-            here
-          </Link>{" "}
-          to go back.
+            こちら
+          </Link>
+          をクリックしてトップページに戻るか、
         </p>
+        <p className="text-base">検索をお試しください。</p>
       </div>
     </div>
   );

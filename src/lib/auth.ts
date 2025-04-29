@@ -33,7 +33,7 @@ declare module "next-auth" {
 }
 
 declare module "next-auth/adapters" {
-  /** The AdapterUser type extends the User type from next-auth */
+  /** AdapterUser 型は next-auth の User 型を拡張します */
   interface AdapterUser extends NextAuthUser {
     username?: string | null;
   }

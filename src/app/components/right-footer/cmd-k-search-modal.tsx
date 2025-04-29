@@ -145,7 +145,7 @@ export default function CmdKSearchModal({
                   onValueChange={(value) => {
                     setSearchQuery(value);
                   }}
-                  placeholder="What are you searching for?"
+                  placeholder="検索または新規作成..."
                   className="flex h-14 w-full bg-transparent text-sm placeholder:text-muted-foreground"
                   autoFocus={true}
                 />
@@ -183,7 +183,7 @@ export default function CmdKSearchModal({
                       >
                         <PlusCircle className="w-4 h-4 mr-3" />
                         <div className="">
-                          Create
+                          新規作成:
                           <span className="text-accent ml-2">
                             {searchQuery}
                           </span>
