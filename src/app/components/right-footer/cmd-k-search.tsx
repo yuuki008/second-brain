@@ -132,7 +132,13 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
         <VisuallyHidden.Root>
           <DialogTitle>CmdKSearch</DialogTitle>
         </VisuallyHidden.Root>
-        <Command className="h-full">
+        <Command
+          value={focusedNodeId || undefined}
+          onValueChange={(value) => {
+            setFocusedNodeId(value);
+          }}
+          className="h-full"
+        >
           <div className="relative h-full flex flex-col">
             <div className="absolute z-10 bg-inherit w-full border-b">
               <CommandInput
