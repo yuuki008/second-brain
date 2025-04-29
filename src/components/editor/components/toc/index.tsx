@@ -66,8 +66,6 @@ export default function ToC({ items, editor }: Props) {
     };
   }, []);
 
-  if (!editor.isInitialized) return <></>;
-
   const onItemClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     if (!editor) return;

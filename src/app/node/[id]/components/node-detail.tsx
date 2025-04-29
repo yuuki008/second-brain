@@ -1,7 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Editor from "@/components/editor";
+import React, { useState, useEffect, useRef } from "react";
+import { useEditor } from "@tiptap/react";
+import { generateExtensions } from "@/components/editor/extensions";
+import "@/components/editor/styles/markdown.css";
+import { type TableOfContentData } from "@tiptap-pro/extension-table-of-contents";
+import ToC from "@/components/editor/components/toc";
 import { updateNodeContent, updateNodeName } from "../actions";
 import { Node, Tag } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
@@ -10,6 +14,7 @@ import dayjs from "dayjs";
 import { useZen } from "@/components/providers/zen-provider";
 import { useSession } from "next-auth/react";
 import NodeFooter from "./node-footer";
+import Editor from "@/components/editor";
 
 interface NodeNodeData {
   id: string;
@@ -40,51 +45,6 @@ interface NodeDetailProps {
   };
   reactions: EmojiCount[];
 }
-
-// エディタ部分のみを扱う別コンポーネント
-const NodeEditor = React.memo(
-  ({
-    id,
-    initialContent,
-    isReadOnly,
-    isZenMode,
-  }: {
-    id: string;
-    initialContent: string;
-    isReadOnly: boolean;
-    isZenMode: boolean;
-  }) => {
-    const [content, setContent] = useState(initialContent);
-
-    // コンテンツが変更されたらデータベースに保存する
-    useEffect(() => {
-      // 読み取り専用モードまたは初期表示時は保存しない
-      if (isReadOnly || content === initialContent) return;
-
-      // デバウンス処理のための変数
-      const timer = setTimeout(async () => {
-        try {
-          await updateNodeContent(id, content);
-        } catch (error) {
-          console.error("保存エラー:", error);
-        }
-      }, 1000); // 1秒のデバウンス
-
-      // クリーンアップ関数
-      return () => clearTimeout(timer);
-    }, [content, id, initialContent, isReadOnly]);
-
-    return (
-      <Editor
-        content={content}
-        onChange={setContent}
-        readOnly={isReadOnly}
-        isZenMode={isZenMode}
-      />
-    );
-  }
-);
-NodeEditor.displayName = "NodeEditor";
 
 // ノード名を編集するコンポーネント
 const NodeNameEditor = React.memo(
@@ -148,8 +108,46 @@ NodeNameEditor.displayName = "NodeNameEditor";
 const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, reactions }) => {
   const { data: session } = useSession();
   const { isZenMode } = useZen();
+  const [tableOfContentData, setTableOfContentData] =
+    useState<TableOfContentData>([]);
+  const updateTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const isAuthenticated = session?.user.id === node.userId;
+  const isNodeOwner = session?.user.id === node.userId;
+
+  const editor = useEditor({
+    immediatelyRender: false,
+    shouldRerenderOnTransaction: false,
+    autofocus: !isNodeOwner,
+    editable: isNodeOwner,
+    extensions: generateExtensions({ setTableOfContentData }),
+    content: node.content,
+    onUpdate: ({ editor }) => {
+      if (updateTimeout.current) {
+        clearTimeout(updateTimeout.current);
+      }
+      updateTimeout.current = setTimeout(async () => {
+        try {
+          await updateNodeContent(id, editor.getHTML());
+        } catch (error) {
+          console.error("保存エラー:", error);
+        }
+      }, 1000);
+    },
+    editorProps: {
+      attributes: {
+        class:
+          "markdown-editor focus:outline-none dark:prose-invert h-full px-1",
+      },
+    },
+  });
+
+  useEffect(() => {
+    return () => {
+      if (updateTimeout.current) {
+        clearTimeout(updateTimeout.current);
+      }
+    };
+  }, []);
 
   return (
     <div
@@ -157,24 +155,20 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, reactions }) => {
         "w-full min-h-screen relative bg-background transition-all duration-300"
       }
     >
+      {!isZenMode && <ToC items={tableOfContentData} editor={editor!} />}
       <div className="w-[90%] flex flex-col min-h-screen relative max-w-2xl mx-auto pb-20">
         <div className="flex-1 flex flex-col pt-14">
           <NodeNameEditor
             id={id}
             initialName={node.name}
-            isReadOnly={!isAuthenticated}
+            isReadOnly={!isNodeOwner}
             isZenMode={isZenMode}
             viewCount={node.viewCount}
             lastUpdated={node.updatedAt}
           />
 
           <div className="flex-1 mt-6">
-            <NodeEditor
-              id={id}
-              initialContent={node.content}
-              isReadOnly={!isAuthenticated}
-              isZenMode={isZenMode}
-            />
+            <Editor className="h-full" editor={editor} />
 
             {!isZenMode && (
               <>

@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { useSession } from "next-auth/react";
 import { createNode } from "@/app/actions/node";
 import Editor from "@/components/editor";
+import { cn } from "@/lib/utils";
 
 type CmdKSearchModalProps = {
   open: boolean;
@@ -35,10 +36,7 @@ export default function CmdKSearchModal({
   const [filteredNodes, setFilteredNodes] = useState<
     (Node & { tags: Tag[] })[]
   >([]);
-  const [focusedNode, setFocusedNode] = useState<
-    (Node & { tags: Tag[] }) | null
-  >(null);
-
+  const [focusedNodeId, setFocusedNodeId] = useState<string | null>(null);
   // 初期データの取得
   useEffect(() => {
     const fetchNodes = async () => {
@@ -58,7 +56,6 @@ export default function CmdKSearchModal({
   useEffect(() => {
     if (!searchQuery) {
       setFilteredNodes(allNodes);
-      setFocusedNode(null);
       return;
     }
 
@@ -83,7 +80,6 @@ export default function CmdKSearchModal({
   const handleSelectItem = (node: Node & { tags: Tag[] }) => {
     router.push(`/node/${node.id}`);
     setSearchQuery("");
-    setFocusedNode(null);
     setOpen(false);
   };
 
@@ -94,12 +90,13 @@ export default function CmdKSearchModal({
       setAllNodes((prev) => [...prev, newNode]);
       router.push(`/node/${newNode.id}`);
       setSearchQuery("");
-      setFocusedNode(null);
       setOpen(false);
     } catch (error) {
       console.error("新規作成エラー:", error);
     }
   };
+
+  console.log(focusedNodeId);
 
   return (
     <AnimatePresence>
@@ -121,6 +118,11 @@ export default function CmdKSearchModal({
               className="max-w-2xl w-[90%] mt-[15vh]"
             >
               <Command
+                value={focusedNodeId || undefined}
+                onValueChange={(value) => {
+                  console.log(value);
+                  setFocusedNodeId(value || null);
+                }}
                 className="rounded-lg border shadow-lg w-full h-auto"
                 shouldFilter={false}
               >
@@ -129,7 +131,6 @@ export default function CmdKSearchModal({
                     value={searchQuery}
                     onValueChange={(value) => {
                       setSearchQuery(value);
-                      setFocusedNode(null);
                     }}
                     placeholder="What are you searching for?"
                     className="flex h-14 w-full bg-transparent text-sm placeholder:text-muted-foreground"
@@ -152,24 +153,14 @@ export default function CmdKSearchModal({
                       transition={{ duration: 0.2 }}
                     >
                       <div className="flex h-auto border-t">
-                        <CommandList
-                          className="overflow-y-auto max-h-[500px] py-1 w-full border-none"
-                          onMouseLeave={() => setFocusedNode(null)}
-                        >
+                        <CommandList className="overflow-y-auto max-h-[500px] py-1 w-full border-none">
                           <CommandGroup className="p-2 text-sm">
                             {filteredNodes.map((node) => (
                               <CommandItem
                                 key={node.id}
                                 onSelect={() => handleSelectItem(node)}
-                                onFocus={() => {
-                                  console.log(node);
-                                  setFocusedNode(node);
-                                }}
-                                onMouseEnter={() => {
-                                  console.log(node);
-                                  setFocusedNode(node);
-                                }}
                                 className="cursor-pointer py-2"
+                                value={node.id}
                               >
                                 <FileText className="w-4 h-4 mr-3 flex-shrink-0" />
                                 <div className="flex justify-between w-full">
@@ -208,12 +199,21 @@ export default function CmdKSearchModal({
                             )}
                           </CommandGroup>
                         </CommandList>
-                        <div className="hidden lg:block w-[400px] h-[500px] flex-shrink-0 border-l">
+                        <div
+                          className={cn(
+                            focusedNodeId ? "xl:block" : "hidden",
+                            "w-[400px] h-[500px] flex-shrink-0 border-l"
+                          )}
+                        >
                           <div className="p-2">
                             <Editor
-                              key={focusedNode?.id}
+                              key={focusedNodeId}
                               readOnly={true}
-                              content={focusedNode?.content || ""}
+                              content={
+                                allNodes.find(
+                                  (node) => node.id === focusedNodeId
+                                )?.content || ""
+                              }
                             />
                           </div>
                         </div>
