@@ -36,6 +36,7 @@ export const generateExtensions = (args?: GenerateExtensionsArgs) => {
   return [
     StarterKit.configure({
       blockquote: false,
+      codeBlock: false,
     }),
     Blockquote,
     generateTableOfContents(args),

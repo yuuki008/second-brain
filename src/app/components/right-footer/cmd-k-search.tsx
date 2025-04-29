@@ -10,7 +10,7 @@ import {
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 import { getAllNodes } from "@/app/actions/search";
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useEffect } from "react";
 import { Node, Tag } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -28,21 +28,18 @@ type CmdKSearchModalProps = {
 };
 
 function NodePreview({ node }: { node: Node & { tags: Tag[] } }) {
-  const editor = useEditor({
-    extensions: generateExtensions(),
-    content: node.content,
-    immediatelyRender: false,
-    editable: false,
-  });
+  const editorKey = useMemo(() => node.id, [node.id]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      if (editor) {
-        editor.commands.setContent(node.content);
-      }
-    });
-  }, [editor, node.content]);
-
+  const editor = useEditor(
+    {
+      extensions: generateExtensions(),
+      content: node.content,
+      immediatelyRender: false,
+      shouldRerenderOnTransaction: false,
+      editable: false,
+    },
+    [editorKey]
+  );
   return <Editor editor={editor} />;
 }
 
