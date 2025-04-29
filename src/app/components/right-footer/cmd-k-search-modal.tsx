@@ -134,9 +134,7 @@ export default function CmdKSearchModal({
           <div className="xl:w-[90vw] xl:h-[90vh] w-[500px] h-[500px]">
             <Command
               value={focusedNodeId || undefined}
-              onValueChange={(value) => {
-                setFocusedNodeId(value || null);
-              }}
+              onValueChange={(value) => setFocusedNodeId(value || null)}
               className="rounded-lg border shadow-lg"
               shouldFilter={false}
             >
@@ -196,7 +194,7 @@ export default function CmdKSearchModal({
                 <div
                   className={cn(
                     focusedNode && "xl:block",
-                    "hidden border-l p-2 w-[672px] h-full"
+                    "hidden border-l p-4 w-8/12 h-full"
                   )}
                 >
                   {focusedNode && <NodePreview node={focusedNode} />}
