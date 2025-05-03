@@ -151,10 +151,6 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
         return nameMatch || tagMatch;
       });
       setFilteredNodes(results);
-
-      if (results.length > 0) {
-        setFocusedNodeId(results[0].id);
-      }
     };
     search();
   }, [searchQuery, allNodes, focusedNodeId]);
@@ -178,7 +174,7 @@ export default function CmdKSearch({ open, setOpen }: CmdKSearchModalProps) {
   };
 
   const focusedNode =
-    allNodes.find((node) => node.id === focusedNodeId) || allNodes[0];
+    filteredNodes.find((node) => node.id === focusedNodeId) || filteredNodes[0];
 
   if (!session) return null;
 
