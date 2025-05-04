@@ -46,7 +46,7 @@ const CodeBlockShiki = Node.create({
     return [
       {
         tag: "pre",
-        preserveWhitespace: false,
+        preserveWhitespace: "full",
       },
     ];
   },

@@ -37,7 +37,7 @@ const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
     <NodeViewWrapper className="relative group border rounded-md p-4 my-4 ">
       <div className="absolute top-2 right-2 opacity-0 bg-background group-hover:opacity-100 transition-opacity duration-200">
         <Select value={language} onValueChange={handleLanguageChange}>
-          <SelectTrigger className="w-[120px] h-7 text-xs">
+          <SelectTrigger className="h-7 text-xs">
             <SelectValue placeholder="言語を選択" />
           </SelectTrigger>
           <SelectContent>
