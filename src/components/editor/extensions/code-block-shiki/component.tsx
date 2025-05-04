@@ -30,9 +30,16 @@ const supportedLanguages: SupportedLanguage[] = [
   { name: "yaml", label: "YAML" },
   { name: "markdown", label: "Markdown" },
   { name: "plaintext", label: "Plaintext" },
+  { name: "bash", label: "Bash" },
+  { name: "sh", label: "Shell" },
+  { name: "sql", label: "SQL" },
 ];
 
-const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
+const CodeBlockShikiComponent = ({
+  node,
+  updateAttributes,
+  editor,
+}: NodeViewProps) => {
   const { resolvedTheme } = useTheme();
   const { language } = node.attrs;
 
@@ -55,21 +62,36 @@ const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
     }
   }, [resolvedTheme, updateAttributes, node.attrs.theme]);
 
+  const selectedLanguageLabel =
+    supportedLanguages.find((lang) => lang.name === language)?.label || "";
+
   return (
     <NodeViewWrapper className="relative flex flex-col border rounded-sm my-4 ">
       <div className="flex items-center justify-between border-b p-2">
-        <Select value={language} onValueChange={handleLanguageChange}>
-          <SelectTrigger className="h-7 text-xs border-none w-32 focus:outline-none focus:ring-0">
-            <SelectValue placeholder="言語を選択" />
-          </SelectTrigger>
-          <SelectContent>
-            {supportedLanguages.map((lang) => (
-              <SelectItem key={lang.name} value={lang.name} className="text-xs">
-                {lang.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {editor.isEditable ? (
+          <Select
+            value={language}
+            onValueChange={handleLanguageChange}
+            disabled={!editor.isEditable}
+          >
+            <SelectTrigger className="h-7 text-xs border-none w-32 focus:outline-none focus:ring-0">
+              <SelectValue placeholder="言語を選択" />
+            </SelectTrigger>
+            <SelectContent>
+              {supportedLanguages.map((lang) => (
+                <SelectItem
+                  key={lang.name}
+                  value={lang.name}
+                  className="text-xs"
+                >
+                  {lang.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : (
+          <div className="text-xs leading-7 p-2">{selectedLanguageLabel}</div>
+        )}
 
         <Button
           className="cursor-pointer"

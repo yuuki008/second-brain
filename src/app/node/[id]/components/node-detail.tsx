@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useEditor } from "@tiptap/react";
+import { useEditor, AnyExtension } from "@tiptap/react";
 import { generateExtensions } from "@/components/editor/extensions";
 import "@/components/editor/styles/markdown.css";
 import { type TableOfContentData } from "@tiptap-pro/extension-table-of-contents";
@@ -119,7 +119,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ id, node, reactions }) => {
     shouldRerenderOnTransaction: false,
     autofocus: !isNodeOwner,
     editable: isNodeOwner,
-    extensions: generateExtensions({ setTableOfContentData }),
+    extensions: generateExtensions({ setTableOfContentData }) as AnyExtension[],
     content: node.content,
     onUpdate: ({ editor }) => {
       if (updateTimeout.current) {
