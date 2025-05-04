@@ -9,6 +9,8 @@ import {
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import { BundledTheme } from "shiki";
+import { Button } from "@/components/ui/button";
+import { CopyIcon } from "lucide-react";
 
 type SupportedLanguage = {
   name: string;
@@ -37,6 +39,11 @@ const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
     updateAttributes({ language: newLanguage });
   }
 
+  const handleCopy = () => {
+    const code = node.content.toString();
+    navigator.clipboard.writeText(code);
+  };
+
   useEffect(() => {
     const shikiTheme: BundledTheme =
       resolvedTheme === "dark" ? "github-dark" : "github-light";
@@ -47,10 +54,10 @@ const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
   }, [resolvedTheme, updateAttributes, node.attrs.theme]);
 
   return (
-    <NodeViewWrapper className="relative group border rounded-xs p-4 my-4 ">
-      <div className="absolute top-2 right-2 opacity-0 bg-background group-hover:opacity-100 transition-opacity duration-200">
+    <NodeViewWrapper className="relative flex flex-col border rounded-sm my-4 ">
+      <div className="flex items-center justify-between border-b p-2">
         <Select value={language} onValueChange={handleLanguageChange}>
-          <SelectTrigger className="h-7 text-xs">
+          <SelectTrigger className="h-7 text-xs border-none w-32 focus:outline-none focus:ring-0">
             <SelectValue placeholder="言語を選択" />
           </SelectTrigger>
           <SelectContent>
@@ -61,8 +68,12 @@ const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
             ))}
           </SelectContent>
         </Select>
+
+        <Button variant="ghost" size="icon" onClick={handleCopy}>
+          <CopyIcon className="w-4 h-4" />
+        </Button>
       </div>
-      <pre className="text-sm font-mono">
+      <pre className="text-sm font-mono p-4 text-[13px]">
         <NodeViewContent as="code" />
       </pre>
     </NodeViewWrapper>
