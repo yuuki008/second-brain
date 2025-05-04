@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { BundledTheme } from "shiki";
 import { Button } from "@/components/ui/button";
 import { CopyIcon } from "lucide-react";
+import { toast } from "sonner";
 
 type SupportedLanguage = {
   name: string;
@@ -42,6 +43,7 @@ const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
   const handleCopy = () => {
     const code = node.content.toString();
     navigator.clipboard.writeText(code);
+    toast.success("コードをコピーしました");
   };
 
   useEffect(() => {
@@ -69,7 +71,12 @@ const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
           </SelectContent>
         </Select>
 
-        <Button variant="ghost" size="icon" onClick={handleCopy}>
+        <Button
+          className="cursor-pointer"
+          variant="ghost"
+          size="icon"
+          onClick={handleCopy}
+        >
           <CopyIcon className="w-4 h-4" />
         </Button>
       </div>
