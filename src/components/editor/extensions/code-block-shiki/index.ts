@@ -39,6 +39,9 @@ const CodeBlockShiki = Node.create({
       language: {
         default: this.options.defaultLanguage,
       },
+      theme: {
+        default: this.options.defaultTheme,
+      },
     };
   },
 

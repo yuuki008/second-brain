@@ -6,6 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTheme } from "next-themes";
+import { useEffect } from "react";
 
 type SupportedLanguage = {
   name: string;
@@ -27,11 +29,18 @@ const supportedLanguages: SupportedLanguage[] = [
 ];
 
 const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
+  const { theme } = useTheme();
   const { language } = node.attrs;
 
   function handleLanguageChange(newLanguage: string): void {
     updateAttributes({ language: newLanguage });
   }
+
+  useEffect(() => {
+    if (theme === "dark") {
+      updateAttributes({ theme: "github-dark" });
+    }
+  }, [theme, updateAttributes]);
 
   return (
     <NodeViewWrapper className="relative group border rounded-xs p-4 my-4 ">
