@@ -80,7 +80,7 @@ const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
           <CopyIcon className="w-4 h-4" />
         </Button>
       </div>
-      <pre className="text-sm font-mono p-4 text-[13px]">
+      <pre className="font-mono p-4 text-xs font-light">
         <NodeViewContent as="code" />
       </pre>
     </NodeViewWrapper>
