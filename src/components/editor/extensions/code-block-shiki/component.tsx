@@ -67,7 +67,7 @@ const CodeBlockShikiComponent = ({
 
   return (
     <NodeViewWrapper className="relative flex flex-col border rounded-sm my-4 ">
-      <div className="flex items-center justify-between border-b p-2">
+      <div className="flex items-center justify-between border-b p-1.5">
         {editor.isEditable ? (
           <Select
             value={language}
