@@ -8,6 +8,7 @@ import { ReactNodeViewRenderer } from "@tiptap/react";
 import CodeBlockShikiComponent from "./component";
 import { tildeInputRegex } from "@tiptap/extension-code-block";
 import { backtickInputRegex } from "@tiptap/extension-code-block";
+import { ShikiPlugin } from "./shiki-plugin";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -24,11 +25,19 @@ const CodeBlockShiki = Node.create({
   marks: "",
   code: true,
   defining: true,
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      defaultLanguage: "typescript",
+      defaultTheme: "github-light",
+    };
+  },
 
   addAttributes() {
     return {
+      ...this.parent?.(),
       language: {
-        default: "plaintext",
+        default: this.options.defaultLanguage,
       },
     };
   },
@@ -81,7 +90,19 @@ const CodeBlockShiki = Node.create({
 
   addKeyboardShortcuts() {
     return {
-      Enter: ({ editor }) => editor.commands.insertContent("\n"),
+      Enter: ({ editor }) => {
+        const { state } = editor;
+        const { selection } = state;
+        const { $from, empty } = selection;
+
+        // If the cursor is not in a code block, do nothing
+        if (!empty || $from.parent.type !== this.type) {
+          return false;
+        }
+
+        editor.commands.insertContent("\n");
+        return true;
+      },
       ArrowDown: ({ editor }) => {
         const { state } = editor;
         const { selection } = state;
@@ -102,6 +123,17 @@ const CodeBlockShiki = Node.create({
         return editor.commands.exitCode();
       },
     };
+  },
+
+  addProseMirrorPlugins() {
+    return [
+      ...(this.parent?.() || []),
+      ShikiPlugin({
+        name: this.name,
+        defaultLanguage: this.options.defaultLanguage,
+        defaultTheme: this.options.defaultTheme,
+      }),
+    ];
   },
 });
 
