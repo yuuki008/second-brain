@@ -6,7 +6,7 @@ const CodeBlockShiki = ({ node }: NodeViewProps) => {
 
   return (
     <NodeViewWrapper>
-      <pre className="border rounded-md p-4 my-4 text-sm">
+      <pre className="border rounded-md p-4 my-4 text-sm font-mono">
         <NodeViewContent as="code" />
       </pre>
     </NodeViewWrapper>

@@ -20,6 +20,7 @@ export default {
         "Segoe UI Symbol",
       ],
       inter: ["Inter", "sans-serif"],
+      mono: ["Geist Mono", "Geist Fallback Mono", "SF Mono", "Monaco"],
     },
     extend: {
       screens: {
