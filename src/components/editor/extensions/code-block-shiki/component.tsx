@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
+import { BundledTheme } from "shiki";
 
 type SupportedLanguage = {
   name: string;
@@ -29,7 +30,7 @@ const supportedLanguages: SupportedLanguage[] = [
 ];
 
 const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const { language } = node.attrs;
 
   function handleLanguageChange(newLanguage: string): void {
@@ -37,10 +38,13 @@ const CodeBlockShikiComponent = ({ node, updateAttributes }: NodeViewProps) => {
   }
 
   useEffect(() => {
-    if (theme === "dark") {
-      updateAttributes({ theme: "github-dark" });
+    const shikiTheme: BundledTheme =
+      resolvedTheme === "dark" ? "github-dark" : "github-light";
+
+    if (node.attrs.theme !== shikiTheme) {
+      updateAttributes({ theme: shikiTheme });
     }
-  }, [theme, updateAttributes]);
+  }, [resolvedTheme, updateAttributes, node.attrs.theme]);
 
   return (
     <NodeViewWrapper className="relative group border rounded-xs p-4 my-4 ">
