@@ -20,7 +20,7 @@ import { createNode } from "@/app/actions/node";
 import Editor from "@/components/editor";
 import { cn } from "@/lib/utils";
 import { generateExtensions } from "@/components/editor/extensions";
-import { useEditor } from "@tiptap/react";
+import { AnyExtension, useEditor } from "@tiptap/react";
 
 type CmdKSearchModalProps = {
   open: boolean;
@@ -32,7 +32,7 @@ function NodePreview({ node }: { node: Node & { tags: Tag[] } }) {
 
   const editor = useEditor(
     {
-      extensions: generateExtensions(),
+      extensions: generateExtensions() as AnyExtension[],
       content: node.content,
       immediatelyRender: false,
       shouldRerenderOnTransaction: false,

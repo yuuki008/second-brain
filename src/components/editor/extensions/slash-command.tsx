@@ -59,6 +59,14 @@ interface KeyDownHandlerResult {
   onKeyDown: (props: { event: KeyboardEvent }) => boolean;
 }
 
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    slashCommand: {
+      setHorizontalRule: () => ReturnType;
+    };
+  }
+}
+
 // 拡張されたCommandListコンポーネント
 const CommandListWithKeyboardHandling = forwardRef<
   KeyDownHandlerResult,

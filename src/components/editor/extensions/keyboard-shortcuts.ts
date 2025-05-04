@@ -2,6 +2,22 @@ import { Extension } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { EditorView } from "@tiptap/pm/view";
 
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    keyboardShortcuts: {
+      setParagraph: () => ReturnType;
+      toggleHeading: ({ level }: { level: number }) => ReturnType;
+      toggleCodeBlock: () => ReturnType;
+      toggleTaskList: () => ReturnType;
+      toggleTaskItem: () => ReturnType;
+      toggleCodeBlockShiki: () => ReturnType;
+      toggleBlockquote: () => ReturnType;
+      toggleBulletList: () => ReturnType;
+      toggleOrderedList: () => ReturnType;
+    };
+  }
+}
+
 export const KeyboardShortcuts = Extension.create({
   name: "keyboardShortcuts",
 
