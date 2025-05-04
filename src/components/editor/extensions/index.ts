@@ -29,7 +29,7 @@ import DetailsContent from "@tiptap-pro/extension-details-content";
 import DetailsSummary from "@tiptap-pro/extension-details-summary";
 import { Blockquote } from "./blockquote";
 import Command from "./slash-command";
-import CodeBlockWithLanguage from "./code-block-with-langueage";
+import CodeBlockShiki from "./code-block-shiki";
 export type GenerateExtensionsArgs = TableOfContentsExtensionArgs;
 
 export const generateExtensions = (args?: GenerateExtensionsArgs) => {
@@ -40,7 +40,7 @@ export const generateExtensions = (args?: GenerateExtensionsArgs) => {
     }),
     Blockquote,
     generateTableOfContents(args),
-    CodeBlockWithLanguage,
+    CodeBlockShiki,
     Link,
     TextAlign,
     Underline,
