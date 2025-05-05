@@ -133,4 +133,16 @@
   video {
     @apply w-full;
   }
+
+  /* Mermaid */
+  .node rect,
+  .node circle,
+  .node ellipse,
+  .node polygon {
+    @apply !fill-secondary !stroke-secondary !stroke-1;
+  }
+
+  .node text {
+    @apply !text-secondary-foreground;
+  }
 }

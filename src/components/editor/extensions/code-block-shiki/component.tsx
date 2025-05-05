@@ -12,6 +12,7 @@ import { BundledTheme } from "shiki";
 import { Button } from "@/components/ui/button";
 import { CopyIcon } from "lucide-react";
 import { toast } from "sonner";
+import MermaidPreview from "./mermaid-preview";
 
 type SupportedLanguage = {
   name: string;
@@ -33,6 +34,7 @@ const supportedLanguages: SupportedLanguage[] = [
   { name: "bash", label: "Bash" },
   { name: "sh", label: "Shell" },
   { name: "sql", label: "SQL" },
+  { name: "mermaid", label: "Mermaid" },
 ];
 
 const CodeBlockShikiComponent = ({
@@ -104,6 +106,12 @@ const CodeBlockShikiComponent = ({
       </div>
       <pre className="font-mono p-4 text-xs font-light">
         <NodeViewContent as="code" />
+
+        {language === "mermaid" && (
+          <div className="mt-8">
+            <MermaidPreview node={node} />
+          </div>
+        )}
       </pre>
     </NodeViewWrapper>
   );
