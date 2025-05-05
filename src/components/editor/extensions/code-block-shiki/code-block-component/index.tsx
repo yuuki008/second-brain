@@ -57,7 +57,7 @@ const CodeBlockShikiComponent = ({
 
   useEffect(() => {
     const shikiTheme: BundledTheme =
-      resolvedTheme === "dark" ? "github-dark" : "github-light";
+      resolvedTheme === "dark" ? "vitesse-dark" : "vitesse-light";
 
     if (node.attrs.theme !== shikiTheme) {
       updateAttributes({ theme: shikiTheme });
@@ -76,7 +76,7 @@ const CodeBlockShikiComponent = ({
             onValueChange={handleLanguageChange}
             disabled={!editor.isEditable}
           >
-            <SelectTrigger className="h-7 text-xs border-none w-32 focus:outline-none focus:ring-0">
+            <SelectTrigger className="h-7 text-xs shadow-none border-none w-32 focus:outline-none focus:ring-0">
               <SelectValue placeholder="言語を選択" />
             </SelectTrigger>
             <SelectContent>
