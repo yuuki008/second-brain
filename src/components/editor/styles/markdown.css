@@ -34,7 +34,7 @@
   }
 
   ul {
-    @apply pl-5;
+    @apply pl-5 my-2;
     list-style-type: "-  ";
 
     ::marker {
@@ -51,7 +51,7 @@
   }
 
   ol {
-    @apply list-decimal pl-5;
+    @apply list-decimal pl-5 my-2;
 
     ::marker {
       @apply font-extralight text-sm;
