@@ -34,26 +34,27 @@
   }
 
   ul {
-    @apply list-disc pl-6 my-1;
+    @apply pl-5;
+    list-style-type: "-  ";
 
     ::marker {
-      @apply font-extralight;
+      @apply font-normal;
+    }
+
+    li {
+      @apply my-0 pl-0;
+
+      p {
+        @apply my-0;
+      }
     }
   }
 
   ol {
-    @apply list-decimal pl-6 my-1;
+    @apply list-decimal pl-5;
 
     ::marker {
-      @apply font-extralight;
-    }
-  }
-
-  li {
-    @apply my-0 pl-0;
-
-    p {
-      @apply my-0;
+      @apply font-extralight text-sm;
     }
   }
 
