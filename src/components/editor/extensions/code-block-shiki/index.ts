@@ -28,8 +28,8 @@ const CodeBlockShiki = Node.create({
   addOptions() {
     return {
       ...this.parent?.(),
-      defaultLanguage: "typescript",
-      defaultTheme: "github-light",
+      defaultLanguage: "plaintext",
+      defaultTheme: "vitesse-light",
     };
   },
 

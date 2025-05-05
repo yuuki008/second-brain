@@ -106,13 +106,12 @@ const CodeBlockShikiComponent = ({
       </div>
       <pre className="font-mono p-4 text-xs font-light">
         <NodeViewContent as="code" />
-
-        {language === "mermaid" && (
-          <div className="mt-8">
-            <MermaidPreview node={node} />
-          </div>
-        )}
       </pre>
+      {language === "mermaid" && (
+        <div className="mt-6 p-2">
+          <MermaidPreview node={node} />
+        </div>
+      )}
     </NodeViewWrapper>
   );
 };
