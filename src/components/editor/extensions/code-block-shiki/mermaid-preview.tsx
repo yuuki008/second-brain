@@ -45,7 +45,9 @@ export default function MermaidPreview({ node }: MermaidPreviewProps) {
       }
     };
 
-    renderMermaid();
+    setTimeout(() => {
+      renderMermaid();
+    }, 500);
   }, [content]);
 
   if (error) {
