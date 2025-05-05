@@ -5,7 +5,7 @@ import {
   textblockTypeInputRule,
 } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
-import CodeBlockShikiComponent from "./code-block-component/component";
+import CodeBlockShikiComponent from "./code-block-component";
 import { tildeInputRegex } from "@tiptap/extension-code-block";
 import { backtickInputRegex } from "@tiptap/extension-code-block";
 import { ShikiPlugin } from "./shiki-plugin";

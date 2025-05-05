@@ -138,11 +138,12 @@
   .node rect,
   .node circle,
   .node ellipse,
-  .node polygon {
-    @apply !fill-secondary !stroke-secondary !stroke-1;
+  .node polygon,
+  .node text {
+    @apply !fill-muted !stroke-border !stroke-1 !text-muted-foreground;
   }
 
-  .node text {
-    @apply !text-secondary-foreground;
+  .edgePaths path {
+    @apply !stroke-border !stroke-1;
   }
 }
