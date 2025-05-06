@@ -21,6 +21,7 @@ export function useCmdKSearch(
   const [allNodes, setAllNodes] = useState<(Node & { tags: Tag[] })[]>([]);
   const [focusedNodeId, setFocusedNodeId] = useState<string | null>(null);
   const [isFetchingNodes, startFetchingTransition] = useTransition(); // データ取得用Transition
+  const [selectingNodeId, setSelectingNodeId] = useState<string | null>(null); // ★ 選択中のノードIDを保持
 
   // Initial data fetching
   useEffect(() => {
@@ -86,7 +87,7 @@ export function useCmdKSearch(
 
   // --- Action Handlers with Transitions ---
   const [isCreating, startCreateTransition] = useTransition();
-  const [isSelecting, startSelectTransition] = useTransition();
+  const [, startSelectTransition] = useTransition(); // ★ isSelecting は不要に
 
   const handleCreateNew = useCallback(async () => {
     if (!searchQuery.trim()) return; // 空のクエリでは作成しない
@@ -103,19 +104,26 @@ export function useCmdKSearch(
         // TODO: Add user-friendly error handling
       }
     });
-  }, [searchQuery, router, setOpen]); // 依存関係を修正
+  }, [searchQuery, router, setOpen, startCreateTransition]); // 依存関係を修正
 
   const handleSelectItem = useCallback(
     (nodeId: string) => {
-      // nodeId を引数で受け取る
+      setSelectingNodeId(nodeId); // ★ 選択開始時にIDを設定
       startSelectTransition(() => {
-        router.push(`/node/${nodeId}`);
-        setSearchQuery(""); // Clear search query
-        setOpen(false); // Close dialog
+        try {
+          router.push(`/node/${nodeId}`);
+          setSearchQuery(""); // Clear search query
+          setOpen(false); // Close dialog
+        } catch (error) {
+          console.error("選択処理エラー:", error);
+          // TODO: エラーハンドリング
+        } finally {
+          setSelectingNodeId(null);
+        }
       });
     },
-    [router, setOpen]
-  ); // 依存関係を修正
+    [router, setOpen, startSelectTransition] // 依存関係を修正
+  );
 
   return {
     session,
@@ -129,7 +137,7 @@ export function useCmdKSearch(
     handleCreateNew,
     handleSelectItem,
     isCreating,
-    isSelecting,
+    selectingNodeId, // ★ 追加
     isFetchingNodes, // データ取得中の状態を返す
   };
 }

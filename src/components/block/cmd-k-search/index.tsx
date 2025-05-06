@@ -34,7 +34,7 @@ export function CmdKSearch({ open, setOpen }: CmdKSearchProps) {
     focusedNode,
     handleSelectItem,
     isCreating,
-    isSelecting,
+    selectingNodeId,
     isFetchingNodes,
     handleCreateNew,
   } = useCmdKSearch(open, setOpen);
@@ -115,8 +115,7 @@ export function CmdKSearch({ open, setOpen }: CmdKSearchProps) {
                         node={node}
                         onMouseEnter={() => setFocusedNodeId(node.id)}
                         onSelect={() => handleSelectItem(node.id)}
-                        // Pass selecting state only if this specific item is being selected
-                        isSelecting={isSelecting && focusedNodeId === node.id}
+                        selectingNodeId={selectingNodeId}
                       />
                     ))
                   )}
