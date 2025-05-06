@@ -21,7 +21,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import CmdKSearch from "../../../components/block/cmd-k-search";
+import { CmdKSearch } from "@/components/block/cmd-k-search";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
