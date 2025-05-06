@@ -63,7 +63,7 @@
   }
 
   a {
-    @apply text-primary underline hover:text-primary/80 cursor-pointer;
+    @apply text-accent cursor-pointer;
   }
 
   hr {
