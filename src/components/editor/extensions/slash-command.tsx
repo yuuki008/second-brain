@@ -238,7 +238,7 @@ const Command = Extension.create({
                   .chain()
                   .focus()
                   .deleteRange(range)
-                  .toggleCodeBlock()
+                  .setCodeBlockShiki({})
                   .run();
               },
             },
