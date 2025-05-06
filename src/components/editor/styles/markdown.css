@@ -29,6 +29,10 @@
     @apply text-foreground leading-[1.9] my-0 text-sm mt-2 font-light;
   }
 
+  code {
+    @apply bg-muted border text-accent font-mono text-xs rounded-sm px-1 py-0.5;
+  }
+
   blockquote {
     @apply border-l-4 border-muted pl-4 italic text-muted-foreground;
   }
