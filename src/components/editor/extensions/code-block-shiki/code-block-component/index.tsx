@@ -68,8 +68,8 @@ const CodeBlockShikiComponent = ({
     supportedLanguages.find((lang) => lang.name === language)?.label || "";
 
   return (
-    <NodeViewWrapper className="relative flex flex-col border rounded-sm my-4 ">
-      <div className="flex items-center justify-between border-b p-1.5">
+    <NodeViewWrapper className="relative flex flex-col border rounded-sm my-4 bg-muted">
+      <div className="flex items-center justify-between border-b p-1.5 text-muted-foreground">
         {editor.isEditable ? (
           <Select
             value={language}
