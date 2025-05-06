@@ -62,8 +62,8 @@ export default async function NodePage({ params }: NodePageProps) {
   if (isPrivate && !isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <h1 className="text-2xl font-bold">
-          「{nodeData.node.name}」は非公開です
+        <h1 className="text-2xl font-bold text-center">
+          「{nodeData.node.name}」 は非公開です
         </h1>
       </div>
     );
