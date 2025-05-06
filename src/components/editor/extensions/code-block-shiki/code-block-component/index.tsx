@@ -104,9 +104,11 @@ const CodeBlockShikiComponent = ({
           <CopyIcon className="w-4 h-4" />
         </Button>
       </div>
-      <pre className="font-mono p-4 text-xs font-light">
-        <NodeViewContent as="code" />
-      </pre>
+      <div className="overflow-x-auto w-full">
+        <pre className="font-mono p-4 text-xs font-light whitespace-pre min-w-max">
+          <NodeViewContent as="code" />
+        </pre>
+      </div>
       {language === "mermaid" && (
         <div className="mt-6 p-2">
           <MermaidPreview node={node} />
