@@ -70,6 +70,10 @@
     @apply border-muted my-4;
   }
 
+  strong {
+    @apply font-bold;
+  }
+
   table {
     @apply w-full border-collapse;
   }
