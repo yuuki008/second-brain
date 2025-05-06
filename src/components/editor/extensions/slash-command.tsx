@@ -127,7 +127,7 @@ const CommandListWithKeyboardHandling = forwardRef<
             <button
               key={index}
               className={cn(
-                "flex items-center gap-2 w-full px-2 py-[6px] text-left rounded-sm text-xs transition-colors duration-200",
+                "flex items-center gap-2 w-full px-2 py-[6px] text-left rounded-sm text-xs transition-colors duration-200 focus:bg-secondary focus:text-secondary-foreground hover:bg-secondary hover:text-secondary-foreground",
                 index === selectedIndex
                   ? "bg-secondary text-secondary-foreground"
                   : ""

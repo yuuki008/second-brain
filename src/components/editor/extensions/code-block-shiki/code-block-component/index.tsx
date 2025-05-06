@@ -60,7 +60,7 @@ const CodeBlockShikiComponent = ({
       resolvedTheme === "dark" ? "vitesse-dark" : "vitesse-light";
 
     if (node.attrs.theme !== shikiTheme) {
-      updateAttributes({ theme: shikiTheme });
+      setTimeout(() => updateAttributes({ theme: shikiTheme }));
     }
   }, [resolvedTheme, updateAttributes, node.attrs.theme]);
 
