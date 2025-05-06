@@ -50,11 +50,11 @@ export default function MermaidPreview({ node }: MermaidPreviewProps) {
 
     setTimeout(() => {
       renderMermaid();
-    }, 500);
+    }, 1000);
   }, [content]);
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return <div className="text-red-500 text-xs">{error}</div>;
   }
 
   return (
