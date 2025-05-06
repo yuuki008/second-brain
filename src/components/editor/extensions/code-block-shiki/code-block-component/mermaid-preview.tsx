@@ -16,6 +16,9 @@ export default function MermaidPreview({ node }: MermaidPreviewProps) {
     mermaid.initialize({
       startOnLoad: true,
       theme: "null",
+      themeVariables: {
+        lineColor: "hsl(var(--foreground))",
+      },
       securityLevel: "loose",
       suppressErrorRendering: true,
     });
@@ -56,7 +59,7 @@ export default function MermaidPreview({ node }: MermaidPreviewProps) {
 
   return (
     <div
-      className="w-full h-full flex justify-center items-center overflow-hidden"
+      className="mermaid w-full h-full flex justify-center items-center overflow-hidden"
       dangerouslySetInnerHTML={{ __html: svg || "" }}
     />
   );

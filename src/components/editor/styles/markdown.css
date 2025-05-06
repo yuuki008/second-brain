@@ -27,10 +27,10 @@
 
   p {
     @apply text-foreground leading-[1.9] my-0 text-sm mt-2 font-light;
-  }
 
-  code {
-    @apply bg-muted border text-accent font-mono text-xs rounded-sm px-1 py-0.5;
+    code {
+      @apply bg-muted border text-accent font-mono text-xs rounded-sm px-1 py-0.5;
+    }
   }
 
   blockquote {
@@ -140,15 +140,17 @@
   }
 
   /* Mermaid */
-  .node rect,
-  .node circle,
-  .node ellipse,
-  .node polygon,
-  .node text {
-    @apply !fill-muted !stroke-border !stroke-1 !text-muted-foreground;
-  }
+  .mermaid {
+    .node rect,
+    .node circle,
+    .node ellipse,
+    .node polygon,
+    .node text {
+      @apply !fill-background !stroke-1 !stroke-foreground !text-foreground;
+    }
 
-  .edgePaths path {
-    @apply !stroke-border !stroke-1;
+    .edgePaths .relationshipLine {
+      @apply !stroke-1;
+    }
   }
 }
