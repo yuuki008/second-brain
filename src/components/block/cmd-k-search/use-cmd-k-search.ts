@@ -11,10 +11,7 @@ import { useSession } from "next-auth/react";
 import { getAllNodes } from "@/app/actions/search";
 import { createNode } from "@/app/actions/node";
 
-export function useCmdKSearch(
-  initialOpen: boolean,
-  setOpen: (open: boolean) => void
-) {
+export function useCmdKSearch(setOpen: (open: boolean) => void) {
   const { data: session } = useSession();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");

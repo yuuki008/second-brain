@@ -37,7 +37,7 @@ export function CmdKSearch({ open, setOpen }: CmdKSearchProps) {
     selectingNodeId,
     isFetchingNodes,
     handleCreateNew,
-  } = useCmdKSearch(open, setOpen);
+  } = useCmdKSearch(setOpen);
 
   const handleValueChange = useCallback(
     (value: string) => {
