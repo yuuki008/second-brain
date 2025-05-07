@@ -20,17 +20,15 @@ export function useCmdKSearch(
   const [searchQuery, setSearchQuery] = useState("");
   const [allNodes, setAllNodes] = useState<(Node & { tags: Tag[] })[]>([]);
   const [focusedNodeId, setFocusedNodeId] = useState<string | null>(null);
-  const [isFetchingNodes, startFetchingTransition] = useTransition(); // データ取得用Transition
-  const [selectingNodeId, setSelectingNodeId] = useState<string | null>(null); // ★ 選択中のノードIDを保持
+  const [isFetchingNodes, startFetchingTransition] = useTransition();
+  const [selectingNodeId, setSelectingNodeId] = useState<string | null>(null);
 
-  // Initial data fetching
   useEffect(() => {
-    if (!session) return; // セッションがない場合は何もしない
+    if (!session) return;
     startFetchingTransition(async () => {
       try {
         const nodes = await getAllNodes();
         setAllNodes(nodes);
-        // 取得後に最初のノードをフォーカス (まだフォーカスがなければ)
         if (nodes.length > 0 && !focusedNodeId) {
           setFocusedNodeId(nodes[0].id);
         }
@@ -40,9 +38,8 @@ export function useCmdKSearch(
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]); // 初回マウント時またはセッション変更時のみ実行
+  }, [session]);
 
-  // Memoized filtered nodes
   const filteredNodes = useMemo(() => {
     if (!searchQuery) {
       return allNodes;
@@ -58,7 +55,6 @@ export function useCmdKSearch(
     return results;
   }, [searchQuery, allNodes]);
 
-  // Update focused node when filtered nodes change
   useEffect(() => {
     if (
       searchQuery &&
@@ -67,53 +63,48 @@ export function useCmdKSearch(
     ) {
       setFocusedNodeId(filteredNodes[0].id);
     } else if (searchQuery && filteredNodes.length === 0) {
-      setFocusedNodeId(null); // 検索結果がなければフォーカス解除
+      setFocusedNodeId(null);
     } else if (
       !searchQuery &&
       allNodes.length > 0 &&
       focusedNodeId !== allNodes[0]?.id
     ) {
-      // 検索クエリがクリアされたら最初のノードにフォーカスを戻す
       setFocusedNodeId(allNodes[0]?.id || null);
     }
-    // We specifically don't include focusedNodeId here to avoid loops
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, filteredNodes, allNodes]);
 
-  // Memoized focused node derived from filtered nodes and focusedNodeId
   const focusedNode = useMemo(() => {
-    return filteredNodes.find((node) => node.id === focusedNodeId) || null; // IDが一致するものだけを返す
+    return filteredNodes.find((node) => node.id === focusedNodeId) || null;
   }, [filteredNodes, focusedNodeId]);
 
-  // --- Action Handlers with Transitions ---
   const [isCreating, startCreateTransition] = useTransition();
-  const [, startSelectTransition] = useTransition(); // ★ isSelecting は不要に
+  const [, startSelectTransition] = useTransition();
 
   const handleCreateNew = useCallback(async () => {
-    if (!searchQuery.trim()) return; // 空のクエリでは作成しない
+    if (!searchQuery.trim()) return;
     startCreateTransition(async () => {
       try {
         const newNode = await createNode(searchQuery);
-        // Add the new node optimistically or refetch
-        setAllNodes((prev) => [newNode, ...prev]); // 新しいノードを先頭に追加
+        setAllNodes((prev) => [newNode, ...prev]);
         router.push(`/node/${newNode.id}`);
-        setSearchQuery(""); // Clear search query
-        setOpen(false); // Close dialog
+        setSearchQuery("");
+        setOpen(false);
       } catch (error) {
         console.error("新規作成エラー:", error);
         // TODO: Add user-friendly error handling
       }
     });
-  }, [searchQuery, router, setOpen, startCreateTransition]); // 依存関係を修正
+  }, [searchQuery, router, setOpen, startCreateTransition]);
 
   const handleSelectItem = useCallback(
     (nodeId: string) => {
-      setSelectingNodeId(nodeId); // ★ 選択開始時にIDを設定
+      setSelectingNodeId(nodeId);
       startSelectTransition(() => {
         try {
           router.push(`/node/${nodeId}`);
-          setSearchQuery(""); // Clear search query
-          setOpen(false); // Close dialog
+          setSearchQuery("");
+          setOpen(false);
         } catch (error) {
           console.error("選択処理エラー:", error);
           // TODO: エラーハンドリング
@@ -122,22 +113,22 @@ export function useCmdKSearch(
         }
       });
     },
-    [router, setOpen, startSelectTransition] // 依存関係を修正
+    [router, setOpen, startSelectTransition]
   );
 
   return {
     session,
     searchQuery,
     setSearchQuery,
-    allNodes, // <--- Add this
+    allNodes,
     filteredNodes,
     focusedNodeId,
     setFocusedNodeId,
-    focusedNode, // This can be null if no node is focused or found
+    focusedNode,
     handleCreateNew,
     handleSelectItem,
     isCreating,
-    selectingNodeId, // ★ 追加
-    isFetchingNodes, // データ取得中の状態を返す
+    selectingNodeId,
+    isFetchingNodes,
   };
 }
