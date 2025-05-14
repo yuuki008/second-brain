@@ -1,4 +1,3 @@
-import { Separator } from "@/components/ui/separator";
 import { Node, Tag } from "@prisma/client";
 import DeleteNodeDialog from "./delete-node-dialog";
 import SwitchVisibility from "./switch-visibility";
@@ -35,14 +34,14 @@ export default function NodeFooter({ node }: NodeFooterProps) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-[800px] sm:max-w-[800px]">
-          <SheetHeader className="p-4 border-b">
+          <SheetHeader>
             <SheetTitle>設定</SheetTitle>
             <SheetDescription>
               ノードの表示設定、タグ、削除などを行います。
             </SheetDescription>
           </SheetHeader>
 
-          <div className="flex-grow p-4 space-y-6 overflow-y-auto">
+          <div className="space-y-6 mt-10">
             <div>
               <h3 className="text-sm font-medium mb-2 text-muted-foreground">
                 公開設定
