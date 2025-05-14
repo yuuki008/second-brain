@@ -13,7 +13,7 @@ import ReactionBar from "./reaction-bar";
 import dayjs from "dayjs";
 import { useZen } from "@/components/providers/zen-provider";
 import { useSession } from "next-auth/react";
-import NodeFooter from "./node-footer";
+import NodeFooter from "./footer";
 import Editor from "@/components/editor";
 
 interface NodeNodeData {
