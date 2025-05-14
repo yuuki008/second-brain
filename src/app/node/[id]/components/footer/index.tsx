@@ -9,7 +9,6 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetFooter,
   SheetDescription,
 } from "@/components/ui/sheet";
 import { PanelLeftOpen, PanelRightOpen } from "lucide-react";
@@ -69,16 +68,6 @@ export default function NodeFooter({ node }: NodeFooterProps) {
               <DeleteNodeDialog node={node} />
             </div>
           </div>
-
-          <SheetFooter className="p-4 border-t mt-auto">
-            <Button
-              variant="outline"
-              onClick={() => setIsSheetOpen(false)}
-              className="w-full"
-            >
-              閉じる
-            </Button>
-          </SheetFooter>
         </SheetContent>
       </Sheet>
     </>
