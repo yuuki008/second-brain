@@ -11,7 +11,7 @@ import {
   SheetTrigger,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { PanelLeftOpen, PanelRightOpen } from "lucide-react";
+import { PanelLeftOpen } from "lucide-react";
 import { useState } from "react";
 
 interface NodeFooterProps {
@@ -28,22 +28,15 @@ export default function NodeFooter({ node }: NodeFooterProps) {
           <Button
             variant="outline"
             size="icon"
-            className="fixed bottom-4 left-4 z-50"
+            className="fixed bottom-4 left-4"
           >
-            {isSheetOpen ? (
-              <PanelRightOpen className="h-5 w-5" />
-            ) : (
-              <PanelLeftOpen className="h-5 w-5" />
-            )}
+            <PanelLeftOpen className="h-5 w-5" />
             <span className="sr-only">設定を開く</span>
           </Button>
         </SheetTrigger>
-        <SheetContent
-          side="left"
-          className="w-full sm:w-[800px] p-0 flex flex-col"
-        >
+        <SheetContent side="left" className="w-[800px] sm:max-w-[800px]">
           <SheetHeader className="p-4 border-b">
-            <SheetTitle>ノード設定</SheetTitle>
+            <SheetTitle>設定</SheetTitle>
             <SheetDescription>
               ノードの表示設定、タグ、削除などを行います。
             </SheetDescription>
@@ -56,10 +49,6 @@ export default function NodeFooter({ node }: NodeFooterProps) {
               </h3>
               <SwitchVisibility node={node} />
             </div>
-
-            <Separator />
-
-            <Separator />
 
             <div>
               <h3 className="text-sm font-medium mb-2 text-muted-foreground">
